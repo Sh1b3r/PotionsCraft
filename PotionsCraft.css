@@ -1,0 +1,565 @@
+@font-face {
+  font-family: 'Minecraft'; 
+  src: url('Minecraft_1.1.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'Minecraft', sans-serif;
+  transition: background-image 0.5s ease-in-out;
+  background-size: cover;
+  background-position: center;
+  color: #000000; 
+  margin: 0;
+  padding: 0;
+}
+
+body.dark-theme {
+  background-color: #0d0d18;
+}
+
+body.light-theme {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #000000;
+}
+
+#body21.light-theme {
+  background-color: rgb(255, 255, 255);
+  color: #000000;
+}
+
+#body21.dark-theme {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  box-shadow: 0px 0px 36px 10px rgba(19,143,40,0.67);
+  -webkit-box-shadow: 0px 0px 36px 10px rgba(19,143,40,0.67);
+  -moz-box-shadow: 0px 0px 36px 10px rgba(19,143,40,0.67);
+}
+
+.body2 {
+  background-color: rgb(198, 198, 198);
+  font-family: 'Minecraft', sans-serif;
+  margin: 250px 100px 100px 100px;
+  padding: 40px;
+  border: 1px solid rgb(60, 60, 60);
+}
+
+.body2 img {
+  image-rendering: pixelated;
+}
+
+.body2 h2, .body2 h3 {
+  margin: 50px 0px 50px 0px;
+}
+
+#header2.light-theme {
+  background: rgba(0, 0, 0, 0.6);
+  border: 10px solid rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+#header2.dark-theme {
+  background-color: rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 0px 36px 10px rgba(19,143,40,0.67);
+  -webkit-box-shadow: 0px 0px 36px 10px rgba(19,143,40,0.67);
+  -moz-box-shadow: 0px 0px 36px 10px rgba(19,143,40,0.67);
+}
+
+header {
+  font-family: 'Minecraft', sans-serif;
+  background: rgba(0, 0, 0, 0.6);
+  border: 10px solid rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  gap: 0px;
+  z-index: 1000;
+  margin: 0;
+  padding: 0;
+  width: 100vw; /* make header full-width */
+  left: 0; right: 0;
+  box-sizing: border-box;
+}
+
+#headertext1.light-theme {
+color: #ffffff;
+}
+
+#headertext1.dark-theme {
+color:rgb(19, 143, 40);
+text-shadow: 0 0 10px rgb(19, 143, 40);
+}
+
+.headertext {
+  text-align: center;
+  color:rgb(255, 255, 255);
+  font-size: 2.5em;
+  font-size: 30px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.logocontainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 181px;
+  height: 181px;
+}
+
+.logocontainer:hover {
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
+}
+
+.logocontainer img {
+  width: 150px;
+  height: 150px;
+}
+
+.title:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+}
+
+.switch {
+  font-size: 17px;
+  position: relative;
+  display: inline-block;
+  width: 4em;
+  height: 2em;
+  margin-left: 10px;
+  margin-top: 10px;
+  vertical-align: middle;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+}
+
+.off, .on {
+  position: absolute;
+  height: 1.5em;
+  width: 1.5em;
+  background-color: transparent;
+  transition: .2s ease;
+  image-rendering: pixelated;
+  pointer-events: none;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.off {
+  left: 0.2em;
+  top: 0.1em;
+  opacity: 1;
+  z-index: 2;
+}
+
+.on {
+  right: 0.2em;
+  top: 0.1em;
+  opacity: 0;
+  z-index: 2;
+}
+
+.switch input:checked ~ .off {
+  opacity: 0;
+}
+
+.switch input:checked ~ .on {
+  opacity: 1;
+
+}
+
+.switch input:checked ~ .slider {
+  background-color: rgb(19, 143, 40);
+}
+
+.switch img { display: block; width: 100%; height: 100%; object-fit: contain; }
+
+.main-text {
+  font-size: 25px;
+}
+
+.title-and-images {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;             /* spacing between image and title */
+  flex-wrap: nowrap;     /* Keep image and title on same row when possible */
+}
+
+ h3 {
+  font-size: 40px;
+}
+
+.potions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 60px;
+}
+
+.potions img {
+  width: 25px;
+  height: 25px;
+}
+
+/* Main potion image next to title: keep it larger and inline */
+.card .title-and-images img {
+  flex: 0 0 auto;       /* do not shrink/grow unexpectedly */
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  display: block;
+}
+
+/* When image is followed by title, allow title to take the rest of the space and wrap nicely */
+.card .title-and-images h3 {
+  margin: 0;
+  flex: 1 1 auto;
+  min-width: 0; /* essential to allow flex children to shrink properly */
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* For other, smaller inline images (like effect icons), keep them smaller */
+.card .title-and-images + .title-and-images img,
+.card .title-and-images img.small {
+  width: 28px;
+  height: 28px;
+}
+
+.hearts img {
+  width: 18px;
+  height: 18px;
+}
+
+.hearts {
+  display: inline;
+}
+
+.card.light-theme {
+  background: rgb(198, 198, 198);
+  border: 1px solid #000000;
+}
+
+.card.dark-theme {
+  background-color: rgba(19, 143, 40, 0.1);
+  box-shadow: 0px 0px 36px 10px rgba(19,143,40,0.67);
+  -webkit-box-shadow: 0px 0px 36px 10px rgba(19,143,40,0.67);
+  -moz-box-shadow: 0px 0px 36px 10px rgba(19,143,40,0.67);
+}
+
+.card:hover.dark-theme {
+  box-shadow: 0px 0px 46px 15px rgba(19,143,40,0.87);
+  -webkit-box-shadow: 0px 0px 46px 15px rgba(19,143,40,0.87);
+  -moz-box-shadow: 0px 0px 46px 15px rgba(19,143,40,0.87);
+}
+
+.card {
+  overflow: hidden;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column; /* stack video above content and make video full width */
+  align-items: stretch;
+  gap: 18px;
+  width: 100%;
+  max-width: 1100px;
+  height: auto; /* allow content to grow */
+  box-sizing: border-box;
+}
+
+/* Make card full-bleed on wide screens (compensate for .body2 margins) */
+@media (min-width: 900px) {
+  .card {
+    width: calc(100% + 200px); /* expand out of body margins */
+    margin-left: -100px;       /* shift left to match full width */
+    max-width: none;           /* allow it to fill the space */
+  }
+}
+
+@media (max-width: 900px) {
+  .card { width: 100%; margin-left: 0; }
+}
+
+.card video {
+  width: 100%;
+  height: auto; /* video takes full width of card, maintains aspect ratio */
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: scale(1.03);
+  transition: transform 0.3s ease;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.card-content {
+  padding: 16px;
+  flex: 1 1 auto;
+  min-width: 0; /* important for flex item shrink */
+  display: flex;
+  flex-direction: column;
+  overflow-wrap: anywhere;
+}
+
+.card h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+}
+
+.card h3.light-theme {
+  color: #1e293b;
+}
+
+.card h3.dark-theme {
+  color: rgb(255, 255, 255);
+}
+
+.card b {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.6;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+}
+
+.card p {
+  font-size: 12px;
+  font-weight: 800;
+  color: #4f46e5;
+ 
+}
+
+@media (max-width: 768px) {
+    .logocontainer {
+        width: 120px;
+        height: 120px;
+    }
+    .card {
+    flex-direction: column;
+  }
+
+  .card video {
+    width: 100%;
+    flex-basis: auto;
+    height: 240px;
+  }
+    .main-text {
+        font-size: 15px;
+    }
+    .logocontainer img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .body2 {
+       width: 100%;
+    }
+    /* Навигационная панель (Header) */
+    header {
+        flex-direction: column; /* Элементы заголовка располагаются вертикально */
+        width: 100%;
+    }
+
+    .headertext {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px; /* Отступ перед поисковой строкой */
+    }
+
+    .title h1 {
+        font-size: 1.5rem; /* Уменьшаем размер заголовка */
+        text-align: center;
+    }
+    /* Карточки зелий */
+    .potions {
+        /* Принудительный вывод в одну колонку */
+      grid-template-columns: 1fr;
+        padding: 10px 20px; /* Уменьшаем горизонтальные отступы */
+    }
+}
+
+/* Настройки для очень маленьких экранов (смартфоны, до 480px) */
+@media (max-width: 480px) {
+    /* В headertext логотип и заголовок могут быть расположены вертикально,
+       если они не помещаются в строку. В данном случае,
+       оставим их в строке, но уменьшим размер шрифта. */
+    .title h1 {
+        font-size: 1.2rem;
+    }
+    .body2 {
+       width: 100%;
+    }
+    .card video {
+    width: 100%;
+    flex-basis: auto;
+    height: 240px;
+  }
+    header {
+        flex-direction: column; /* Элементы заголовка располагаются вертикально */
+        width: 100%;
+    }
+    .logocontainer {
+        width: 80px;
+        height: 80px;
+    }
+    .main-text {
+        font-size: 12px;
+    }
+    .logocontainer img {
+        width: 60px;
+        height: 60px;
+    }
+    h3 {
+        font-size: 1.2rem;
+    }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  transition: background-color 0.5s ease;
+}
+
+.stars,
+.shooting-star,
+.stars::before,
+.stars::after {
+  opacity: 1; /* visible by default */
+  visibility: visible;
+  transition: opacity 1s ease, visibility 1s ease;
+}
+
+/* Allow opt-out via html.no-stars */
+html.no-stars .stars,
+html.no-stars .shooting-star,
+html.no-stars .stars::before,
+html.no-stars .stars::after {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.stars {
+  position: fixed;
+  inset: 0 0 0 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+  transition: opacity 1s ease, visibility 1s ease;
+  will-change: opacity, transform;
+}
+
+.stars::before,
+.stars::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  background: white;
+  will-change: transform, opacity;
+}
+
+.stars::before{
+  opacity: 0.7;
+  filter: blur(0.1px);
+  box-shadow: 28vw 12vh 0 0 white, 32vw 32vh 0 0 white, 38vw 18vh 0 0 white, 42vw 35vh 0 0 white, 48vw 25vh 0 0 white, 53vw 42vh 0 0 white, 58vw 15vh 0 0 white, 63vw 38vh 0 0 white, 68vw 28vh 0 0 white, 73vw 45vh 0 0 white, 78vw 32vh 0 0 white, 83vw 48vh 0 0 white, 88vw 20vh 0 0 white, 93vw 52vh 0 0 white, 98vw 35vh 0 0 white, 5vw 60vh 0 0 white, 12vw 65vh 0 0 white, 18vw 72vh 0 0 white, 25vw 78vh 0 0 white, 30vw 85vh 0 0 white, 35vw 68vh 0 0 white, 40vw 82vh 0 0 white, 45vw 92vh 0 0 white, 50vw 75vh 0 0 white, 55vw 88vh 0 0 white, 60vw 95vh 0 0 white, 65vw 72vh 0 0 white, 70vw 85vh 0 0 white, 75vw 78vh 0 0 white, 80vw 92vh 0 0 white, 85vw 82vh 0 0 white, 90vw 88vh 0 0 white, 95vw 75vh 0 0 white;
+  animation: twinkle 10s infinite linear;
+}
+
+.stars::after{
+  opacity: 0.95;
+  filter: blur(0);
+  box-shadow: 8vw 12vh 0 0 white, 16vw 18vh 0 0 white, 24vw 25vh 0 0 white, 33vw 15vh 0 0 white, 41vw 28vh 0 0 white, 49vw 35vh 0 0 white, 57vw 22vh 0 0 white, 65vw 42vh 0 0 white, 73vw 28vh 0 0 white, 81vw 48vh 0 0 white, 89vw 32vh 0 0 white, 97vw 45vh 0 0 white, 3vw 68vh 0 0 white, 11vw 75vh 0 0 white, 19vw 82vh 0 0 white, 27vw 88vh 0 0 white, 35vw 72vh 0 0 white, 43vw 85vh 0 0 white, 51vw 92vh 0 0 white, 59vw 78vh 0 0 white;
+  animation: twinkle 6s infinite linear reverse;
+}
+
+.shooting-star{
+  position: fixed;
+  width: 100px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(255,255,255,1), rgba(255,255,255,0));
+  transform: rotate(25deg);
+  pointer-events: none;
+  left: -150px;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+  z-index: 1;
+  will-change: transform, opacity;
+  animation: shoot 3s infinite ease-in;
+}
+.shooting-star:nth-child(2){top:20%;animation-delay:0s;}
+.shooting-star:nth-child(3){top:35%;animation-delay:1s;}
+.shooting-star:nth-child(4){top:50%;animation-delay:2s;}
+.shooting-star:nth-child(5){top:65%;animation-delay:3s;}
+.shooting-star:nth-child(6){top:80%;animation-delay:4s;}
+
+/* Only show shooting stars when in dark theme */
+.dark-theme .shooting-star{opacity: 1;}
+
+@keyframes twinkle{
+  0%,100%{opacity:0.9;}
+  50%{opacity:0.4;}
+}
+@keyframes shoot{
+  0%{transform:translateX(0) translateY(0) rotate(25deg);opacity:1;}
+  100%{transform:translateX(120vw) translateY(50vh) rotate(25deg);opacity:0;}
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .stars::before, .stars::after, .shooting-star {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Ensure content sits above stars. */
+.container, .body2 {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 480px) {
+  .card .title-and-images img { width: 32px; height: 32px; }
+  .card .title-and-images h3 { font-size: 16px; }
+  .title-and-images { flex-wrap: wrap; gap: 8px; }
+}
