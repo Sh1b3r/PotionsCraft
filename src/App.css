@@ -140,90 +140,53 @@ header#header2 {
   flex-shrink: 0;
 }
 
-/* Dark Presets Navigation Pill Bar */
-.dark-presets-nav {
-  display: flex;
+/* Themes Showcase Link Button in Header */
+.themes-showcase-link {
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  background: rgba(0, 0, 0, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  padding: 3px 8px;
+  gap: 6px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  padding: 5px 12px;
   border-radius: 6px;
+  color: #f1f5f9;
+  text-decoration: none;
+  font-family: 'Minecraft', sans-serif;
+  font-size: 12px;
+  transition: all 0.2s ease;
   backdrop-filter: blur(8px);
 }
 
-.dark-presets-label {
-  font-size: 11px;
-  color: #94a3b8;
-  user-select: none;
-}
-
-.dark-presets-buttons {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.preset-choice-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #cbd5e1;
-  font-family: 'Minecraft', sans-serif;
-  font-size: 11px;
-  padding: 4px 8px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  user-select: none;
-}
-
-.preset-choice-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
+.themes-showcase-link:hover {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: #3b82f6;
   color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
 }
 
-.preset-choice-btn.active {
-  background: #3b82f6;
-  border-color: #60a5fa;
-  color: #ffffff;
-  box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+.light-theme .themes-showcase-link {
+  background: rgba(255, 255, 255, 0.5);
+  border-color: rgba(0, 0, 0, 0.15);
+  color: #1e293b;
 }
 
-.theme-preset-nether .preset-choice-btn.active {
-  background: #dc2626;
-  border-color: #ef4444;
-  box-shadow: 0 0 10px rgba(220, 38, 38, 0.4);
+.light-theme .themes-showcase-link:hover {
+  background: #ffffff;
+  border-color: #3b82f6;
+  color: #2563eb;
 }
 
-.theme-preset-deepslate .preset-choice-btn.active {
-  background: #0284c7;
-  border-color: #38bdf8;
-  box-shadow: 0 0 10px rgba(2, 132, 199, 0.4);
+.themes-icon {
+  font-size: 14px;
 }
 
-.theme-preset-original .preset-choice-btn.active {
-  background: #15803d;
-  border-color: #22c55e;
-  box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
-}
-
-.preset-icon {
-  font-size: 12px;
-}
-
-@media (max-width: 900px) {
-  .dark-presets-label {
+@media (max-width: 600px) {
+  .themes-link-text {
     display: none;
   }
-  .preset-choice-btn .preset-text {
-    display: none;
-  }
-  .preset-choice-btn {
-    padding: 4px 6px;
+  .themes-showcase-link {
+    padding: 5px 8px;
   }
 }
 
@@ -307,83 +270,15 @@ header#header2 {
   color: #000000;
 }
 
-/* Default dark-theme fallback (Obsidian Minimal) */
+/* Base Dark Theme (Obsidian Minimal - Mature & Clean Glassmorphism) */
 #body21.dark-theme {
-  background-color: rgba(16, 17, 24, 0.88);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 8px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65), 0 0 1px 1px rgba(255, 255, 255, 0.08);
-}
-
-/* ==================== PRESET 1: OBSIDIAN MINIMAL (Mature & Clean) ==================== */
-body.theme-preset-obsidian {
-  background-color: #0b0c10;
-}
-
-.theme-preset-obsidian #body21.dark-theme {
   background-color: rgba(15, 17, 23, 0.85);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
+  color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 10px;
   box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.06);
-}
-
-/* ==================== PRESET 2: NETHER FORGE (Charcoal & Warm Ember) ==================== */
-body.theme-preset-nether {
-  background-color: #12090b;
-}
-
-.theme-preset-nether #body21.dark-theme {
-  background-color: rgba(22, 14, 16, 0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(239, 68, 68, 0.22);
-  border-radius: 10px;
-  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.85), 0 0 35px 2px rgba(220, 38, 38, 0.14);
-}
-
-.theme-preset-nether .card.dark-theme {
-  background-color: #23181a;
-  border-top-color: #3b2529;
-  border-left-color: #3b2529;
-  border-bottom-color: #150d0f;
-  border-right-color: #150d0f;
-}
-
-/* ==================== PRESET 3: DEEPSLATE MODERN (Slate & Cyan Amethyst) ==================== */
-body.theme-preset-deepslate {
-  background-color: #090e17;
-}
-
-.theme-preset-deepslate #body21.dark-theme {
-  background-color: rgba(13, 20, 32, 0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(56, 189, 248, 0.22);
-  border-radius: 10px;
-  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.85), 0 0 32px 1px rgba(14, 165, 233, 0.12);
-}
-
-.theme-preset-deepslate .card.dark-theme {
-  background-color: #15202e;
-  border-top-color: #22344a;
-  border-left-color: #22344a;
-  border-bottom-color: #0b111a;
-  border-right-color: #0b111a;
-}
-
-/* ==================== PRESET 4: ORIGINAL CLASSIC GLOW (Green Neon) ==================== */
-.theme-preset-original #body21.dark-theme {
-  background-color: rgba(0, 0, 0, 0.65);
-  border: 1px solid rgb(60, 60, 60);
-  border-radius: 0;
-  box-shadow: 0px 0px 36px 10px rgba(19,143,40,0.67);
-  -webkit-box-shadow: 0px 0px 36px 10px rgba(19,143,40,0.67);
-  -moz-box-shadow: 0px 0px 36px 10px rgba(19,143,40,0.67);
 }
 
 .body2 h2, .body2 h3 {

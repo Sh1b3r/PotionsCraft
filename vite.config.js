@@ -14,6 +14,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
+        themes: resolve(__dirname, 'themes.html'),
         no: resolve(__dirname, 'no.html'),
         heroine: resolve(__dirname, 'heroine.html'),
       },

@@ -19,15 +19,6 @@ export default function App() {
     }
   });
 
-  const [darkPreset, setDarkPreset] = useState(() => {
-    try {
-      const savedPreset = localStorage.getItem('potionscraft_dark_preset');
-      return savedPreset || 'obsidian';
-    } catch {
-      return 'obsidian';
-    }
-  });
-
   // Modals
   const [activeModalPotion, setActiveModalPotion] = useState(null);
   const [activeEasterEgg, setActiveEasterEgg] = useState(null);
@@ -38,19 +29,17 @@ export default function App() {
   useEffect(() => {
     try {
       localStorage.setItem('theme', isDark ? 'dark' : 'light');
-      localStorage.setItem('potionscraft_dark_preset', darkPreset);
     } catch (e) {}
 
-    // Update body theme and attributes
-    document.body.className = `${isDark ? 'dark-theme' : 'light-theme'} theme-preset-${darkPreset}`;
-    document.documentElement.setAttribute('data-theme-preset', darkPreset);
+    // Update body theme
+    document.body.className = isDark ? 'dark-theme' : 'light-theme';
 
     // Update favicon matching the logo swap (as in Pop! project)
     const favicon = document.getElementById('favicon') || document.querySelector("link[rel*='icon']");
     if (favicon) {
       favicon.href = isDark ? logoNightSrc : logoDaySrc;
     }
-  }, [isDark, darkPreset]);
+  }, [isDark]);
 
   // Client-side URL Routing & Legacy URL Handling
   useEffect(() => {
@@ -164,14 +153,12 @@ export default function App() {
           isDark={isDark}
           onToggleTheme={setIsDark}
           onOpenEasterEgg={handleOpenEasterEgg}
-          darkPreset={darkPreset}
-          onSelectDarkPreset={setDarkPreset}
         />
 
         {/* Main Body Container */}
         <div className="container">
           <div
-            className={`body2 ${isDark ? 'dark-theme' : 'light-theme'} theme-preset-${darkPreset}`}
+            className={`body2 ${isDark ? 'dark-theme' : 'light-theme'}`}
             id="body21"
           >
             {/* Base ingredients & modifiers table replacing the old note */}
