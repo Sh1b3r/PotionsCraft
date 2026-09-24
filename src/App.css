@@ -2859,19 +2859,22 @@ body.dark-theme .invslot.mcui-output3 {
     image-rendering: pixelated;
   }
 
-  /* Potion title increased by another ~15% */
+  /* Potion title allowed to wrap onto 2 lines so full name is visible */
   .mobile-header-potion-title {
     flex: 1;
     min-width: 0;
     margin: 0;
-    font-size: 16.5px;
+    font-size: 14.5px;
     font-weight: 700;
-    white-space: nowrap;
+    white-space: normal;
+    word-break: break-word;
     overflow: hidden;
-    text-overflow: ellipsis;
-    line-height: 1.25;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-height: 1.15;
     cursor: pointer;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.2px;
   }
 
   .mobile-header-potion-title.light-theme {
@@ -2938,7 +2941,8 @@ body.dark-theme .invslot.mcui-output3 {
 
 @media (max-width: 440px) {
   .mobile-header-potion-title {
-    font-size: 14.5px;
+    font-size: 13.5px;
+    line-height: 1.15;
   }
 
   .mobile-header-potion-icon .invslot {
