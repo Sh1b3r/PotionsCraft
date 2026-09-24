@@ -4,19 +4,127 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ХЕРПОБРИЛ</title>
-    <link rel="stylesheet" href="heroine.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="icon" href="photo_5429299422396807545_x.jpg" type="image/x-icon">
-    </head>
-    <body>
-        <div class="stars"></div>
-<div class="shooting-star"></div>
-<div class="shooting-star"></div>
-<div class="shooting-star"></div>
-<div class="shooting-star"></div>
-<div class="shooting-star"></div>
-<img src="photo_5429299422396807543_x.jpg">
-        <h1>О ні, Херпобрив, не їж мене</h1>
-        <script src="script.js"></script>
-        </body>
+    <link rel="icon" href="/photo_5429299422396807545_x.jpg" type="image/x-icon">
+    <style>
+        @font-face {
+            font-family: 'Minecraft'; 
+            src: url('/Minecraft_1.1.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Minecraft', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(to bottom, #0C0F23, #0C0F23 70%, #0C0F23);
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: auto;
+            position: relative;
+            padding: 30px 15px;
+        }
+        body img {
+            width: 1200px;
+            max-width: 90vw;
+            height: auto;
+            max-height: 70vh;
+            object-fit: contain;
+            position: relative;
+            z-index: 2;
+        }
+        body h1 {
+            font-size: clamp(2rem, 5vw, 4.5rem);
+            color: #ffffff;
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
+        }
+        .stars {
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: transparent;
+            pointer-events: none;
+            z-index: 1;
+            box-shadow: 2vw 5vh 2px white, 10vw 8vh 2px white, 15vw 15vh 1px white,
+                22vw 22vh 1px white, 28vw 12vh 2px white, 32vw 32vh 1px white,
+                38vw 18vh 2px white, 42vw 35vh 1px white, 48vw 25vh 2px white,
+                53vw 42vh 1px white, 58vw 15vh 2px white, 63vw 38vh 1px white,
+                68vw 28vh 2px white, 73vw 45vh 1px white, 78vw 32vh 2px white,
+                83vw 48vh 1px white, 88vw 20vh 2px white, 93vw 52vh 1px white,
+                98vw 35vh 2px white, 5vw 60vh 1px white, 12vw 65vh 2px white,
+                18vw 72vh 1px white, 25vw 78vh 2px white, 30vw 85vh 1px white,
+                35vw 68vh 2px white, 40vw 82vh 1px white, 45vw 92vh 2px white,
+                50vw 75vh 1px white, 55vw 88vh 2px white, 60vw 95vh 1px white,
+                65vw 72vh 2px white, 70vw 85vh 1px white, 75vw 78vh 2px white,
+                80vw 92vh 1px white, 85vw 82vh 2px white, 90vw 88vh 1px white,
+                95vw 75vh 2px white;
+            animation: twinkle 8s infinite linear;
+        }
+        .shooting-star {
+            position: fixed;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, white, transparent);
+            animation: shoot 3s infinite ease-in;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .shooting-star:nth-child(1) { top: 20%; left: -100px; animation-delay: 0s; }
+        .shooting-star:nth-child(2) { top: 35%; left: -100px; animation-delay: 1s; }
+        .shooting-star:nth-child(3) { top: 50%; left: -100px; animation-delay: 2s; }
+        .shooting-star:nth-child(4) { top: 65%; left: -100px; animation-delay: 1.5s; }
+        .shooting-star:nth-child(5) { top: 80%; left: -100px; animation-delay: 2.5s; }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 0.4; }
+        }
+        @keyframes shoot {
+            0% { transform: translateX(0) translateY(0) rotate(25deg); opacity: 1; }
+            100% { transform: translateX(120vw) translateY(50vh) rotate(25deg); opacity: 0; }
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-size: 14px;
+            transition: all 0.2s;
+            z-index: 100;
+        }
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-btn">← Повернутися до PotionsCraft</a>
+    <div class="stars"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <img src="/photo_5429299422396807543_x.jpg" alt="ХЕРПОБРИЛ">
+    <h1>О ні, Херпобрив, не їж мене</h1>
+</body>
 </html>

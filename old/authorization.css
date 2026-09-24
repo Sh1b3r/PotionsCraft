@@ -1,0 +1,238 @@
+@font-face {
+  font-family: 'Minecraft'; 
+  src: url('Minecraft_1.1.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'Minecraft', sans-serif;
+  transition: background-image 0.5s ease-in-out;
+  background-size: cover;
+  background-position: center;
+  color: #000000;
+  background-color: #0d0d18; 
+  margin: 0;
+  padding: 0;
+}
+
+.body2 {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  box-shadow: 0px 0px 36px 10px rgba(19,143,40,0.67);
+  -webkit-box-shadow: 0px 0px 36px 10px rgba(19,143,40,0.67);
+  -moz-box-shadow: 0px 0px 36px 10px rgba(19,143,40,0.67);
+  font-family: 'Minecraft', sans-serif;
+  margin: 250px 100px 100px 100px;
+  padding: 40px;
+  border: 1px solid rgb(60, 60, 60);
+}
+
+.body2 h1 {
+  text-align: center;
+  color: #ffffff;
+  font-size: 2.5em;
+  margin-bottom: 10px;
+  text-shadow: 0 0 10px rgb(19, 143, 40);
+}
+
+.body2 .input-group {
+  position: relative;
+  margin-bottom: 35px;
+  margin-top: 40px;
+}
+
+.body2 .input-group input {
+  width: 100%;
+  padding: 10px 0;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  font-size: 1.5em;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.body2 .input-group label {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  color: rgba(255, 255, 255, 0.5);
+  pointer-events: none;
+  transition: all 0.3s ease;
+  font-size: 1.5em;
+}
+
+.body2 .input-group input:focus + label,
+.body2 .input-group input:valid + label {
+  top: -15px;
+  font-size: 1.5em;
+  color: rgb(0, 0, 0);
+  text-shadow: 0 0 10px rgb(19, 143, 40);
+}
+
+.body2 .submit-btn {
+  width: 100%;
+  margin-top: 30px;
+  padding: 15px;
+  border: 1px solid rgba(19, 143, 40, 0.5);
+  border-radius: 10px;
+  background: transparent;
+  color: rgb(19, 143, 40);
+  text-shadow: 0 0 10px rgb(19, 143, 40);
+  font-size: 1.2em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  letter-spacing: 1px;
+}
+
+.body2 .submit-btn:hover {
+  background: linear-gradient(45deg, rgb(9, 219, 44), rgb(19, 143, 40));
+  color: #1a1a2e;
+  box-shadow: 0px 0px 36px 10px rgba(19,143,40,0.67);
+  -webkit-box-shadow: 0px 0px 36px 10px rgba(19,143,40,0.67);
+  -moz-box-shadow: 0px 0px 36px 10px rgba(19,143,40,0.67);
+  transform: translateY(-3px);
+}
+
+.body2 .checkbox-group {
+  display: flex;
+  align-items: center;
+  font-size: 0.8em;
+}
+
+.body2 .checkbox-group input[type="checkbox"] {
+  cursor: pointer;
+}
+
+.body2 .login-link {
+  text-align: center;
+  margin-top: 20px;
+  color: #b0b0b0;
+}
+
+.body2 a {
+  color: rgb(19, 143, 40);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.body2 a:hover {
+  color: rgb(0, 0, 0);
+  text-shadow: 0 0 10px rgb(19, 143, 40);
+  text-decoration: underline;
+}
+
+.body3 {
+ display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  font-size: 50px;
+}
+
+select {
+  font-size: 0.7em;
+  color: #b0b0b0;
+  background-color: rgba(0, 0, 0, 0.5);
+   box-shadow: 0px 0px 36px 10px rgba(19,143,40,0.67);
+  -webkit-box-shadow: 0px 0px 36px 10px rgba(19,143,40,0.67);
+  -moz-box-shadow: 0px 0px 36px 10px rgba(19,143,40,0.67);
+  font-family: 'Minecraft', sans-serif;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+   backdrop-filter: blur(10px);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.stars {
+  width: 1px;
+  height: 1px;
+  position: absolute;
+  background: white;
+  box-shadow: 2vw 5vh 2px white, 10vw 8vh 2px white, 15vw 15vh 1px white,
+    22vw 22vh 1px white, 28vw 12vh 2px white, 32vw 32vh 1px white,
+    38vw 18vh 2px white, 42vw 35vh 1px white, 48vw 25vh 2px white,
+    53vw 42vh 1px white, 58vw 15vh 2px white, 63vw 38vh 1px white,
+    68vw 28vh 2px white, 73vw 45vh 1px white, 78vw 32vh 2px white,
+    83vw 48vh 1px white, 88vw 20vh 2px white, 93vw 52vh 1px white,
+    98vw 35vh 2px white, 5vw 60vh 1px white, 12vw 65vh 2px white,
+    18vw 72vh 1px white, 25vw 78vh 2px white, 30vw 85vh 1px white,
+    35vw 68vh 2px white, 40vw 82vh 1px white, 45vw 92vh 2px white,
+    50vw 75vh 1px white, 55vw 88vh 2px white, 60vw 95vh 1px white,
+    65vw 72vh 2px white, 70vw 85vh 1px white, 75vw 78vh 2px white,
+    80vw 92vh 1px white, 85vw 82vh 2px white, 90vw 88vh 1px white,
+    95vw 75vh 2px white;
+  animation: twinkle 8s infinite linear;
+}
+
+.shooting-star {
+  position: absolute;
+  width: 100px;
+  height: 2px;
+  background: linear-gradient(90deg, white, transparent);
+  animation: shoot 3s infinite ease-in;
+}
+
+.shooting-star:nth-child(1) {
+  top: 20%;
+  left: -100px;
+  animation-delay: 0s;
+}
+
+.shooting-star:nth-child(2) {
+  top: 35%;
+  left: -100px;
+  animation-delay: 1s;
+}
+
+.shooting-star:nth-child(3) {
+  top: 50%;
+  left: -100px;
+  animation-delay: 2s;
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+@keyframes shoot {
+  0% {
+    transform: translateX(0) translateY(0) rotate(25deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(120vw) translateY(50vh) rotate(25deg);
+    opacity: 0;
+  }
+}
+
+/* Additional twinkling stars with different animation timing */
+.stars::after {
+  content: "";
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  background: white;
+  box-shadow: 8vw 12vh 2px white, 16vw 18vh 1px white, 24vw 25vh 2px white,
+    33vw 15vh 1px white, 41vw 28vh 2px white, 49vw 35vh 1px white,
+    57vw 22vh 2px white, 65vw 42vh 1px white, 73vw 28vh 2px white,
+    81vw 48vh 1px white, 89vw 32vh 2px white, 97vw 45vh 1px white,
+    3vw 68vh 2px white, 11vw 75vh 1px white, 19vw 82vh 2px white,
+    27vw 88vh 1px white, 35vw 72vh 2px white, 43vw 85vh 1px white,
+    51vw 92vh 2px white, 59vw 78vh 1px white;
+  animation: twinkle 6s infinite linear reverse;
+}

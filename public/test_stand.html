@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+body { background: #333; padding: 40px; }
+
+.pixel-image,
+.mcui {
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-crisp-edges;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.mcui {
+  display: inline-block;
+  position: relative;
+  box-sizing: content-box;
+  font-size: 0;
+  line-height: 0;
+}
+
+.mcui-Brewing_Stand,
+[class*="mcui-Brewing"] {
+  display: inline-block;
+  position: relative;
+  width: 128px;
+  height: 111px;
+  padding: 6px;
+  background-color: rgb(198, 198, 198);
+  border-top: 2px solid rgb(219, 219, 219);
+  border-left: 2px solid rgb(219, 219, 219);
+  border-bottom: 2px solid rgb(91, 91, 91);
+  border-right: 2px solid rgb(91, 91, 91);
+  box-sizing: content-box;
+  vertical-align: bottom;
+  text-align: left;
+}
+
+.mcui-input {
+  display: block;
+  width: 128px;
+  height: 57px;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  font-size: 0;
+}
+
+.mcui-bubbling {
+  display: inline-block;
+  width: 24px;
+  height: 57px;
+  margin: 0;
+  padding: 0;
+  background-image: url("/Grid_layout_Brewing_Bubbles.gif");
+  background-position: 0% 0%;
+  background-repeat: no-repeat;
+  vertical-align: top;
+}
+
+.mcui-arrow {
+  display: inline-block;
+  width: 24px;
+  height: 57px;
+  margin: 0;
+  padding: 0;
+  background-image: url("/Grid_layout_Brewing_Arrow.png");
+  background-position: 0% 0%;
+  background-repeat: no-repeat;
+  vertical-align: top;
+}
+
+.mcui-paths {
+  display: block;
+  position: relative;
+  width: 60px;
+  height: 40px;
+  margin: -20px 34px -16px;
+  background-image: url("/Grid_layout_Brewing_Paths.png");
+  background-position: 0% 0%;
+  background-repeat: no-repeat;
+  vertical-align: baseline;
+}
+
+.mcui-output {
+  display: block;
+  width: 128px;
+  height: 50px;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  font-size: 0;
+}
+
+.invslot {
+  display: inline-block;
+  position: relative;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background-color: rgb(139, 139, 139);
+  border-top: 2px solid rgb(55, 55, 55);
+  border-left: 2px solid rgb(55, 55, 55);
+  border-bottom: 2px solid rgb(255, 255, 255);
+  border-right: 2px solid rgb(255, 255, 255);
+  box-sizing: content-box;
+  vertical-align: top;
+  font-size: 14px;
+  line-height: normal;
+}
+
+.mcui-input .invslot {
+  margin: 3px 0 0 24px;
+}
+
+.invslot.mcui-output1,
+.invslot.mcui-output2,
+.invslot.mcui-output3 {
+  background-image: url("/Grid_layout_Brewing_Empty.png");
+  background-position: 50% 50%;
+  background-size: 32px 32px;
+  background-repeat: no-repeat;
+}
+
+.mcui-output .mcui-output1 {
+  margin: 0 0 0 0;
+}
+
+.mcui-output .mcui-output2 {
+  margin: 14px 10px 0;
+}
+
+.mcui-output .mcui-output3 {
+  margin: 0 0 0 0;
+}
+
+.invslot-item,
+.invslot-item-image {
+  display: block;
+  position: relative;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  margin: 0;
+}
+
+.invslot-item-image a {
+  display: block;
+  width: 32px;
+  height: 32px;
+}
+
+.invslot-item-image img,
+.mw-file-element {
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  display: block;
+}
+</style>
+</head>
+<body>
+<div>
+<span class="mcui mcui-Brewing_Stand pixel-image"><span class="mcui-input"><span class="mcui-bubbling"><br></span><span class="invslot"><span class="invslot-item invslot-item-image" data-minetip-title="Сльоза ґаста"><span typeof="mw:File"><img alt="Сльоза ґаста" src="/items/ghast_tear.png" width="32" height="32" class="mw-file-element"></span></span></span><span class="mcui-arrow"><br></span></span><span class="mcui-paths"><br></span><span class="mcui-output"><span class="invslot mcui-output1"></span><span class="invslot mcui-output2"><span class="invslot-item invslot-item-image" data-minetip-title="Незграбне зілля"><span typeof="mw:File"><img alt="Незграбне зілля" src="/items/water_bottle.png" width="32" height="32" class="mw-file-element"></span></span></span><span class="invslot mcui-output3"></span></span></span>
+</div>
+</body>
+</html>

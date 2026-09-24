@@ -1,0 +1,2262 @@
+/* ==================== MINECRAFT POTIONSCRAFT ORIGINAL STYLES ==================== */
+
+@font-face {
+  font-family: 'Minecraft'; 
+  src: url('/Minecraft_1.1.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Minecraft', sans-serif;
+  transition: background-image 0.5s ease-in-out, background-color 0.5s ease-in-out;
+  background-size: cover;
+  background-position: center;
+  color: #000000; 
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+body.dark-theme {
+  background-color: #0d0d18;
+  color: #ffffff;
+}
+
+body.light-theme {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #000000;
+}
+
+.potions-craft-app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* ==================== HEADER (BREWING STAND GUI STYLE) ==================== */
+header#header2 {
+  font-family: 'Minecraft', sans-serif;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  height: 64px;
+  margin: 0;
+  padding: 0 20px;
+  box-sizing: border-box;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+#header2.light-theme {
+  background-color: rgb(198, 198, 198);
+  border-top: 2px solid rgb(219, 219, 219);
+  border-left: 2px solid rgb(219, 219, 219);
+  border-bottom: 3px solid rgb(91, 91, 91);
+  border-right: 2px solid rgb(91, 91, 91);
+}
+
+#header2.dark-theme {
+  background-color: #2c2d30;
+  border-top: 2px solid #3e4046;
+  border-left: 2px solid #3e4046;
+  border-bottom: 3px solid #18191c;
+  border-right: 2px solid #18191c;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.65);
+}
+
+.headertext {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+}
+
+#headertext1.light-theme {
+  color: #1e293b;
+}
+
+#headertext1.dark-theme {
+  color: #ffffff;
+  text-shadow: 2px 2px #151515;
+}
+
+.logocontainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.logocontainer:hover {
+  transform: scale(1.08);
+}
+
+.logocontainer img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+.title {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.title:hover {
+  transform: scale(1.03);
+}
+
+.title h1 {
+  font-size: clamp(1.2rem, 3.5vw, 1.7rem);
+  margin: 0;
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+}
+
+.header-right-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+/* ==================== FROM UIVERSE.IO BY ZL306 ==================== */
+.switch {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  width: 60px;
+  height: 26px;
+  margin-left: 10px;
+}
+
+.toggle {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  image-rendering: pixelated;
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAlgAAAEECAYAAAD0wkrNAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsEAAA7BAbiRa+0AAAGHaVRYdFhNTDpjb20uYWRvYmUueG1wAAAAAAA8P3hwYWNrZXQgYmVnaW49J++7vycgaWQ9J1c1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCc/Pg0KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyI+PHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj48cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0idXVpZDpmYWY1YmRkNS1iYTNkLTExZGEtYWQzMS1kMzNkNzUxODJmMWIiIHhtbG5zOnRpZmY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vdGlmZi8xLjAvIj48dGlmZjpPcmllbnRhdGlvbj4xPC90aWZmOk9yaWVudGF0aW9uPjwvcmRmOkRlc2NyaXB0aW9uPjwvcmRmOlJERj48L3g6eG1wbWV0YT4NCjw/eHBhY2tldCBlbmQ9J3cnPz4slJgLAAAFd0lEQVR4Xu3YMWpbQRhG0ZGdwqAVJqQzRsYIL8aoSUgppKUJvIaYl346+91Csc+Bab52msu/GWMsAwCAzM08AACwjsACAIgJLACAmMACAIgJLACAmMACAIgJLACAmMACAIgJLACAmMACAIgJLACAmMACAIgJLACAmMACAIgJLACAmMACAIgJLACAmMACAIgJLACA2GaMsczjGsfTeZ4AAK7azx/f52kVFywAgJjAAgCICSwAgJjAAgCICSwAgJjAAgCICSwAgJjAAgCICSwAgJjAAgCICSwAgJjAAgCICSwAgJjAAgCICSwAgJjAAgCICSwAgJjAAgCICSwAgJjAAgCICSwAgJjAAgCICSwAgJjAAgCICSwAgJjAAgCICSwAgJjAAgCICSwAgJjAAgCICSwAgJjAAgCICSwAgJjAAgCICSwAgJjAAgCICSwAgNhmjLHM4xrH03mersrl8jpPAHzA4fAyT7zDfv88T5/adns3T1fl6XE3T6u4YAEAxAQWAEBMYAEAxAQWAEBMYAEAxAQWAEBMYAEAxAQWAEBMYAEAxAQWAEBMYAEAxAQWAEBMYAEAxAQWAEBMYAEAxAQWAEBMYAEAxDZjjGUe1ziezvN0VS6X13kC+BIOh5d5WmW/f54n3uGr/cd2ezdPq9zefpunVXYP9/O0igsWAEBMYAEAxAQWAEBMYAEAxAQWAEBMYAEAxAQWAEBMYAEAxAQWAEBMYAEAxAQWAEBMYAEAxAQWAEBMYAEAxAQWAEBMYAEAxAQWAEBMYAEAxAQWAEBMYAEAxAQWAEBMYAEAxAQWAEBMYAEAxAQWAEBMYAEAxAQWAEBMYAEAxAQWAEBMYAEAxAQWAEBMYAEAxAQWAEBMYAEAxAQWAEBMYAEA/523t7/pqwksAICYwAIAiAksAICYwAIAiAksAICYwAIAiAksAICYwAIAiAksAICYwAIAiAksAICYwAIAiAksAICYwAIAiAksAICYwAIAiAksAICYwAIAiAksAICYwAIAiAksAICYwAIAiAksAICYwAIAiAksAICYwAIAiAksAICYwAIAiAksAICYwAIAiAksAICYwAIAiAksAICYwAIAiAksAICYwAIAiAksAICYwAIAiAksAICYwAIAiAksAICYwAIAiAksAICYwAIAiAksAICYwAIAiAksAICYwAIAiAksAICYwAIAiAksAICYwAIAiAksAICYwAIAiAksAICYwAIAiAksAIDYZoyxzOMax9N5nq7K5fI6TwB8wOHwMk+8w37/PE+f2nZ7N09X5elxN0+ruGABAMQEFgBATGABAMQEFgBATGABAMQEFgBATGABAMQEFgBATGABAMQEFgBATGABAMQEFgBATGABAMQEFgBATGABAMQEFgBATGABAMQ2Y4xlHtf4/evPPAEApJabzTytsnu4n6dVXLAAAGICCwAgJrAAAGICCwAgJrAAAGICCwAgJrAAAGICCwAgJrAAAGICCwAgJrAAAGICCwAgJrAAAGICCwAgJrAAAGICCwAgJrAAAGICCwAgJrAAAGICCwAgJrAAAGICCwAgJrAAAGICCwAgJrAAAGICCwAgJrAAAGICCwAgJrAAAGICCwAgJrAAAGKbMcYyjwAAfJwLFgBATGABAMQEFgBATGABAMQEFgBATGABAMQEFgBATGABAMQEFgBATGABAMQEFgBATGABAMQEFgBATGABAMQEFgBATGABAMQEFgBA7B+FCmkzoT9HAAAAAABJRU5ErkJggg==);
+  background-size: 100% 100%;
+  transition: 0.3s;
+}
+
+.slider:before {
+  box-sizing: border-box;
+  position: absolute;
+  content: "";
+  height: 32px;
+  width: 28px;
+  bottom: 0px;
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAARgAAAFACAYAAABnU2MWAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsEAAA7BAbiRa+0AAAGHaVRYdFhNTDpjb20uYWRvYmUueG1wAAAAAAA8P3hwYWNrZXQgYmVnaW49J++7vycgaWQ9J1c1TTBNcENlaGlIenJlU3pOVGN6a2M5ZCc/Pg0KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyI+PHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj48cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0idXVpZDpmYWY1YmRkNS1iYTNkLTExZGEtYWQzMS1kMzNkNzUxODJmMWIiIHhtbG5zOnRpZmY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vdGlmZi8xLjAvIj48dGlmZjpPcmllbnRhdGlvbj4xPC90aWZmOk9yaWVudGF0aW9uPjwvcmRmOkRlc2NyaXB0aW9uPjwvcmRmOlJERj48L3g6eG1wbWV0YT4NCjw/eHBhY2tldCBlbmQ9J3cnPz4slJgLAAAEZElEQVR4Xu3cMWojURBF0WpHQpYXOxivYjBerGWhrCf/aesOFpwTvgVcKqptZvYBCLysA8CjCAyQERggIzBARmCAjMAAGYEBMgIDZAQGyAgMkBEYICMwQEZggIzAABmBATICA2QEBsgIDJARGCCzPfon7/V2XyfgSVzOp3U6xAUDZAQGyAgMkBEYICMwQEZggIzAABmBATICA2QEBsgIDJARGCAjMEBGYICMwAAZgQEyAgNkBAbICAyQERggIzBARmCAjMAAGYEBMgIDZAQGyAgMkBEYICMwQEZggIzAABmBATICA2QEBsgIDJARGCAjMEBGYICMwACZbWb2dTzieruv06/y/f2zTvDfvL29rtOvcjmf1ukQFwyQERggIzBARmCAjMAAGYEBMgIDZAQGyAgMkBEYICMwQEZggIzAABmBATICA2QEBsgIDJARGCAjMEBGYICMwAAZgQEyAgNkBAbICAyQERggIzBARmCAjMAAGYEBMgIDZAQGyAgMkBEYICMwQEZggIzAABmBATICA2QEBsgIDJARGCAjMEBGYICMwAAZgQEyAgNkBAbICAyQERggIzBARmCAjMAAGYEBMgIDZAQGyAgMkBEYICMwQEZggIzAABmBATICA2QEBsgIDJARGCAjMEBGYICMwAAZgQEyAgNkBAbICAyQERggIzBARmCAjMAAGYEBMgIDZAQGyAgMkBEYICMwQEZggIzAABmBATICA2QEBsgIDJARGCAjMEBGYICMwAAZgQEyAgNkBAbICAyQERggIzBARmCAjMAAGYEBMgIDZAQGyAgMkBEYICMwQEZggIzAABmBATICA2QEBsgIDJARGCAjMEBGYICMwAAZgQEyAgNkBAbICAyQERggIzBARmCAjMAAGYEBMgIDZAQGyAgMkBEYICMwQEZggIzAABmBATICA2QEBsgIDJARGCAjMEBGYICMwAAZgQEyAgNkBAbICAyQERggIzBARmCAjMAAGYEBMgIDZAQGyAgMkBEYICMwQEZggIzAABmBATICA2S2mdnX8Yjr7b5OwJO4nE/rdIgLBsgIDJARGCAjMEBGYICMwAAZgQEyAgNkBAbICAyQERggIzBARmCAjMAAGYEBMgIDZAQGyAgMkBEYICMwQEZggIzAABmBATICA2QEBsgIDJARGCAjMEBGYICMwAAZgQEyAgNkBAbICAyQERggIzBARmCAjMAAGYEBMtvM7Ot4xN/Pr3UCnsTH+591OsQFA2QEBsgIDJARGCAjMEBGYICMwAAZgQEyAgNkBAbICAyQERggIzBARmCAjMAAGYEBMgIDZAQGyAgMkBEYICMwQEZggIzAABmBATICA2QEBsgIDJARGCAjMEBGYICMwAAZgQEyAgNkBAbICAyQERggIzBARmCAjMAAmW1m9nUEeAQXDJARGCAjMEBGYICMwAAZgQEyAgNkBAbICAyQERggIzBARmCAjMAAGYEBMgIDZAQGyAgMkBEYICMwQOYfxHAXdb5V9+0AAAAASUVORK5CYII=);
+  background-size: 28px 32px;
+  transition: 0.3s;
+}
+
+.toggle:checked + .slider {
+  background: url(data:image/png;base64,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);
+  background-size: 100% 100%;
+}
+
+.toggle:checked + .slider:before {
+  transform: translateX(32px);
+}
+
+/* ==================== MAIN BODY2 CONTAINER ==================== */
+.container {
+  width: 100%;
+  position: relative;
+  z-index: 10;
+}
+
+.body2 {
+  font-family: 'Minecraft', sans-serif;
+  margin: 20px auto 40px auto;
+  max-width: 1700px;
+  width: 95%;
+  padding: 20px 24px;
+  border: 1px solid rgb(60, 60, 60);
+  box-sizing: border-box;
+  transition: all 0.4s ease;
+}
+
+.body2 img {
+  image-rendering: pixelated;
+}
+
+#body21.light-theme {
+  background-color: rgb(255, 255, 255);
+  color: #000000;
+}
+
+#body21.dark-theme {
+  background-color: rgba(0, 0, 0, 0.65);
+  color: white;
+  box-shadow: 0px 0px 36px 10px rgba(19,143,40,0.67);
+  -webkit-box-shadow: 0px 0px 36px 10px rgba(19,143,40,0.67);
+  -moz-box-shadow: 0px 0px 36px 10px rgba(19,143,40,0.67);
+}
+
+.body2 h2, .body2 h3 {
+  margin: 20px 0px 14px 0px;
+}
+
+.body2 h2 {
+  font-size: 16px;
+  border-bottom: 2px solid rgba(120, 120, 120, 0.3);
+  padding-bottom: 8px;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+.main-text {
+  font-size: 18px;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.main-text h1 {
+  font-size: 24px;
+  margin-bottom: 12px;
+}
+
+/* ==================== WIKI BASE MODIFIERS TABLE SECTION ==================== */
+.wiki-section-container {
+  margin-bottom: 25px;
+  background: rgba(0, 0, 0, 0.03);
+  border: 2px solid rgba(80, 80, 80, 0.25);
+  border-radius: 4px;
+  padding: 18px;
+  transition: all 0.3s ease;
+}
+
+.dark-theme .wiki-section-container {
+  background: rgba(18, 25, 20, 0.6);
+  border: 2px solid rgba(34, 197, 94, 0.3);
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.wiki-section-header {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 8px;
+}
+
+.wiki-section-title {
+  font-size: 12px;
+  margin: 0;
+  color: #15803d;
+  letter-spacing: 0.5px;
+}
+
+.dark-theme .wiki-section-title {
+  color: #4ade80;
+  text-shadow: 2px 2px #0f172a;
+}
+
+.wiki-section-intro {
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.wiki-section-intro p {
+  margin: 0;
+}
+
+.wiki-table-wrapper {
+  overflow-x: auto;
+  border-radius: 4px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.minecraft-styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.4;
+  background: #ffffff;
+  border: 2px solid #8f8f8f;
+  box-shadow: 2px 2px 0px rgba(0,0,0,0.15);
+}
+
+.dark-theme .minecraft-styled-table {
+  background: #1b1b1b;
+  border: 2px solid #3c3c3c;
+  color: #e2e8f0;
+}
+
+.minecraft-styled-table thead tr {
+  background: #d8d8d8;
+  border-bottom: 2px solid #8f8f8f;
+}
+
+.dark-theme .minecraft-styled-table thead tr {
+  background: #2a2a2a;
+  border-bottom: 2px solid #4a4a4a;
+}
+
+.minecraft-styled-table th,
+.minecraft-styled-table td {
+  padding: 12px 14px;
+  border: 1px solid #bfbfbf;
+  vertical-align: middle;
+}
+
+.dark-theme .minecraft-styled-table th,
+.dark-theme .minecraft-styled-table td {
+  border: 1px solid #383838;
+}
+
+.minecraft-styled-table thead th {
+  font-size: 16px;
+  font-weight: bold;
+  color: #1f2937;
+  letter-spacing: 0.5px;
+}
+
+.dark-theme .minecraft-styled-table thead th {
+  color: #f1f5f9;
+}
+
+.minecraft-styled-table tbody tr:nth-child(even) {
+  background-color: #f9fafb;
+}
+
+.dark-theme .minecraft-styled-table tbody tr:nth-child(even) {
+  background-color: #222222;
+}
+
+.minecraft-styled-table tbody tr:hover {
+  background-color: rgba(34, 197, 94, 0.08);
+}
+
+.dark-theme .minecraft-styled-table tbody tr:hover {
+  background-color: rgba(34, 197, 94, 0.15);
+}
+
+.table-item-name {
+  font-size: 15px;
+  font-weight: bold;
+  text-align: left;
+  white-space: nowrap;
+  color: #111827;
+}
+
+.dark-theme .table-item-name {
+  color: #f8fafc;
+}
+
+.wiki-name-link,
+.wiki-potion-link {
+  color: #0645ad;
+  text-decoration: underline;
+  text-decoration-color: rgba(6, 69, 173, 0.4);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.wiki-name-link:hover,
+.wiki-potion-link:hover {
+  color: #0b0080;
+  text-decoration-color: #0b0080;
+}
+
+.dark-theme .wiki-name-link,
+.dark-theme .wiki-potion-link {
+  color: #60a5fa;
+  text-decoration-color: rgba(96, 165, 250, 0.4);
+}
+
+.dark-theme .wiki-name-link:hover,
+.dark-theme .wiki-potion-link:hover {
+  color: #93c5fd;
+  text-decoration-color: #93c5fd;
+}
+
+.table-icon-cell {
+  width: 70px;
+}
+
+.minecraft-slot-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: #8b8b8b;
+  border-top: 3px solid #373737;
+  border-left: 3px solid #373737;
+  border-bottom: 3px solid #ffffff;
+  border-right: 3px solid #ffffff;
+  box-sizing: border-box;
+}
+
+.dark-theme .minecraft-slot-wrapper {
+  background: #313131;
+  border-top: 3px solid #161616;
+  border-left: 3px solid #161616;
+  border-bottom: 3px solid #4a4a4a;
+  border-right: 3px solid #4a4a4a;
+}
+
+.pixelated-item-icon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  transition: transform 0.15s ease;
+}
+
+.minecraft-slot-wrapper:hover .pixelated-item-icon {
+  transform: scale(1.15);
+}
+
+.table-water-cell {
+  font-weight: 500;
+  color: #2563eb;
+}
+
+.dark-theme .table-water-cell {
+  color: #60a5fa;
+}
+
+.table-subtext {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.dark-theme .table-subtext {
+  color: #94a3b8;
+}
+
+.table-modifier-cell {
+  text-align: left;
+  color: #374151;
+}
+
+.dark-theme .table-modifier-cell {
+  color: #cbd5e1;
+}
+
+@media (max-width: 768px) {
+  .wiki-section-container {
+    padding: 16px 12px;
+  }
+  .wiki-section-title {
+    font-size: 17px;
+  }
+  .minecraft-styled-table th,
+  .minecraft-styled-table td {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+}
+
+/* ==================== SEARCH & FILTER SYSTEM ==================== */
+.search-system-container {
+  margin: 20px 0 28px 0;
+  padding: 16px;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.light-theme .search-system-container {
+  background-color: rgb(215, 215, 215);
+  border-top: 2px solid rgb(235, 235, 235);
+  border-left: 2px solid rgb(235, 235, 235);
+  border-bottom: 2px solid rgb(120, 120, 120);
+  border-right: 2px solid rgb(120, 120, 120);
+}
+
+.dark-theme .search-system-container {
+  background-color: #242528;
+  border-top: 2px solid #3a3b40;
+  border-left: 2px solid #3a3b40;
+  border-bottom: 2px solid #141416;
+  border-right: 2px solid #141416;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.search-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.search-input-wrapper {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  font-size: 16px;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.search-input {
+  width: 100%;
+  height: 42px;
+  padding: 0 40px 0 38px;
+  font-family: 'Minecraft', sans-serif;
+  font-size: 15px;
+  outline: none;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.light-theme .search-input {
+  background-color: #ffffff;
+  color: #1e293b;
+  border: 2px solid #94a3b8;
+  box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.15);
+}
+
+.light-theme .search-input:focus {
+  border-color: #3b82f6;
+}
+
+.dark-theme .search-input {
+  background-color: #18191c;
+  color: #ffffff;
+  border: 2px solid #3e4046;
+  box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.6);
+}
+
+.dark-theme .search-input:focus {
+  border-color: #22c55e;
+}
+
+.search-clear-btn {
+  position: absolute;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  color: #888;
+  cursor: pointer;
+  padding: 4px 8px;
+  font-family: 'Minecraft', sans-serif;
+}
+
+.search-clear-btn:hover {
+  color: #ef4444;
+}
+
+.search-reset-all-btn {
+  height: 42px;
+  padding: 0 16px;
+  font-family: 'Minecraft', sans-serif;
+  font-size: 14px;
+  background: #ef4444;
+  border: 2px solid #b91c1c;
+  color: #ffffff;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.search-reset-all-btn:hover {
+  background: #dc2626;
+}
+
+.search-categories-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.category-tabs {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.category-tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  font-family: 'Minecraft', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+}
+
+.light-theme .category-tab-btn {
+  background: #e2e8f0;
+  color: #334155;
+  border-color: #cbd5e1;
+}
+
+.light-theme .category-tab-btn:hover {
+  background: #cbd5e1;
+}
+
+.light-theme .category-tab-btn.active {
+  background: #22c55e;
+  color: #ffffff;
+  border-color: #16a34a;
+}
+
+.dark-theme .category-tab-btn {
+  background: #2e3035;
+  color: #cbd5e1;
+  border-color: #3e4046;
+}
+
+.dark-theme .category-tab-btn:hover {
+  background: #3a3c42;
+}
+
+.dark-theme .category-tab-btn.active {
+  background: #15803d;
+  color: #ffffff;
+  border-color: #22c55e;
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.4);
+}
+
+.cat-badge {
+  background: rgba(0, 0, 0, 0.25);
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-size: 11px;
+}
+
+.search-results-count {
+  font-size: 13px;
+  color: #64748b;
+  font-family: 'Minecraft', sans-serif;
+}
+
+.dark-theme .search-results-count {
+  color: #94a3b8;
+}
+
+.quick-reagents-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.quick-reagents-title {
+  font-size: 12px;
+  color: #64748b;
+  margin-right: 4px;
+}
+
+.dark-theme .quick-reagents-title {
+  color: #94a3b8;
+}
+
+.quick-reagents-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.reagent-pill-btn {
+  padding: 3px 8px;
+  font-family: 'Minecraft', sans-serif;
+  font-size: 11px;
+  background: rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.15s ease;
+}
+
+.dark-theme .reagent-pill-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #e2e8f0;
+}
+
+.reagent-pill-btn:hover {
+  background: rgba(34, 197, 94, 0.2);
+  border-color: #22c55e;
+  color: #22c55e;
+}
+
+.reagent-pill-btn.active {
+  background: #22c55e;
+  color: #ffffff;
+  border-color: #16a34a;
+}
+
+.potion-filter-pill-btn {
+  padding: 3px 8px;
+  font-family: 'Minecraft', sans-serif;
+  font-size: 11px;
+  background: rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.15s ease;
+  text-transform: capitalize;
+}
+
+.dark-theme .potion-filter-pill-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #e2e8f0;
+}
+
+.potion-filter-pill-btn:hover {
+  background: rgba(34, 197, 94, 0.2);
+  border-color: #22c55e;
+  color: #22c55e;
+}
+
+.potion-filter-pill-btn.active {
+  background: #22c55e;
+  color: #ffffff;
+  border-color: #16a34a;
+}
+
+.mobile-quick-filters {
+  display: none;
+}
+
+.desktop-quick-filters {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.desktop-effects-group,
+.desktop-reagents-group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.filter-group-divider {
+  color: rgba(120, 120, 120, 0.4);
+  font-size: 13px;
+  user-select: none;
+  margin: 0 2px;
+}
+
+.potion-filter-pill-btn.effect-pill {
+  border-color: rgba(34, 197, 94, 0.4);
+}
+
+.dark-theme .potion-filter-pill-btn.effect-pill {
+  border-color: rgba(74, 222, 128, 0.35);
+}
+
+.card-desktop-layout {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+}
+
+.card-mobile-layout {
+  display: none;
+}
+
+.search-empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  background: rgba(0, 0, 0, 0.05);
+  border: 2px dashed rgba(100, 100, 100, 0.3);
+  border-radius: 4px;
+  margin: 20px 0;
+}
+
+.dark-theme .search-empty-state {
+  background: rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.empty-state-icon {
+  font-size: 36px;
+  margin-bottom: 8px;
+}
+
+.search-empty-state h3 {
+  font-size: 20px;
+  margin: 0 0 6px 0;
+}
+
+.search-empty-state p {
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 16px;
+}
+
+.dark-theme .search-empty-state p {
+  color: #94a3b8;
+}
+
+.empty-reset-btn {
+  padding: 8px 18px;
+  font-family: 'Minecraft', sans-serif;
+  font-size: 13px;
+  background: #22c55e;
+  border: 2px solid #16a34a;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+/* ==================== POTIONS GRID (3 COLUMNS ON PC, 1 ON MOBILE) ==================== */
+.potions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  padding: 10px 0 30px 0;
+  width: 100%;
+  margin: 0 auto;
+}
+
+@media (max-width: 1100px) and (min-width: 851px) {
+  .potions {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 850px) {
+  .potions {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ==================== POTION CARD (ENLARGED & PROMINENT) ==================== */
+.card {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 215px;
+  min-height: 210px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
+.card.light-theme {
+  background-color: rgb(198, 198, 198);
+  border-top: 2px solid rgb(219, 219, 219);
+  border-left: 2px solid rgb(219, 219, 219);
+  border-bottom: 2px solid rgb(91, 91, 91);
+  border-right: 2px solid rgb(91, 91, 91);
+  color: #000000;
+}
+
+.card.light-theme .mcui-Brewing_Stand {
+  background-color: rgb(198, 198, 198);
+}
+
+.card.dark-theme {
+  background-color: #2c2d30;
+  border-top: 2px solid #3e4046;
+  border-left: 2px solid #3e4046;
+  border-bottom: 2px solid #18191c;
+  border-right: 2px solid #18191c;
+  color: #ffffff;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+.card.dark-theme:hover {
+  box-shadow: 0px 6px 22px rgba(0, 0, 0, 0.7);
+}
+
+.card.dark-theme .mcui-Brewing_Stand {
+  background-color: #2c2d30;
+  border-top: none;
+  border-left: none;
+  border-bottom: none;
+  border-right: 2px solid #18191c;
+}
+
+/* ==================== MINECRAFT WIKI MCUI BREWING STAND ==================== */
+.card-brewing-stand-box {
+  flex: 0 0 195px;
+  width: 195px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  border-right: none;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  user-select: none;
+  overflow: hidden;
+}
+
+.card-brewing-stand-box > div {
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+.card-brewing-stand-box .mcui-Brewing_Stand {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  transform: scale(1.08);
+  margin: 0;
+  border-top: none;
+  border-left: none;
+  border-bottom: none;
+  border-right: 2px solid rgb(91, 91, 91);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 6px;
+}
+
+.card.dark-theme .card-brewing-stand-box .mcui-Brewing_Stand {
+  border-right-color: #18191c;
+}
+
+.card-brewing-stand-box.in-modal-stand {
+  flex: none;
+  width: 100%;
+  height: auto;
+  border-right: none;
+  background: transparent;
+  padding: 8px 0;
+}
+
+.card-brewing-stand-box.in-modal-stand > div {
+  width: auto;
+  height: auto;
+  display: block;
+}
+
+.card-brewing-stand-box.in-modal-stand .mcui-Brewing_Stand {
+  width: 128px;
+  height: 111px;
+  padding: 6px;
+  border-top: 2px solid rgb(219, 219, 219);
+  border-left: 2px solid rgb(219, 219, 219);
+  border-bottom: 2px solid rgb(91, 91, 91);
+  border-right: 2px solid rgb(91, 91, 91);
+  transform: scale(1.4);
+  transform-origin: center;
+  display: inline-block;
+}
+
+.dark-theme .card-brewing-stand-box.in-modal-stand .mcui-Brewing_Stand {
+  border-top: 2px solid #3e4046;
+  border-left: 2px solid #3e4046;
+  border-bottom: 2px solid #18191c;
+  border-right: 2px solid #18191c;
+}
+
+
+/* ==================== EXACT MINECRAFT WIKI MCUI BREWING STAND ==================== */
+.pixel-image,
+.mcui {
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-crisp-edges;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.mcui {
+  display: inline-block;
+  position: relative;
+  box-sizing: content-box;
+  font-size: 0;
+  line-height: 0;
+}
+
+.mcui-Brewing_Stand,
+[class*="mcui-Brewing"] {
+  display: inline-block;
+  position: relative;
+  width: 128px;
+  height: 111px;
+  padding: 6px;
+  background-color: rgb(198, 198, 198);
+  border-top: 2px solid rgb(219, 219, 219);
+  border-left: 2px solid rgb(219, 219, 219);
+  border-bottom: 2px solid rgb(91, 91, 91);
+  border-right: 2px solid rgb(91, 91, 91);
+  box-sizing: content-box;
+  vertical-align: bottom;
+  text-align: left;
+  transform: scale(1.6);
+  transform-origin: center;
+}
+
+.mcui-input {
+  display: block;
+  width: 128px;
+  height: 57px;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  font-size: 0;
+}
+
+.mcui-bubbling {
+  display: inline-block;
+  width: 24px;
+  height: 57px;
+  margin: 0;
+  padding: 0;
+  background-image: url("/Grid_layout_Brewing_Bubbles.gif");
+  background-position: 0% 0%;
+  background-repeat: no-repeat;
+  vertical-align: top;
+}
+
+.mcui-arrow {
+  display: inline-block;
+  width: 24px;
+  height: 57px;
+  margin: 0;
+  padding: 0;
+  background-image: url("/Grid_layout_Brewing_Arrow.png");
+  background-position: 0% 0%;
+  background-repeat: no-repeat;
+  vertical-align: top;
+}
+
+.mcui-paths {
+  display: block;
+  position: relative;
+  width: 60px;
+  height: 40px;
+  margin: -20px 34px -16px;
+  background-image: url("/Grid_layout_Brewing_Paths.png");
+  background-position: 0% 0%;
+  background-repeat: no-repeat;
+  vertical-align: baseline;
+}
+
+.mcui-output {
+  display: block;
+  width: 128px;
+  height: 50px;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  font-size: 0;
+}
+
+.invslot {
+  display: inline-block;
+  position: relative;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background-color: rgb(139, 139, 139);
+  border-top: 2px solid rgb(55, 55, 55);
+  border-left: 2px solid rgb(55, 55, 55);
+  border-bottom: 2px solid rgb(255, 255, 255);
+  border-right: 2px solid rgb(255, 255, 255);
+  box-sizing: content-box;
+  vertical-align: top;
+  font-size: 14px;
+  line-height: normal;
+}
+
+/* Dark theme slot borders */
+.dark-theme .invslot,
+body.dark-theme .invslot,
+.card.dark-theme .invslot {
+  border-bottom: 2px solid #000000;
+  border-right: 2px solid #000000;
+}
+
+.mcui-input .invslot {
+  margin: 3px 0 0 24px;
+}
+
+.invslot.mcui-output1,
+.invslot.mcui-output2,
+.invslot.mcui-output3 {
+  background-image: url("/Grid_layout_Brewing_Empty.png");
+  background-position: 50% 50%;
+  background-size: 32px 32px;
+  background-repeat: no-repeat;
+}
+
+.mcui-output .mcui-output1 {
+  margin: 0 0 0 0;
+}
+
+.mcui-output .mcui-output2 {
+  margin: 14px 10px 0;
+}
+
+.mcui-output .mcui-output3 {
+  margin: 0 0 0 0;
+}
+
+.invslot-item,
+.invslot-item-image {
+  display: block;
+  position: relative;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  margin: 0;
+}
+
+.invslot-item-image a {
+  display: block;
+  width: 32px;
+  height: 32px;
+}
+
+.invslot-item-image img,
+.mw-file-element {
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  display: block;
+}
+
+
+.card-content {
+  flex-grow: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 12px 16px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.card-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+}
+
+.card-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.card-title-group .invslot {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+}
+
+.card-potion-img {
+  width: 36px;
+  height: 36px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+}
+
+.card-title-group .invslot:hover .card-potion-img {
+  transform: scale(1.1);
+}
+
+.card h3.cardh3 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.25;
+}
+
+.card h3.light-theme { color: #1e293b; }
+.card h3.dark-theme { color: rgb(255, 255, 255); }
+
+.card-effect-badges {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.card-effect-badges .sprite-file {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-effect-img {
+  width: 26px;
+  height: 26px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+  vertical-align: middle;
+}
+
+.card-effect-badges .sprite-file:hover .card-effect-img {
+  transform: scale(1.15);
+}
+
+/* ==================== CATEGORY SECTIONS ==================== */
+.potions-sections-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  width: 100%;
+}
+
+.potions-category-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.category-section-title {
+  font-size: 13px;
+  font-weight: 700;
+  margin: 8px 0 0 0;
+  padding-bottom: 4px;
+  border-bottom: 2px solid rgba(120, 120, 120, 0.25);
+  font-family: 'Minecraft', sans-serif;
+  letter-spacing: 0.5px;
+}
+
+.positive-title {
+  color: #15803d;
+}
+
+.dark-theme .positive-title {
+  color: #4ade80;
+  text-shadow: 1px 1px #000;
+}
+
+.negative-title {
+  color: #b91c1c;
+}
+
+.dark-theme .negative-title {
+  color: #f87171;
+  text-shadow: 1px 1px #000;
+}
+
+.mixed-title {
+  color: #7e22ce;
+}
+
+.dark-theme .mixed-title {
+  color: #c084fc;
+  text-shadow: 1px 1px #000;
+}
+
+/* Middle description row */
+.card-desc-row {
+  font-size: 14px;
+  line-height: 1.45;
+  margin: 6px 0;
+  color: #334155;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.dark-theme .card-desc-row {
+  color: #cbd5e1;
+}
+
+.card-desc-row p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: inherit;
+  font-weight: normal;
+}
+
+.wiki-effect-desc {
+  display: inline;
+}
+
+.wiki-effect-desc b {
+  color: #0f172a;
+}
+
+.dark-theme .wiki-effect-desc b {
+  color: #f8fafc;
+}
+
+.mc-hearts {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  margin: 0 2px;
+}
+
+.mc-heart-img {
+  width: 12px;
+  height: 12px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  vertical-align: middle;
+  margin: 0 1px;
+}
+
+/* Bottom stats row */
+.card-bottom-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.card-stat-pill {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  background: rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 2px;
+  white-space: nowrap;
+}
+
+.dark-theme .card-stat-pill {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.stat-label {
+  color: #64748b;
+  font-weight: bold;
+}
+
+.dark-theme .stat-label {
+  color: #94a3b8;
+}
+
+.stat-value.time-val {
+  color: #4f46e5;
+  font-weight: bold;
+}
+
+.dark-theme .stat-value.time-val {
+  color: #818cf8;
+}
+
+.card-upgrade-tag {
+  font-size: 10px;
+  padding: 2px 5px;
+  border-radius: 2px;
+  font-weight: bold;
+  white-space: nowrap;
+  cursor: default;
+}
+
+.card-upgrade-tag.redstone-tag {
+  background: rgba(239, 68, 68, 0.15);
+  color: #dc2626;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+.dark-theme .card-upgrade-tag.redstone-tag {
+  background: rgba(239, 68, 68, 0.25);
+  color: #f87171;
+  border-color: #ef4444;
+}
+
+.card-upgrade-tag.glowstone-tag {
+  background: rgba(234, 179, 8, 0.15);
+  color: #ca8a04;
+  border: 1px solid rgba(234, 179, 8, 0.35);
+}
+
+.dark-theme .card-upgrade-tag.glowstone-tag {
+  background: rgba(234, 179, 8, 0.25);
+  color: #facc15;
+  border-color: #eab308;
+}
+
+.hearts,
+.mc-hearts {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  gap: 2px;
+  vertical-align: -2px;
+  margin: 0 4px;
+}
+
+.hearts img,
+.mc-hearts img,
+.mc-heart-img {
+  width: 14px;
+  height: 14px;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  vertical-align: middle;
+}
+
+.mc-tip-line {
+  line-height: 1.35;
+}
+
+/* ==================== MINECRAFT WIKI MINETIP TOOLTIP (EXACT BE.HTML) ==================== */
+#minetip-tooltip,
+.minetip-tooltip,
+.minecraft-tooltip-box {
+  position: fixed;
+  pointer-events: none;
+  z-index: 1000000;
+  display: none;
+  background-color: rgba(16, 0, 16, 0.94);
+  border-top: 0.125em solid rgba(80, 0, 255, 0.31);
+  border-bottom: 0.125em solid rgba(40, 0, 127, 0.31);
+  box-shadow: -0.125em 0 0 0 rgba(80, 0, 255, 0.31), 0.125em 0 0 0 rgba(80, 0, 255, 0.31), 0 0 0 0.125em #100010;
+  padding: 0.25em 0.375em;
+  font-family: 'Minecraft', monospace;
+  font-size: 16px;
+  line-height: 1.25em;
+  color: #ffffff;
+  white-space: nowrap;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  border-radius: 0;
+  max-width: 420px;
+}
+
+#minetip-tooltip[style*="display: block"],
+.minetip-tooltip[style*="display: block"] {
+  display: block !important;
+}
+
+.minetip-title,
+.mc-tip-title {
+  display: block;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: normal;
+  line-height: 1.25em;
+  margin-bottom: 0;
+  white-space: nowrap;
+}
+
+.minetip-text,
+.mc-tip-subtitle,
+.mc-tip-lore {
+  display: block;
+  color: #aaaaaa;
+  font-size: 16px;
+  line-height: 1.25em;
+  white-space: nowrap;
+}
+
+.minetip-line,
+.mc-tip-line {
+  display: block;
+  line-height: 1.25em;
+  white-space: nowrap;
+}
+
+.minetip-extra,
+.mc-tip-extra {
+  display: block;
+  color: #ffaa00;
+  font-size: 14px;
+  line-height: 1.25em;
+  margin-top: 3px;
+  white-space: nowrap;
+}
+
+.mc-tooltip-trigger {
+  display: inline-block;
+}
+
+/* ==================== ORIGINAL BACKGROUND STARS ==================== */
+.gallery {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.stars, .shooting-star, .tiny-stars::before, .tiny-stars::after {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  background: transparent;
+  transition: opacity 0.5s ease;
+}
+
+.stars {
+  box-shadow: 10vw 80vh 0 0 white, 20vw 10vh 0 0 white, 30vw 90vh 0 0 white, 40vw 35vh 0 0 white, 50vw 55vh 0 0 white, 60vw 15vh 0 0 white, 70vw 75vh 0 0 white, 80vw 20vh 0 0 white, 90vw 60vh 0 0 white, 15vw 45vh 0 0 white, 25vw 25vh 0 0 white, 35vw 65vh 0 0 white, 45vw 5vh 0 0 white, 55vw 85vh 0 0 white, 65vw 40vh 0 0 white, 75vw 95vh 0 0 white, 85vw 30vh 0 0 white, 95vw 70vh 0 0 white, 5vw 50vh 0 0 white;
+  animation: twinkle 6s infinite linear reverse;
+}
+
+.dark-theme .stars {
+  opacity: 1;
+}
+
+.light-theme .stars {
+  opacity: 0.5;
+}
+
+.tiny-stars::before,
+.tiny-stars::after {
+  content: "";
+  position: fixed;
+  width: 1px;
+  height: 1px;
+  background: white;
+  z-index: 0;
+}
+
+.tiny-stars::before {
+  box-shadow: 28vw 12vh 0 0 white, 32vw 32vh 0 0 white, 38vw 18vh 0 0 white, 42vw 35vh 0 0 white, 48vw 25vh 0 0 white, 53vw 42vh 0 0 white, 58vw 15vh 0 0 white, 63vw 38vh 0 0 white, 68vw 28vh 0 0 white, 73vw 45vh 0 0 white, 78vw 32vh 0 0 white, 83vw 48vh 0 0 white, 88vw 20vh 0 0 white, 93vw 52vh 0 0 white, 98vw 35vh 0 0 white, 5vw 60vh 0 0 white, 12vw 65vh 0 0 white, 18vw 72vh 0 0 white, 25vw 78vh 0 0 white, 30vw 85vh 0 0 white, 35vw 68vh 0 0 white, 40vw 82vh 0 0 white, 45vw 92vh 0 0 white, 50vw 75vh 0 0 white, 55vw 88vh 0 0 white, 60vw 95vh 0 0 white, 65vw 72vh 0 0 white, 70vw 85vh 0 0 white, 75vw 78vh 0 0 white, 80vw 92vh 0 0 white, 85vw 82vh 0 0 white, 90vw 88vh 0 0 white, 95vw 75vh 0 0 white;
+  animation: twinkle 10s infinite linear;
+}
+
+.tiny-stars::after {
+  box-shadow: 8vw 12vh 0 0 white, 16vw 18vh 0 0 white, 24vw 25vh 0 0 white, 33vw 15vh 0 0 white, 41vw 28vh 0 0 white, 49vw 35vh 0 0 white, 57vw 22vh 0 0 white, 65vw 42vh 0 0 white, 73vw 28vh 0 0 white, 81vw 48vh 0 0 white, 89vw 32vh 0 0 white, 97vw 45vh 0 0 white, 3vw 68vh 0 0 white, 11vw 75vh 0 0 white, 19vw 82vh 0 0 white, 27vw 88vh 0 0 white, 35vw 72vh 0 0 white, 43vw 85vh 0 0 white, 51vw 92vh 0 0 white, 59vw 78vh 0 0 white;
+  animation: twinkle 6s infinite linear reverse;
+}
+
+.dark-theme .tiny-stars::before,
+.dark-theme .tiny-stars::after {
+  background: white;
+  opacity: 0.9;
+}
+
+.light-theme .tiny-stars::before,
+.light-theme .tiny-stars::after {
+  background: rgba(255, 255, 255, 0.4);
+  opacity: 0.3;
+}
+
+.shooting-star {
+  width: 100px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(255,255,255,1), rgba(255,255,255,0));
+  transform: rotate(25deg);
+  pointer-events: none;
+  left: -150px;
+  z-index: 1; 
+  will-change: transform, opacity;
+  animation: shoot 3s infinite ease-in;
+}
+
+.dark-theme .shooting-star {
+  opacity: 1; 
+}
+
+.light-theme .shooting-star {
+  opacity: 0.5;
+}
+
+.shooting-star:nth-child(2) { top: 20%; animation-delay: 0s; }
+.shooting-star:nth-child(3) { top: 35%; animation-delay: 1s; }
+.shooting-star:nth-child(4) { top: 50%; animation-delay: 2s; }
+.shooting-star:nth-child(5) { top: 65%; animation-delay: 3s; }
+.shooting-star:nth-child(6) { top: 80%; animation-delay: 4s; }
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+@keyframes shoot {
+  0% {
+    transform: translateX(-100px) translateY(0) rotate(25deg);
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(calc(100vw + 100px)) translateY(calc(100vh + 100px)) rotate(25deg);
+    opacity: 0;
+  }
+}
+
+/* ==================== MODALS (3D, AUTH, EASTER EGGS) ==================== */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20000;
+  padding: 20px;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  font-size: 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.modal-close-btn:hover {
+  background: #ff5555;
+  border-color: #ff3333;
+}
+
+.pixel-title {
+  font-family: 'Minecraft', monospace;
+  text-shadow: 2px 2px #000;
+}
+
+.pixel-btn {
+  font-family: 'Minecraft', monospace;
+  cursor: pointer;
+  border: 2px solid;
+  border-radius: 4px;
+}
+
+/* 3D Potion Modal */
+.potion-modal-content {
+  position: relative;
+  background: #1a1a2e;
+  border: 4px solid;
+  border-radius: 8px;
+  max-width: 850px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 30px;
+  color: #fff;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.potion-modal-content.light-theme {
+  background: #ffffff;
+  color: #1e293b;
+}
+
+.modal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 30px;
+}
+
+.modal-3d-canvas-wrap {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.canvas-hint {
+  position: absolute;
+  bottom: 8px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 11px;
+  opacity: 0.6;
+}
+
+.drink-btn {
+  margin-top: 15px;
+  width: 100%;
+  padding: 12px;
+  background: #138f28;
+  color: #fff;
+  border-color: #1ed760;
+  font-size: 16px;
+}
+
+.modal-header-flex {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.modal-potion-icon {
+  width: 48px;
+  height: 48px;
+  image-rendering: pixelated;
+}
+
+.modal-title {
+  font-size: 24px;
+  margin: 0;
+}
+
+.modal-english-name {
+  font-size: 13px;
+  opacity: 0.6;
+}
+
+.modal-desc {
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.modal-stats-card {
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 6px;
+  font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.stat-tag {
+  color: #ffaa00;
+}
+
+/* ==================== ORIGINAL EASTER EGG FULLSCREEN (FROM OLD) ==================== */
+.original-easter-egg-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.easter-egg-back-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-family: 'Minecraft', sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  z-index: 10001;
+  transition: all 0.2s;
+}
+
+.easter-egg-back-btn:hover {
+  background: rgba(255, 255, 255, 0.4);
+  border-color: #fff;
+}
+
+/* no.html style */
+.no-easter-egg {
+  background-color: rgb(0, 0, 0);
+  color: rgb(255, 255, 255);
+}
+
+.no-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+}
+
+.no-content img {
+  width: 600px;
+  max-width: 90vw;
+  height: auto;
+  max-height: 65vh;
+  object-fit: contain;
+}
+
+.no-content h1 {
+  font-size: clamp(28px, 4vw, 50px);
+  margin-bottom: 20px;
+  font-family: sans-serif;
+}
+
+.no-content h2 {
+  font-size: clamp(24px, 3.5vw, 40px);
+  margin-top: 20px;
+  font-family: sans-serif;
+}
+
+/* heroine.html style */
+.heroine-easter-egg {
+  font-family: 'Minecraft', sans-serif;
+  background: linear-gradient(to bottom, #0C0F23, #0C0F23 70%, #0C0F23);
+  color: #ffffff;
+}
+
+.heroine-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 30px 15px;
+  position: relative;
+  z-index: 2;
+}
+
+.heroine-content img {
+  width: 1200px;
+  max-width: 90vw;
+  height: auto;
+  max-height: 70vh;
+  object-fit: contain;
+}
+
+.heroine-content h1 {
+  font-size: clamp(2rem, 5vw, 4.5rem);
+  color: #ffffff;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 850px) {
+  header#header2 {
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    height: 58px;
+    padding: 0 12px;
+  }
+
+  .headertext {
+    display: flex;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    width: auto !important;
+    margin-bottom: 0 !important;
+    gap: 8px;
+  }
+
+  .logocontainer {
+    width: 44px;
+    height: 44px;
+  }
+
+  .logocontainer img {
+    width: 38px;
+    height: 38px;
+  }
+
+  .title h1 {
+    font-size: clamp(1rem, 3.8vw, 1.25rem);
+    white-space: nowrap;
+  }
+
+  .container {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
+
+  .body2 {
+    width: 100%;
+    margin: 0 !important;
+    padding: 8px 10px;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+  }
+
+  .body2 h2 {
+    font-size: 13px;
+    margin: 14px 0 8px 0;
+    padding-bottom: 4px;
+  }
+
+  .category-section-title {
+    font-size: 11px;
+    margin: 8px 0 0 0;
+    padding-bottom: 4px;
+  }
+
+  .wiki-section-title {
+    font-size: 11px;
+  }
+
+  .wiki-style-note {
+    padding: 14px 16px;
+  }
+
+  .wiki-style-note h1 {
+    font-size: 16px;
+  }
+
+  .search-system-container {
+    padding: 12px;
+  }
+
+  .search-input {
+    font-size: 13px;
+    height: 38px;
+  }
+
+  .category-tab-btn {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+
+  /* Requirement 2: Only mobile: remove "Знайдено: N" */
+  .search-results-count {
+    display: none !important;
+  }
+
+  /* Requirement 3: Only mobile: hide desktop filters and show 3 adaptive potion filters directly after "Фільтр:" */
+  .desktop-quick-filters {
+    display: none !important;
+  }
+
+  .quick-reagents-list {
+    display: none !important;
+  }
+
+  .mobile-quick-filters {
+    display: flex !important;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .potion-filter-pill-btn {
+    padding: 4px 10px;
+    font-size: 12px;
+  }
+
+  .potions {
+    display: grid;
+    grid-template-columns: 1fr !important;
+    gap: 16px;
+    width: 100%;
+    padding: 0;
+  }
+
+  .card-desktop-layout {
+    display: none !important;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+    height: auto !important;
+    min-height: auto !important;
+    position: relative !important;
+    padding: 0;
+  }
+
+  .card-mobile-layout {
+    display: flex !important;
+    flex-direction: column;
+    width: 100%;
+    position: relative;
+    padding: 10px 12px;
+    box-sizing: border-box;
+    gap: 8px;
+  }
+
+  /* Top area: Brewing stand pinned to the left + info column beside it */
+  .mobile-card-top-area {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+  }
+
+  /* Brewing stand pinned to the left, not centered */
+  .mobile-brewing-stand-container {
+    flex: 0 0 130px;
+    width: 130px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin: 0;
+    padding: 0;
+  }
+
+  .mobile-brewing-stand-container .card-brewing-stand-box {
+    flex: none !important;
+    width: 100% !important;
+    height: auto !important;
+    display: flex !important;
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    background: transparent !important;
+  }
+
+  .mobile-brewing-stand-container .card-brewing-stand-box > div {
+    width: auto !important;
+    height: auto !important;
+    display: block !important;
+  }
+
+  .mobile-brewing-stand-container .mcui-Brewing_Stand {
+    border: none !important;
+    border-right: none !important;
+    background-color: transparent !important;
+    transform: scale(0.92) !important;
+    transform-origin: top left !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Info column to the right of brewing stand */
+  .mobile-card-info-col {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 8px;
+  }
+
+  /* Single row: 1. Potion icon, 2. Potion name, 3. Effect icon */
+  .mobile-single-header-row {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    flex-wrap: nowrap !important;
+    gap: 8px !important;
+    width: 100% !important;
+    border-bottom: 1px solid rgba(120, 120, 120, 0.2);
+    padding-bottom: 6px;
+    box-sizing: border-box;
+  }
+
+  .mobile-header-potion-icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .mobile-header-potion-icon .invslot {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mobile-header-potion-icon .card-potion-img {
+    width: 36px;
+    height: 36px;
+    image-rendering: pixelated;
+  }
+
+  /* Potion title increased by another ~15% */
+  .mobile-header-potion-title {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    font-size: 16.5px;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.25;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+  }
+
+  .mobile-header-potion-title.light-theme {
+    color: #1e293b;
+  }
+
+  .mobile-header-potion-title.dark-theme {
+    color: #ffffff;
+    text-shadow: 1px 1px #000;
+  }
+
+  .mobile-header-effect-icons {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .mobile-header-effect-icons .mobile-effect-icon-img {
+    width: 32px;
+    height: 32px;
+    image-rendering: pixelated;
+    vertical-align: middle;
+  }
+
+  .mobile-pills-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .mobile-pills-row .card-stat-pill {
+    padding: 2px 6px;
+    font-size: 11px;
+  }
+
+  .mobile-pills-row .card-upgrade-tag {
+    font-size: 10px;
+    padding: 2px 5px;
+  }
+
+  /* Description below */
+  .mobile-card-desc-box {
+    width: 100%;
+    font-size: 13px;
+    line-height: 1.45;
+    border-top: 1px dashed rgba(120, 120, 120, 0.25);
+    padding-top: 6px;
+    margin-top: 2px;
+    color: #334155;
+  }
+
+  .dark-theme .mobile-card-desc-box {
+    color: #cbd5e1;
+  }
+}
+
+@media (max-width: 440px) {
+  .mobile-header-potion-title {
+    font-size: 14.5px;
+  }
+
+  .mobile-header-potion-icon .invslot {
+    width: 36px;
+    height: 36px;
+  }
+
+  .mobile-header-potion-icon .card-potion-img {
+    width: 32px;
+    height: 32px;
+  }
+
+  .mobile-header-effect-icons .mobile-effect-icon-img {
+    width: 28px;
+    height: 28px;
+  }
+
+  .mobile-brewing-stand-container {
+    flex: 0 0 116px;
+    width: 116px;
+  }
+
+  .mobile-brewing-stand-container .mcui-Brewing_Stand {
+    transform: scale(0.82) !important;
+  }
+}

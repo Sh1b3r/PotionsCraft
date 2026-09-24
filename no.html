@@ -4,13 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>No.</title>
-    <link rel="stylesheet" href="no.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="icon" href="photo_5429299422396807519_x.jpg" type="image/x-icon">
+    <link rel="icon" href="/photo_5429299422396807519_x.jpg" type="image/x-icon">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            color: rgb(255, 255, 255);
+            background-color: rgb(0, 0, 0);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 20px;
+            font-family: sans-serif;
+            position: relative;
+        }
+        body img {
+            width: 600px;
+            max-width: 90vw;
+            height: auto;
+            max-height: 65vh;
+            object-fit: contain;
+        }
+        body h1 {
+            font-size: clamp(28px, 4vw, 50px);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        body h2 {
+            font-size: clamp(24px, 3.5vw, 40px);
+            text-align: center;
+            margin-top: 20px;
+        }
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-size: 14px;
+            transition: all 0.2s;
+            z-index: 100;
+        }
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: #fff;
+        }
+    </style>
 </head>
 <body>
-<h1>Ти думав що тут буде пасхалка?</h1>
-<img src="photo_5429111156800356839_x.jpg">
-<h2>нє.</h2>
+    <a href="/" class="back-btn">← Повернутися до PotionsCraft</a>
+    <h1>Ти думав що тут буде пасхалка?</h1>
+    <img src="/photo_5429111156800356839_x.jpg" alt="No.">
+    <h2>нє.</h2>
 </body>
 </html>
