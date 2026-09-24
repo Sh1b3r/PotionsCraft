@@ -28,27 +28,27 @@ export default function PotionCard({
     );
   };
 
-  // Ukrainian nominative case for potion effects
+  // Ukrainian nominative case for potion effects with soft hyphens (\u00AD) for correct Ukrainian syllable wrapping
   const EFFECT_NOMINATIVE_MAP = {
-    healing: 'Зцілення',
-    fire_resistance: 'Вогнестійкість',
-    regeneration: 'Регенерація',
+    healing: 'Зці\u00ADлен\u00ADня',
+    fire_resistance: 'Вог\u00ADне\u00ADстій\u00ADкість',
+    regeneration: 'Ре\u00ADге\u00ADне\u00ADра\u00ADція',
     strength: 'Сила',
-    swiftness: 'Швидкість',
-    night_vision: 'Нічне бачення',
-    invisibility: 'Невидимість',
-    water_breathing: 'Водяне дихання',
-    leaping: 'Стрибучість',
-    slow_falling: 'Повільне падіння',
-    poison: 'Отруєння',
-    weakness: 'Слабкість',
+    swiftness: 'Швид\u00ADкість',
+    night_vision: 'Ніч\u00ADне ба\u00ADчен\u00ADня',
+    invisibility: 'Не\u00ADви\u00ADди\u00ADмість',
+    water_breathing: 'Во\u00ADдя\u00ADне ди\u00ADхан\u00ADня',
+    leaping: 'Стри\u00ADбу\u00ADчість',
+    slow_falling: 'По\u00ADвіль\u00ADне па\u00ADдін\u00ADня',
+    poison: 'Отру\u00ADєн\u00ADня',
+    weakness: 'Слаб\u00ADкість',
     harming: 'Шкода',
-    slowness: 'Повільність',
-    oozing: 'Слизькість',
-    weaving: 'Плетіння',
-    infestation: 'Зараження',
-    wind_charging: 'Вітряний заряд',
-    turtle_master: 'Майстер черепах'
+    slowness: 'По\u00ADвіль\u00ADність',
+    oozing: 'Слизь\u00ADкість',
+    weaving: 'Пле\u00ADтін\u00ADня',
+    infestation: 'За\u00ADра\u00ADжен\u00ADня',
+    wind_charging: 'Віт\u00ADря\u00ADний за\u00ADряд',
+    turtle_master: 'Май\u00ADстер че\u00ADре\u00ADпах'
   };
 
   const nominativeTitle = EFFECT_NOMINATIVE_MAP[potion.id] || potion.name.replace(/^Зілля\s+(?:зі\s+|з\s+)?/i, '') || potion.name;

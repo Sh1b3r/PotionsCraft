@@ -2834,8 +2834,8 @@ body.dark-theme .invslot.mcui-output3 {
     flex-wrap: nowrap !important;
     gap: 8px !important;
     width: 100% !important;
-    border-bottom: 1px solid rgba(120, 120, 120, 0.2);
-    padding-bottom: 6px;
+    border-bottom: none !important;
+    padding-bottom: 2px;
     box-sizing: border-box;
   }
 
@@ -2859,7 +2859,7 @@ body.dark-theme .invslot.mcui-output3 {
     image-rendering: pixelated;
   }
 
-  /* Potion title allowed to wrap onto 2 lines so full name is visible */
+  /* Potion title allowed to wrap onto 2 lines with proper Ukrainian hyphenation rules */
   .mobile-header-potion-title {
     flex: 1;
     min-width: 0;
@@ -2867,12 +2867,15 @@ body.dark-theme .invslot.mcui-output3 {
     font-size: 14.5px;
     font-weight: 700;
     white-space: normal;
-    word-break: break-word;
+    word-break: normal;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    -webkit-hyphens: auto;
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
-    line-height: 1.15;
+    line-height: 1.18;
     cursor: pointer;
     letter-spacing: 0.2px;
   }
