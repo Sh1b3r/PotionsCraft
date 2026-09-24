@@ -170,24 +170,15 @@ export default function ThemesLabApp() {
         {/* Header */}
         <header id="header2" className="dark-theme">
           <div className="headertext dark-theme" id="headertext1">
-            <div className="logocontainer" id="logo">
-              <a href="/index.html">
-                <img
-                  src="/Potion_of_Luck_JE3.png"
-                  id="logoday"
-                  alt="PotionsCraft Logo"
-                  className="logo"
-                />
-              </a>
-            </div>
             <div className="title">
-              <h1>PotionsCraft 3D</h1>
+              <h1>PotionsCraft</h1>
             </div>
           </div>
 
           <div className="header-right-controls">
             <div className="current-theme-status">
-              Активна тема: <b>{LAB_THEMES.find((t) => t.id === currentTheme)?.name}</b>
+              <span className="current-theme-label">Активна тема:</span>
+              <b className="current-theme-name">{LAB_THEMES.find((t) => t.id === currentTheme)?.name}</b>
             </div>
           </div>
         </header>

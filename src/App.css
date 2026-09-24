@@ -2614,6 +2614,26 @@ body.dark-theme .invslot.mcui-output3 {
     white-space: nowrap;
   }
 
+  .current-theme-status {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    line-height: 1.2 !important;
+    padding: 3px 8px !important;
+    font-size: 11px !important;
+    gap: 2px !important;
+  }
+
+  .current-theme-label {
+    font-size: 10px !important;
+    opacity: 0.85;
+  }
+
+  .current-theme-name {
+    font-size: 11px !important;
+    white-space: nowrap !important;
+  }
+
   .container {
     margin: 0;
     padding: 0;
