@@ -26,16 +26,13 @@ export default function PotionSearch({
     'швидкість',
     'вогнестійкість',
     'регенерація',
-    'невидимість'
-  ];
-
-  const popularReagents = [
-    'Цукор',
-    'Сльоза ґаста',
-    'Магмовий крем',
-    'Золота морква',
-    'Павуче око',
-    'Панцир черепахи'
+    'невидимість',
+    'нічне бачення',
+    'стрибучість',
+    'водяне дихання',
+    'повільне падіння',
+    'отруєння',
+    'слабкість'
   ];
 
   // Adaptive quick filters with frequency + recency calculation
@@ -129,16 +126,6 @@ export default function PotionSearch({
   const handleCategoryClick = (catId) => {
     playButtonClickSound();
     onSelectCategory(catId);
-  };
-
-  const handleReagentClick = (reagentName) => {
-    playButtonClickSound();
-    if (searchQuery.toLowerCase() === reagentName.toLowerCase()) {
-      onSearchChange('');
-    } else {
-      onSearchChange(reagentName);
-      recordSearchTerm(reagentName);
-    }
   };
 
   const handlePotionFilterClick = (filterName) => {
@@ -250,41 +237,21 @@ export default function PotionSearch({
           })}
         </div>
 
-        {/* Desktop filters: Potion Effects + Reagents */}
+        {/* Desktop filters: All Potion Effects */}
         <div className="desktop-quick-filters">
-          <div className="desktop-effects-group">
-            {popularEffects.map((effect) => {
-              const isSelected = searchQuery.toLowerCase() === effect.toLowerCase();
-              return (
-                <button
-                  key={effect}
-                  type="button"
-                  className={`potion-filter-pill-btn effect-pill ${isSelected ? 'active' : ''}`}
-                  onClick={() => handlePotionFilterClick(effect)}
-                >
-                  {effect}
-                </button>
-              );
-            })}
-          </div>
-
-          <span className="filter-group-divider">|</span>
-
-          <div className="desktop-reagents-group">
-            {popularReagents.map((reagent) => {
-              const isSelected = searchQuery.toLowerCase() === reagent.toLowerCase();
-              return (
-                <button
-                  key={reagent}
-                  type="button"
-                  className={`reagent-pill-btn ${isSelected ? 'active' : ''}`}
-                  onClick={() => handleReagentClick(reagent)}
-                >
-                  {reagent}
-                </button>
-              );
-            })}
-          </div>
+          {popularEffects.map((effect) => {
+            const isSelected = searchQuery.toLowerCase() === effect.toLowerCase();
+            return (
+              <button
+                key={effect}
+                type="button"
+                className={`potion-filter-pill-btn effect-pill ${isSelected ? 'active' : ''}`}
+                onClick={() => handlePotionFilterClick(effect)}
+              >
+                {effect}
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>

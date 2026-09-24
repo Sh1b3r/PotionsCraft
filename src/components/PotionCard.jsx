@@ -28,7 +28,40 @@ export default function PotionCard({
     );
   };
 
-  const shortEffectName = potion.name.replace(/^Зілля\s+(?:зі\s+|з\s+)?/i, '') || potion.name;
+  // Ukrainian nominative case for potion effects
+  const EFFECT_NOMINATIVE_MAP = {
+    healing: 'Зцілення',
+    fire_resistance: 'Вогнестійкість',
+    regeneration: 'Регенерація',
+    strength: 'Сила',
+    swiftness: 'Швидкість',
+    night_vision: 'Нічне бачення',
+    invisibility: 'Невидимість',
+    water_breathing: 'Водяне дихання',
+    leaping: 'Стрибучість',
+    slow_falling: 'Повільне падіння',
+    poison: 'Отруєння',
+    weakness: 'Слабкість',
+    harming: 'Шкода',
+    slowness: 'Повільність',
+    oozing: 'Слизькість',
+    weaving: 'Плетіння',
+    infestation: 'Зараження',
+    wind_charging: 'Вітряний заряд',
+    turtle_master: 'Майстер черепах'
+  };
+
+  const nominativeTitle = EFFECT_NOMINATIVE_MAP[potion.id] || potion.name.replace(/^Зілля\s+(?:зі\s+|з\s+)?/i, '') || potion.name;
+
+  // Custom effect tooltip lore (without white title line):
+  // For turtle_master, primary icon is Resistance (Стійкість), secondary icon is Slowness (Повільність).
+  const primaryEffectLore = potion.id === 'turtle_master'
+    ? '&9Стійкість III (0:20)'
+    : wikiPotion?.minetip;
+
+  const secondaryEffectLore = potion.id === 'turtle_master'
+    ? '&cПовільність IV (0:20)'
+    : null;
 
   return (
     <div
@@ -89,18 +122,15 @@ export default function PotionCard({
                 }}
                 style={{ cursor: 'pointer' }}
               >
-                {potion.name}
+                {nominativeTitle}
               </h3>
             </div>
 
             <div className="card-effect-badges">
               <TooltipTrigger
-                title={wikiPotion?.effectTitle || potion.effectName || 'Ефект'}
-                lore={wikiPotion?.minetip}
+                lore={primaryEffectLore}
                 extra={
-                  potion.id === 'healing'
-                    ? '🦆 Секретна пасхалка!'
-                    : potion.id === 'invisibility'
+                  potion.id === 'invisibility'
                     ? '⚡ Секретна пасхалка (Херпобрив)!'
                     : ''
                 }
@@ -146,9 +176,7 @@ export default function PotionCard({
               </TooltipTrigger>
               {potion.secondaryEffectIcon && (
                 <TooltipTrigger
-                  title="Додатковий ефект"
-                  subtitle="§cПовільність IV / §9Стійкість III"
-                  lore={wikiPotion?.effectDesc || potion.description}
+                  lore={secondaryEffectLore}
                 >
                   <span className="sprite-file">
                     <span className="pixel-image">
@@ -268,7 +296,7 @@ export default function PotionCard({
                 </TooltipTrigger>
               </div>
 
-              {/* 2. Название зелья */}
+              {/* 2. Назва ефекту (у називному відмінку без слова "зілля") */}
               <h3
                 className={`mobile-header-potion-title ${isDark ? 'dark-theme' : 'light-theme'}`}
                 onClick={() => {
@@ -277,16 +305,15 @@ export default function PotionCard({
                     onSelect3D(potion);
                   }
                 }}
-                title={potion.name}
+                title={nominativeTitle}
               >
-                {potion.name}
+                {nominativeTitle}
               </h3>
 
-              {/* 3. Картинка эффекта */}
+              {/* 3. Картинка ефекту */}
               <div className="mobile-header-effect-icons">
                 <TooltipTrigger
-                  title={wikiPotion?.effectTitle || potion.effectName || 'Ефект'}
-                  lore={wikiPotion?.minetip}
+                  lore={primaryEffectLore}
                 >
                   <span className="sprite-file">
                     <span className="pixel-image">
@@ -301,17 +328,21 @@ export default function PotionCard({
                   </span>
                 </TooltipTrigger>
                 {potion.secondaryEffectIcon && (
-                  <span className="sprite-file">
-                    <span className="pixel-image">
-                      <img
-                        src={potion.secondaryEffectIcon}
-                        alt="Додатковий ефект"
-                        className="mobile-effect-icon-img"
-                        width="32"
-                        height="32"
-                      />
+                  <TooltipTrigger
+                    lore={secondaryEffectLore}
+                  >
+                    <span className="sprite-file">
+                      <span className="pixel-image">
+                        <img
+                          src={potion.secondaryEffectIcon}
+                          alt="Додатковий ефект"
+                          className="mobile-effect-icon-img"
+                          width="32"
+                          height="32"
+                        />
+                      </span>
                     </span>
-                  </span>
+                  </TooltipTrigger>
                 )}
               </div>
             </div>

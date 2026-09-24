@@ -394,28 +394,166 @@ header#header2 {
   color: #60a5fa;
 }
 
-/* ---------------- VARIANT 1: SCULK ECHO (Deep Dark Theme) ---------------- */
+/* ---------------- VARIANT 0: OBSIDIAN MINIMAL (Clean Glass & Emerald Accents) ---------------- */
+body.lab-theme-obsidian {
+  background-color: #0b0c10;
+}
+
+.lab-theme-obsidian #body21.dark-theme {
+  background-color: rgba(15, 17, 23, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.lab-theme-obsidian .wiki-section-container {
+  background: rgba(18, 25, 20, 0.6) !important;
+  border: 2px solid rgba(34, 197, 94, 0.3) !important;
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.lab-theme-obsidian .wiki-section-title {
+  color: #4ade80 !important;
+}
+
+/* ---------------- VARIANT 1: SCULK ECHO (Deep Dark Theme - Cyan / Teal / Acoustic) ---------------- */
 body.lab-theme-sculk {
-  background-color: #030f16;
+  background-color: #020b10;
+  background-image: radial-gradient(circle at 50% 20%, rgba(13, 148, 136, 0.12), transparent 70%);
+}
+
+.lab-theme-sculk #header2.dark-theme {
+  background-color: #071924;
+  border-top-color: #0e3347;
+  border-left-color: #0e3347;
+  border-bottom-color: #02090e;
+  border-right-color: #02090e;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), 0 0 15px rgba(20, 184, 166, 0.15);
 }
 
 .lab-theme-sculk #body21.dark-theme {
-  background-color: rgba(3, 20, 28, 0.88);
-  border: 1px solid rgba(20, 184, 166, 0.28);
-  box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.9), 0 0 35px 2px rgba(13, 148, 136, 0.18);
+  background-color: rgba(3, 20, 28, 0.92);
+  border: 1px solid rgba(20, 184, 166, 0.35);
+  box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.9), 0 0 40px 3px rgba(13, 148, 136, 0.22);
 }
 
+/* Note Section (Базові інгредієнти та модифікатори) in Sculk Echo */
+.lab-theme-sculk .wiki-section-container {
+  background: rgba(4, 28, 38, 0.75) !important;
+  border: 2px solid rgba(45, 212, 191, 0.5) !important;
+  box-shadow: inset 0 0 25px rgba(13, 148, 136, 0.25), 0 0 15px rgba(20, 184, 166, 0.15) !important;
+}
+
+.lab-theme-sculk .wiki-section-title {
+  color: #2dd4bf !important;
+  text-shadow: 0 0 12px rgba(45, 212, 191, 0.6), 2px 2px #02090e !important;
+}
+
+.lab-theme-sculk .wiki-name-link,
+.lab-theme-sculk .wiki-potion-link,
+.lab-theme-sculk .table-water-cell {
+  color: #2dd4bf !important;
+  text-decoration-color: rgba(45, 212, 191, 0.4) !important;
+}
+
+.lab-theme-sculk .minecraft-styled-table {
+  background: #061822 !important;
+  border: 2px solid #0f354a !important;
+}
+
+.lab-theme-sculk .minecraft-styled-table thead tr {
+  background: #0a2536 !important;
+  border-bottom: 2px solid #144966 !important;
+}
+
+.lab-theme-sculk .minecraft-styled-table th,
+.lab-theme-sculk .minecraft-styled-table td {
+  border: 1px solid #0f354a !important;
+}
+
+.lab-theme-sculk .minecraft-styled-table tbody tr:nth-child(even) {
+  background-color: #081d2a !important;
+}
+
+.lab-theme-sculk .minecraft-styled-table tbody tr:hover {
+  background-color: rgba(45, 212, 191, 0.15) !important;
+}
+
+/* Search bar & tabs in Sculk Echo */
+.lab-theme-sculk .search-system-container {
+  background-color: #071924 !important;
+  border-top: 2px solid #0e3347 !important;
+  border-left: 2px solid #0e3347 !important;
+  border-bottom: 2px solid #02090e !important;
+  border-right: 2px solid #02090e !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5), 0 0 15px rgba(20, 184, 166, 0.1) !important;
+}
+
+.lab-theme-sculk .search-input {
+  background-color: #041018 !important;
+  border-color: #0e3347 !important;
+}
+
+.lab-theme-sculk .search-input:focus {
+  border-color: #2dd4bf !important;
+  box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.7), 0 0 10px rgba(45, 212, 191, 0.4) !important;
+}
+
+.lab-theme-sculk .category-tab-btn {
+  background: #09202e !important;
+  border-color: #0e3347 !important;
+  color: #99f6e4 !important;
+}
+
+.lab-theme-sculk .category-tab-btn:hover {
+  background: #0d2d42 !important;
+  border-color: #14b8a6 !important;
+}
+
+.lab-theme-sculk .category-tab-btn.active {
+  background: #0d9488 !important;
+  border-color: #2dd4bf !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 12px rgba(45, 212, 191, 0.5) !important;
+}
+
+.lab-theme-sculk .potion-filter-pill-btn.effect-pill {
+  border-color: rgba(45, 212, 191, 0.4) !important;
+}
+
+.lab-theme-sculk .potion-filter-pill-btn:hover {
+  background: rgba(20, 184, 166, 0.25) !important;
+  border-color: #2dd4bf !important;
+  color: #2dd4bf !important;
+}
+
+.lab-theme-sculk .potion-filter-pill-btn.active {
+  background: #0d9488 !important;
+  border-color: #2dd4bf !important;
+}
+
+.lab-theme-sculk .category-section-title.positive-title {
+  color: #2dd4bf !important;
+}
+
+/* Cards & Widgets in Sculk Echo */
 .lab-theme-sculk .card.dark-theme {
   background-color: #081a24;
-  border-top-color: #0e2a3b;
-  border-left-color: #0e2a3b;
-  border-bottom-color: #030c12;
-  border-right-color: #030c12;
+  border-top-color: #103347;
+  border-left-color: #103347;
+  border-bottom-color: #02090e;
+  border-right-color: #02090e;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6), 0 0 8px rgba(13, 148, 136, 0.12);
+}
+
+.lab-theme-sculk .card.dark-theme:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8), 0 0 18px rgba(20, 184, 166, 0.35);
+  border-top-color: #14b8a6;
+  border-left-color: #14b8a6;
 }
 
 .lab-theme-sculk .card.dark-theme .mcui-Brewing_Stand {
   background-color: #081a24;
-  border-right-color: #030c12;
+  border-right-color: #02090e;
 }
 
 .lab-theme-sculk .lab-pill-btn.active {
@@ -428,28 +566,146 @@ body.lab-theme-sculk {
   color: #2dd4bf;
 }
 
-/* ---------------- VARIANT 2: END VOID (Chorus & Purple Nebula Theme) ---------------- */
+/* ---------------- VARIANT 2: END VOID (Chorus, Amethyst & Purple Nebula) ---------------- */
 body.lab-theme-end {
-  background-color: #0e0717;
+  background-color: #0b0512;
+  background-image: radial-gradient(circle at 50% 20%, rgba(147, 51, 234, 0.14), transparent 70%);
+}
+
+.lab-theme-end #header2.dark-theme {
+  background-color: #1a0f28;
+  border-top-color: #2f1b4a;
+  border-left-color: #2f1b4a;
+  border-bottom-color: #090310;
+  border-right-color: #090310;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), 0 0 15px rgba(168, 85, 247, 0.18);
 }
 
 .lab-theme-end #body21.dark-theme {
-  background-color: rgba(18, 10, 28, 0.88);
-  border: 1px solid rgba(168, 85, 247, 0.28);
-  box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.9), 0 0 35px 2px rgba(147, 51, 234, 0.18);
+  background-color: rgba(18, 10, 28, 0.92);
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.9), 0 0 40px 3px rgba(147, 51, 234, 0.24);
 }
 
+/* Note Section in End Void (Amethyst/Purple Border & Glow) */
+.lab-theme-end .wiki-section-container {
+  background: rgba(28, 14, 44, 0.75) !important;
+  border: 2px solid rgba(192, 132, 252, 0.5) !important;
+  box-shadow: inset 0 0 25px rgba(147, 51, 234, 0.25), 0 0 18px rgba(168, 85, 247, 0.18) !important;
+}
+
+.lab-theme-end .wiki-section-title {
+  color: #c084fc !important;
+  text-shadow: 0 0 12px rgba(192, 132, 252, 0.6), 2px 2px #090310 !important;
+}
+
+.lab-theme-end .wiki-name-link,
+.lab-theme-end .wiki-potion-link,
+.lab-theme-end .table-water-cell {
+  color: #c084fc !important;
+  text-decoration-color: rgba(192, 132, 252, 0.4) !important;
+}
+
+.lab-theme-end .minecraft-styled-table {
+  background: #170b24 !important;
+  border: 2px solid #351953 !important;
+}
+
+.lab-theme-end .minecraft-styled-table thead tr {
+  background: #25123a !important;
+  border-bottom: 2px solid #451e6d !important;
+}
+
+.lab-theme-end .minecraft-styled-table th,
+.lab-theme-end .minecraft-styled-table td {
+  border: 1px solid #351953 !important;
+}
+
+.lab-theme-end .minecraft-styled-table tbody tr:nth-child(even) {
+  background-color: #1e0d30 !important;
+}
+
+.lab-theme-end .minecraft-styled-table tbody tr:hover {
+  background-color: rgba(168, 85, 247, 0.15) !important;
+}
+
+/* Search bar & tabs in End Void */
+.lab-theme-end .search-system-container {
+  background-color: #180d26 !important;
+  border-top: 2px solid #2e1a47 !important;
+  border-left: 2px solid #2e1a47 !important;
+  border-bottom: 2px solid #090310 !important;
+  border-right: 2px solid #090310 !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5), 0 0 15px rgba(147, 51, 234, 0.12) !important;
+}
+
+.lab-theme-end .search-input {
+  background-color: #10081a !important;
+  border-color: #2e1a47 !important;
+}
+
+.lab-theme-end .search-input:focus {
+  border-color: #c084fc !important;
+  box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.7), 0 0 10px rgba(192, 132, 252, 0.4) !important;
+}
+
+.lab-theme-end .category-tab-btn {
+  background: #221237 !important;
+  border-color: #351a54 !important;
+  color: #e9d5ff !important;
+}
+
+.lab-theme-end .category-tab-btn:hover {
+  background: #2f194c !important;
+  border-color: #a855f7 !important;
+}
+
+.lab-theme-end .category-tab-btn.active {
+  background: #7e22ce !important;
+  border-color: #c084fc !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 12px rgba(192, 132, 252, 0.5) !important;
+}
+
+.lab-theme-end .potion-filter-pill-btn.effect-pill {
+  border-color: rgba(192, 132, 252, 0.4) !important;
+}
+
+.lab-theme-end .potion-filter-pill-btn:hover {
+  background: rgba(168, 85, 247, 0.25) !important;
+  border-color: #c084fc !important;
+  color: #c084fc !important;
+}
+
+.lab-theme-end .potion-filter-pill-btn.active {
+  background: #7e22ce !important;
+  border-color: #c084fc !important;
+}
+
+.lab-theme-end .category-section-title.positive-title,
+.lab-theme-end .category-section-title.mixed-title {
+  color: #c084fc !important;
+}
+
+/* Cards & Widgets in End Void */
 .lab-theme-end .card.dark-theme {
-  background-color: #1a0f29;
-  border-top-color: #2c1a45;
-  border-left-color: #2c1a45;
-  border-bottom-color: #0d0617;
-  border-right-color: #0d0617;
+  background-color: #190e28;
+  border-top-color: #2d1947;
+  border-left-color: #2d1947;
+  border-bottom-color: #090310;
+  border-right-color: #090310;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6), 0 0 10px rgba(147, 51, 234, 0.12);
+}
+
+.lab-theme-end .card.dark-theme:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8), 0 0 18px rgba(168, 85, 247, 0.35);
+  border-top-color: #a855f7;
+  border-left-color: #a855f7;
 }
 
 .lab-theme-end .card.dark-theme .mcui-Brewing_Stand {
-  background-color: #1a0f29;
-  border-right-color: #0d0617;
+  background-color: #190e28;
+  border-right-color: #090310;
 }
 
 .lab-theme-end .lab-pill-btn.active {
@@ -462,28 +718,145 @@ body.lab-theme-end {
   color: #c084fc;
 }
 
-/* ---------------- VARIANT 3: DEEPSLATE MODERN (Slate & Cyan Amethyst) ---------------- */
+/* ---------------- VARIANT 3: DEEPSLATE MODERN (Slate & Sky Blue / Sapphire) ---------------- */
 body.lab-theme-deepslate {
-  background-color: #090e17;
+  background-color: #060b13;
+  background-image: radial-gradient(circle at 50% 20%, rgba(2, 132, 199, 0.14), transparent 70%);
+}
+
+.lab-theme-deepslate #header2.dark-theme {
+  background-color: #101926;
+  border-top-color: #1e2f47;
+  border-left-color: #1e2f47;
+  border-bottom-color: #050a12;
+  border-right-color: #050a12;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), 0 0 15px rgba(56, 189, 248, 0.16);
 }
 
 .lab-theme-deepslate #body21.dark-theme {
-  background-color: rgba(13, 20, 32, 0.88);
-  border: 1px solid rgba(56, 189, 248, 0.24);
-  box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.9), 0 0 32px 1px rgba(14, 165, 233, 0.14);
+  background-color: rgba(13, 20, 32, 0.92);
+  border: 1px solid rgba(56, 189, 248, 0.32);
+  box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.9), 0 0 36px 2px rgba(14, 165, 233, 0.2);
 }
 
+/* Note Section in Deepslate Modern (Cyan/Sapphire Border & Glow) */
+.lab-theme-deepslate .wiki-section-container {
+  background: rgba(16, 27, 43, 0.75) !important;
+  border: 2px solid rgba(56, 189, 248, 0.5) !important;
+  box-shadow: inset 0 0 25px rgba(2, 132, 199, 0.22), 0 0 16px rgba(56, 189, 248, 0.16) !important;
+}
+
+.lab-theme-deepslate .wiki-section-title {
+  color: #38bdf8 !important;
+  text-shadow: 0 0 12px rgba(56, 189, 248, 0.6), 2px 2px #050a12 !important;
+}
+
+.lab-theme-deepslate .wiki-name-link,
+.lab-theme-deepslate .wiki-potion-link,
+.lab-theme-deepslate .table-water-cell {
+  color: #38bdf8 !important;
+  text-decoration-color: rgba(56, 189, 248, 0.4) !important;
+}
+
+.lab-theme-deepslate .minecraft-styled-table {
+  background: #0f1926 !important;
+  border: 2px solid #1c2e46 !important;
+}
+
+.lab-theme-deepslate .minecraft-styled-table thead tr {
+  background: #17263b !important;
+  border-bottom: 2px solid #243c5d !important;
+}
+
+.lab-theme-deepslate .minecraft-styled-table th,
+.lab-theme-deepslate .minecraft-styled-table td {
+  border: 1px solid #1c2e46 !important;
+}
+
+.lab-theme-deepslate .minecraft-styled-table tbody tr:nth-child(even) {
+  background-color: #132031 !important;
+}
+
+.lab-theme-deepslate .minecraft-styled-table tbody tr:hover {
+  background-color: rgba(56, 189, 248, 0.15) !important;
+}
+
+/* Search bar & tabs in Deepslate Modern */
+.lab-theme-deepslate .search-system-container {
+  background-color: #101b2a !important;
+  border-top: 2px solid #1e3049 !important;
+  border-left: 2px solid #1e3049 !important;
+  border-bottom: 2px solid #050a12 !important;
+  border-right: 2px solid #050a12 !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5), 0 0 15px rgba(2, 132, 199, 0.12) !important;
+}
+
+.lab-theme-deepslate .search-input {
+  background-color: #0b121c !important;
+  border-color: #1e3049 !important;
+}
+
+.lab-theme-deepslate .search-input:focus {
+  border-color: #38bdf8 !important;
+  box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.7), 0 0 10px rgba(56, 189, 248, 0.4) !important;
+}
+
+.lab-theme-deepslate .category-tab-btn {
+  background: #152336 !important;
+  border-color: #1e334e !important;
+  color: #bae6fd !important;
+}
+
+.lab-theme-deepslate .category-tab-btn:hover {
+  background: #1d314c !important;
+  border-color: #0284c7 !important;
+}
+
+.lab-theme-deepslate .category-tab-btn.active {
+  background: #0284c7 !important;
+  border-color: #38bdf8 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.5) !important;
+}
+
+.lab-theme-deepslate .potion-filter-pill-btn.effect-pill {
+  border-color: rgba(56, 189, 248, 0.4) !important;
+}
+
+.lab-theme-deepslate .potion-filter-pill-btn:hover {
+  background: rgba(2, 132, 199, 0.25) !important;
+  border-color: #38bdf8 !important;
+  color: #38bdf8 !important;
+}
+
+.lab-theme-deepslate .potion-filter-pill-btn.active {
+  background: #0284c7 !important;
+  border-color: #38bdf8 !important;
+}
+
+.lab-theme-deepslate .category-section-title.positive-title {
+  color: #38bdf8 !important;
+}
+
+/* Cards & Widgets in Deepslate Modern */
 .lab-theme-deepslate .card.dark-theme {
-  background-color: #15202e;
-  border-top-color: #22344a;
-  border-left-color: #22344a;
-  border-bottom-color: #0b111a;
-  border-right-color: #0b111a;
+  background-color: #14202f;
+  border-top-color: #23354c;
+  border-left-color: #23354c;
+  border-bottom-color: #060b13;
+  border-right-color: #060b13;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6), 0 0 10px rgba(2, 132, 199, 0.12);
+}
+
+.lab-theme-deepslate .card.dark-theme:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8), 0 0 18px rgba(56, 189, 248, 0.35);
+  border-top-color: #38bdf8;
+  border-left-color: #38bdf8;
 }
 
 .lab-theme-deepslate .card.dark-theme .mcui-Brewing_Stand {
-  background-color: #15202e;
-  border-right-color: #0b111a;
+  background-color: #14202f;
+  border-right-color: #060b13;
 }
 
 .lab-theme-deepslate .lab-pill-btn.active {
@@ -2257,13 +2630,13 @@ body.dark-theme .invslot.mcui-output3 {
   }
 
   .body2 h2 {
-    font-size: 13px;
+    font-size: 15px;
     margin: 14px 0 8px 0;
     padding-bottom: 4px;
   }
 
   .category-section-title {
-    font-size: 11px;
+    font-size: 13px;
     margin: 8px 0 0 0;
     padding-bottom: 4px;
   }
