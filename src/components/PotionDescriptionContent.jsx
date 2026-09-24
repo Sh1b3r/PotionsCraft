@@ -95,11 +95,11 @@ export default function PotionDescriptionContent({ potionId, description, compac
     case 'swiftness':
       return (
         <span className="wiki-effect-desc">
-          Збільшує швидкість пересування, швидкість бігу та довжину стрибків на 20 %.
+          Збільшує швидкість пересування, бігу та стрибків на 20 %.
           {!compact && (
             <>
               <br />
-              <b>Посилене:</b> Збільшує швидкість пересування, швидкість бігу та довжину стрибків на 40 %.
+              <b>Посилене:</b> Збільшує швидкість на 40 %.
             </>
           )}
         </span>
