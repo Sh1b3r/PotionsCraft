@@ -19,16 +19,38 @@ export default function App() {
     }
   });
 
+  const [darkPreset, setDarkPreset] = useState(() => {
+    try {
+      const savedPreset = localStorage.getItem('potionscraft_dark_preset');
+      return savedPreset || 'obsidian';
+    } catch {
+      return 'obsidian';
+    }
+  });
+
   // Modals
   const [activeModalPotion, setActiveModalPotion] = useState(null);
   const [activeEasterEgg, setActiveEasterEgg] = useState(null);
 
+  const logoDaySrc = '/Glass_Bottle_JE2_BE2.webp';
+  const logoNightSrc = '/Potion_of_Luck_JE3.png';
+
   useEffect(() => {
     try {
       localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      localStorage.setItem('potionscraft_dark_preset', darkPreset);
     } catch (e) {}
-    document.body.className = isDark ? 'dark-theme' : 'light-theme';
-  }, [isDark]);
+
+    // Update body theme and attributes
+    document.body.className = `${isDark ? 'dark-theme' : 'light-theme'} theme-preset-${darkPreset}`;
+    document.documentElement.setAttribute('data-theme-preset', darkPreset);
+
+    // Update favicon matching the logo swap (as in Pop! project)
+    const favicon = document.getElementById('favicon') || document.querySelector("link[rel*='icon']");
+    if (favicon) {
+      favicon.href = isDark ? logoNightSrc : logoDaySrc;
+    }
+  }, [isDark, darkPreset]);
 
   // Client-side URL Routing & Legacy URL Handling
   useEffect(() => {
@@ -120,31 +142,38 @@ export default function App() {
   return (
     <TooltipProvider>
       <div className={`potions-craft-app ${isDark ? 'dark-theme' : 'light-theme'}`} id="body1">
-        {/* Original Gallery Sky & Twinkling Stars */}
-        <div className="gallery">
-          <div className="stars"></div>
-          <div className="shooting-star"></div>
-          <div className="shooting-star"></div>
-          <div className="shooting-star"></div>
-          <div className="shooting-star"></div>
-          <div className="shooting-star"></div>
-          <div className="tiny-stars"></div>
-          <div className="tiny-stars"></div>
-          <div className="tiny-stars"></div>
-          <div className="tiny-stars"></div>
-          <div className="tiny-stars"></div>
-        </div>
+        {/* Original Gallery Sky & Twinkling Stars (only active in dark theme) */}
+        {isDark && (
+          <div className="gallery">
+            <div className="stars"></div>
+            <div className="shooting-star"></div>
+            <div className="shooting-star"></div>
+            <div className="shooting-star"></div>
+            <div className="shooting-star"></div>
+            <div className="shooting-star"></div>
+            <div className="tiny-stars"></div>
+            <div className="tiny-stars"></div>
+            <div className="tiny-stars"></div>
+            <div className="tiny-stars"></div>
+            <div className="tiny-stars"></div>
+          </div>
+        )}
 
         {/* Original Sticky Glassmorphism Header */}
         <Header
           isDark={isDark}
           onToggleTheme={setIsDark}
           onOpenEasterEgg={handleOpenEasterEgg}
+          darkPreset={darkPreset}
+          onSelectDarkPreset={setDarkPreset}
         />
 
         {/* Main Body Container */}
         <div className="container">
-          <div className={`body2 ${isDark ? 'dark-theme' : 'light-theme'}`} id="body21">
+          <div
+            className={`body2 ${isDark ? 'dark-theme' : 'light-theme'} theme-preset-${darkPreset}`}
+            id="body21"
+          >
             {/* Base ingredients & modifiers table replacing the old note */}
             <BaseModifiersTable />
 

@@ -47,15 +47,13 @@ export default function PotionCard({
           <div className="card-top-row">
             <div className="card-title-group">
               <TooltipTrigger
-                title={wikiPotion?.title || potion.name}
-                lore={wikiPotion?.minetip}
+                title={potion.name}
                 extra="💡 Клацніть, щоб оглянути в 3D"
               >
                 <span className="invslot">
                   <span
                     className="invslot-item invslot-item-image"
-                    data-minetip-title={wikiPotion?.title || potion.name}
-                    data-minetip-text={wikiPotion?.minetip}
+                    data-minetip-title={potion.name}
                   >
                     <span typeof="mw:File">
                       <img
@@ -236,15 +234,13 @@ export default function PotionCard({
               {/* 1. Иконка зелья */}
               <div className="mobile-header-potion-icon">
                 <TooltipTrigger
-                  title={wikiPotion?.title || potion.name}
-                  lore={wikiPotion?.minetip}
+                  title={potion.name}
                   extra="💡 Клацніть, щоб оглянути в 3D"
                 >
                   <span className="invslot">
                     <span
                       className="invslot-item invslot-item-image"
-                      data-minetip-title={wikiPotion?.title || potion.name}
-                      data-minetip-text={wikiPotion?.minetip}
+                      data-minetip-title={potion.name}
                     >
                       <span typeof="mw:File">
                         <img

@@ -140,6 +140,93 @@ header#header2 {
   flex-shrink: 0;
 }
 
+/* Dark Presets Navigation Pill Bar */
+.dark-presets-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 3px 8px;
+  border-radius: 6px;
+  backdrop-filter: blur(8px);
+}
+
+.dark-presets-label {
+  font-size: 11px;
+  color: #94a3b8;
+  user-select: none;
+}
+
+.dark-presets-buttons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.preset-choice-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  font-family: 'Minecraft', sans-serif;
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.preset-choice-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.preset-choice-btn.active {
+  background: #3b82f6;
+  border-color: #60a5fa;
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+}
+
+.theme-preset-nether .preset-choice-btn.active {
+  background: #dc2626;
+  border-color: #ef4444;
+  box-shadow: 0 0 10px rgba(220, 38, 38, 0.4);
+}
+
+.theme-preset-deepslate .preset-choice-btn.active {
+  background: #0284c7;
+  border-color: #38bdf8;
+  box-shadow: 0 0 10px rgba(2, 132, 199, 0.4);
+}
+
+.theme-preset-original .preset-choice-btn.active {
+  background: #15803d;
+  border-color: #22c55e;
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+}
+
+.preset-icon {
+  font-size: 12px;
+}
+
+@media (max-width: 900px) {
+  .dark-presets-label {
+    display: none;
+  }
+  .preset-choice-btn .preset-text {
+    display: none;
+  }
+  .preset-choice-btn {
+    padding: 4px 6px;
+  }
+}
+
 /* ==================== FROM UIVERSE.IO BY ZL306 ==================== */
 .switch {
   position: relative;
@@ -220,9 +307,80 @@ header#header2 {
   color: #000000;
 }
 
+/* Default dark-theme fallback (Obsidian Minimal) */
 #body21.dark-theme {
+  background-color: rgba(16, 17, 24, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65), 0 0 1px 1px rgba(255, 255, 255, 0.08);
+}
+
+/* ==================== PRESET 1: OBSIDIAN MINIMAL (Mature & Clean) ==================== */
+body.theme-preset-obsidian {
+  background-color: #0b0c10;
+}
+
+.theme-preset-obsidian #body21.dark-theme {
+  background-color: rgba(15, 17, 23, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+/* ==================== PRESET 2: NETHER FORGE (Charcoal & Warm Ember) ==================== */
+body.theme-preset-nether {
+  background-color: #12090b;
+}
+
+.theme-preset-nether #body21.dark-theme {
+  background-color: rgba(22, 14, 16, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(239, 68, 68, 0.22);
+  border-radius: 10px;
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.85), 0 0 35px 2px rgba(220, 38, 38, 0.14);
+}
+
+.theme-preset-nether .card.dark-theme {
+  background-color: #23181a;
+  border-top-color: #3b2529;
+  border-left-color: #3b2529;
+  border-bottom-color: #150d0f;
+  border-right-color: #150d0f;
+}
+
+/* ==================== PRESET 3: DEEPSLATE MODERN (Slate & Cyan Amethyst) ==================== */
+body.theme-preset-deepslate {
+  background-color: #090e17;
+}
+
+.theme-preset-deepslate #body21.dark-theme {
+  background-color: rgba(13, 20, 32, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(56, 189, 248, 0.22);
+  border-radius: 10px;
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.85), 0 0 32px 1px rgba(14, 165, 233, 0.12);
+}
+
+.theme-preset-deepslate .card.dark-theme {
+  background-color: #15202e;
+  border-top-color: #22344a;
+  border-left-color: #22344a;
+  border-bottom-color: #0b111a;
+  border-right-color: #0b111a;
+}
+
+/* ==================== PRESET 4: ORIGINAL CLASSIC GLOW (Green Neon) ==================== */
+.theme-preset-original #body21.dark-theme {
   background-color: rgba(0, 0, 0, 0.65);
-  color: white;
+  border: 1px solid rgb(60, 60, 60);
+  border-radius: 0;
   box-shadow: 0px 0px 36px 10px rgba(19,143,40,0.67);
   -webkit-box-shadow: 0px 0px 36px 10px rgba(19,143,40,0.67);
   -moz-box-shadow: 0px 0px 36px 10px rgba(19,143,40,0.67);
@@ -1004,6 +1162,7 @@ h3 {
 }
 
 .dark-theme .card-brewing-stand-box.in-modal-stand .mcui-Brewing_Stand {
+  background-color: #2c2d30;
   border-top: 2px solid #3e4046;
   border-left: 2px solid #3e4046;
   border-bottom: 2px solid #18191c;
@@ -1093,6 +1252,11 @@ h3 {
   vertical-align: baseline;
 }
 
+.dark-theme .mcui-paths,
+body.dark-theme .mcui-paths {
+  background-image: url("/Grid_layout_Brewing_Paths_dark.png");
+}
+
 .mcui-output {
   display: block;
   width: 128px;
@@ -1139,6 +1303,15 @@ body.dark-theme .invslot,
   background-position: 50% 50%;
   background-size: 32px 32px;
   background-repeat: no-repeat;
+}
+
+.dark-theme .invslot.mcui-output1,
+.dark-theme .invslot.mcui-output2,
+.dark-theme .invslot.mcui-output3,
+body.dark-theme .invslot.mcui-output1,
+body.dark-theme .invslot.mcui-output2,
+body.dark-theme .invslot.mcui-output3 {
+  filter: none;
 }
 
 .mcui-output .mcui-output1 {
@@ -1578,7 +1751,8 @@ body.dark-theme .invslot,
 }
 
 .light-theme .stars {
-  opacity: 0.5;
+  opacity: 0;
+  display: none;
 }
 
 .tiny-stars::before,
@@ -1609,8 +1783,8 @@ body.dark-theme .invslot,
 
 .light-theme .tiny-stars::before,
 .light-theme .tiny-stars::after {
-  background: rgba(255, 255, 255, 0.4);
-  opacity: 0.3;
+  opacity: 0;
+  display: none;
 }
 
 .shooting-star {
@@ -1627,10 +1801,12 @@ body.dark-theme .invslot,
 
 .dark-theme .shooting-star {
   opacity: 1; 
+  display: block;
 }
 
 .light-theme .shooting-star {
-  opacity: 0.5;
+  opacity: 0;
+  display: none;
 }
 
 .shooting-star:nth-child(2) { top: 20%; animation-delay: 0s; }
@@ -2013,7 +2189,7 @@ body.dark-theme .invslot,
     display: none !important;
   }
 
-  /* Requirement 3: Only mobile: hide desktop filters and show 3 adaptive potion filters directly after "Фільтр:" */
+  /* Requirement 3: Only mobile: hide desktop filters and show 3 adaptive potion filters directly in ONE line after "Фільтр:" */
   .desktop-quick-filters {
     display: none !important;
   }
@@ -2022,16 +2198,44 @@ body.dark-theme .invslot,
     display: none !important;
   }
 
+  .quick-reagents-row {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    padding-bottom: 2px;
+  }
+
+  .quick-reagents-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .quick-reagents-title {
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+    margin-right: 2px !important;
+    font-size: 12px !important;
+  }
+
   .mobile-quick-filters {
     display: flex !important;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 6px;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    gap: 6px !important;
+    flex-shrink: 0 !important;
   }
 
   .potion-filter-pill-btn {
     padding: 4px 10px;
     font-size: 12px;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
   }
 
   .potions {
@@ -2215,19 +2419,25 @@ body.dark-theme .invslot,
     padding: 2px 5px;
   }
 
-  /* Description below */
+  /* Description below (increased font size for mobile readability) */
   .mobile-card-desc-box {
     width: 100%;
-    font-size: 13px;
+    font-size: 16px;
     line-height: 1.45;
-    border-top: 1px dashed rgba(120, 120, 120, 0.25);
+    border-top: 1px solid rgba(120, 120, 120, 0.25);
     padding-top: 6px;
     margin-top: 2px;
     color: #334155;
   }
 
+  .mobile-card-desc-box p {
+    font-size: 16px;
+    line-height: 1.45;
+  }
+
   .dark-theme .mobile-card-desc-box {
     color: #cbd5e1;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
   }
 }
 

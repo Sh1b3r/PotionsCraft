@@ -38,9 +38,32 @@ export default function PotionSearch({
     'Панцир черепахи'
   ];
 
-  // Mobile adaptive 3 potion filters stored in localStorage
+  // Adaptive quick filters with frequency + recency calculation
   const [quickPotionFilters, setQuickPotionFilters] = useState(() => {
     try {
+      const savedHistory = localStorage.getItem('pc_potion_queries_history');
+      if (savedHistory) {
+        const history = JSON.parse(savedHistory);
+        // history is an object { [term]: { count: number, lastUsed: number } }
+        const sorted = Object.entries(history)
+          .sort((a, b) => {
+            // prioritize frequency (count * 2) combined with recency
+            const scoreA = a[1].count * 2 + Math.min(10, Math.floor((Date.now() - a[1].lastUsed) / -3600000));
+            const scoreB = b[1].count * 2 + Math.min(10, Math.floor((Date.now() - b[1].lastUsed) / -3600000));
+            return scoreB - scoreA;
+          })
+          .map(([term]) => term);
+        
+        if (sorted.length > 0) {
+          const filled = [...sorted];
+          for (const d of DEFAULT_POTION_FILTERS) {
+            if (!filled.includes(d)) filled.push(d);
+          }
+          return filled.slice(0, 3);
+        }
+      }
+
+      // fallback to legacy STORAGE_KEY
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
@@ -52,27 +75,55 @@ export default function PotionSearch({
     return DEFAULT_POTION_FILTERS;
   });
 
-  // Adapt 3 filters whenever user enters a search query
-  const updateAdaptiveFilters = (query) => {
+  // Record a search term in frequency/recency history and update the 3 pills
+  const recordSearchTerm = (query) => {
+    if (!query) return;
     const raw = query.trim().toLowerCase();
     if (raw.length < 3) return;
 
-    const shortName = raw.replace(/^зілля\s+(?:зі\s+|з\s+)?/i, '').trim();
-    if (!shortName) return;
+    // clean up prefixes like "зілля", "зелья", "зелье"
+    const cleaned = raw
+      .replace(/^(?:зілля|зелье|зелья)\s+(?:зі\s+|з\s+|от\s+|для\s+)?/i, '')
+      .replace(/^от\s+/i, '')
+      .trim();
 
-    setQuickPotionFilters((prev) => {
-      if (prev[0] && prev[0].toLowerCase() === shortName.toLowerCase()) {
-        return prev;
+    if (!cleaned || cleaned.length < 2) return;
+
+    try {
+      let history = {};
+      const saved = localStorage.getItem('pc_potion_queries_history');
+      if (saved) {
+        try { history = JSON.parse(saved); } catch (e) {}
       }
-      const filtered = prev.filter(
-        (item) => item.toLowerCase() !== shortName.toLowerCase()
-      );
-      const updated = [shortName, ...filtered].slice(0, 3);
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-      } catch (e) {}
-      return updated;
-    });
+
+      const existing = history[cleaned] || { count: 0, lastUsed: 0 };
+      history[cleaned] = {
+        count: existing.count + 1,
+        lastUsed: Date.now()
+      };
+
+      localStorage.setItem('pc_potion_queries_history', JSON.stringify(history));
+
+      // Calculate top 3 by score (count + recency weight)
+      const topTerms = Object.entries(history)
+        .sort((a, b) => {
+          // recency bonus
+          const ageHoursA = (Date.now() - a[1].lastUsed) / 3600000;
+          const ageHoursB = (Date.now() - b[1].lastUsed) / 3600000;
+          const scoreA = a[1].count * 3 + Math.max(0, 10 - ageHoursA);
+          const scoreB = b[1].count * 3 + Math.max(0, 10 - ageHoursB);
+          return scoreB - scoreA;
+        })
+        .map(([term]) => term);
+
+      const combined = [...topTerms];
+      for (const def of DEFAULT_POTION_FILTERS) {
+        if (!combined.includes(def)) combined.push(def);
+      }
+      const updated3 = combined.slice(0, 3);
+      setQuickPotionFilters(updated3);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated3));
+    } catch (e) {}
   };
 
   const handleCategoryClick = (catId) => {
@@ -86,7 +137,7 @@ export default function PotionSearch({
       onSearchChange('');
     } else {
       onSearchChange(reagentName);
-      updateAdaptiveFilters(reagentName);
+      recordSearchTerm(reagentName);
     }
   };
 
@@ -96,7 +147,7 @@ export default function PotionSearch({
       onSearchChange('');
     } else {
       onSearchChange(filterName);
-      updateAdaptiveFilters(filterName);
+      recordSearchTerm(filterName);
     }
   };
 
@@ -114,7 +165,15 @@ export default function PotionSearch({
             value={searchQuery}
             onChange={(e) => {
               onSearchChange(e.target.value);
-              updateAdaptiveFilters(e.target.value);
+              recordSearchTerm(e.target.value);
+            }}
+            onBlur={(e) => {
+              recordSearchTerm(e.target.value);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                recordSearchTerm(e.currentTarget.value);
+              }
             }}
             placeholder="Пошук зілля за назвою, інгредієнтом або ефектом..."
             aria-label="Пошук зілля"
