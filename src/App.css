@@ -1933,8 +1933,6 @@ body.dark-theme .invslot.mcui-output3 {
   font-size: 17px;
   font-weight: 700;
   margin: 12px 0 2px 0;
-  padding-bottom: 6px;
-  border-bottom: 2px solid rgba(120, 120, 120, 0.25);
   font-family: 'Minecraft', sans-serif;
   letter-spacing: 0.5px;
 }
@@ -2871,13 +2869,11 @@ body.dark-theme .invslot.mcui-output3 {
     overflow-wrap: break-word;
     hyphens: auto;
     -webkit-hyphens: auto;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
     line-height: 1.18;
     cursor: pointer;
     letter-spacing: 0.2px;
+    max-height: calc(1.18em * 2 + 2px);
+    overflow: hidden;
   }
 
   .mobile-header-potion-title.light-theme {
@@ -2946,6 +2942,7 @@ body.dark-theme .invslot.mcui-output3 {
   .mobile-header-potion-title {
     font-size: 13.5px;
     line-height: 1.15;
+    max-height: calc(1.15em * 2 + 2px);
   }
 
   .mobile-header-potion-icon .invslot {
