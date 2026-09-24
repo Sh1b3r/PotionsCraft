@@ -281,6 +281,221 @@ header#header2 {
   box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.06);
 }
 
+/* ==================== THEMES LAB INTERACTIVE STYLES ==================== */
+.lab-control-bar {
+  width: 100%;
+  background: rgba(13, 15, 22, 0.95);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.12);
+  padding: 10px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 2000;
+  backdrop-filter: blur(12px);
+}
+
+.lab-control-inner {
+  max-width: 1700px;
+  width: 95%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.lab-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.lab-home-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #2563eb;
+  color: #ffffff;
+  text-decoration: none;
+  font-family: 'Minecraft', sans-serif;
+  font-size: 13px;
+  padding: 6px 14px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.lab-home-btn:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+}
+
+.lab-brand-title {
+  display: flex;
+  flex-direction: column;
+}
+
+.lab-badge {
+  font-size: 13px;
+  font-weight: bold;
+  color: #f8fafc;
+  letter-spacing: 0.5px;
+}
+
+.lab-subtitle {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.lab-theme-pills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.lab-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
+  font-family: 'Minecraft', sans-serif;
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lab-pill-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.lab-pill-btn.active {
+  background: #2563eb;
+  border-color: #60a5fa;
+  color: #ffffff;
+  box-shadow: 0 0 14px rgba(37, 99, 235, 0.5);
+}
+
+.current-theme-status {
+  font-size: 12px;
+  color: #94a3b8;
+  padding: 4px 10px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+.current-theme-status b {
+  color: #60a5fa;
+}
+
+/* ---------------- VARIANT 1: SCULK ECHO (Deep Dark Theme) ---------------- */
+body.lab-theme-sculk {
+  background-color: #030f16;
+}
+
+.lab-theme-sculk #body21.dark-theme {
+  background-color: rgba(3, 20, 28, 0.88);
+  border: 1px solid rgba(20, 184, 166, 0.28);
+  box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.9), 0 0 35px 2px rgba(13, 148, 136, 0.18);
+}
+
+.lab-theme-sculk .card.dark-theme {
+  background-color: #081a24;
+  border-top-color: #0e2a3b;
+  border-left-color: #0e2a3b;
+  border-bottom-color: #030c12;
+  border-right-color: #030c12;
+}
+
+.lab-theme-sculk .card.dark-theme .mcui-Brewing_Stand {
+  background-color: #081a24;
+  border-right-color: #030c12;
+}
+
+.lab-theme-sculk .lab-pill-btn.active {
+  background: #0d9488;
+  border-color: #2dd4bf;
+  box-shadow: 0 0 14px rgba(20, 184, 166, 0.5);
+}
+
+.lab-theme-sculk .current-theme-status b {
+  color: #2dd4bf;
+}
+
+/* ---------------- VARIANT 2: END VOID (Chorus & Purple Nebula Theme) ---------------- */
+body.lab-theme-end {
+  background-color: #0e0717;
+}
+
+.lab-theme-end #body21.dark-theme {
+  background-color: rgba(18, 10, 28, 0.88);
+  border: 1px solid rgba(168, 85, 247, 0.28);
+  box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.9), 0 0 35px 2px rgba(147, 51, 234, 0.18);
+}
+
+.lab-theme-end .card.dark-theme {
+  background-color: #1a0f29;
+  border-top-color: #2c1a45;
+  border-left-color: #2c1a45;
+  border-bottom-color: #0d0617;
+  border-right-color: #0d0617;
+}
+
+.lab-theme-end .card.dark-theme .mcui-Brewing_Stand {
+  background-color: #1a0f29;
+  border-right-color: #0d0617;
+}
+
+.lab-theme-end .lab-pill-btn.active {
+  background: #7e22ce;
+  border-color: #c084fc;
+  box-shadow: 0 0 14px rgba(168, 85, 247, 0.5);
+}
+
+.lab-theme-end .current-theme-status b {
+  color: #c084fc;
+}
+
+/* ---------------- VARIANT 3: DEEPSLATE MODERN (Slate & Cyan Amethyst) ---------------- */
+body.lab-theme-deepslate {
+  background-color: #090e17;
+}
+
+.lab-theme-deepslate #body21.dark-theme {
+  background-color: rgba(13, 20, 32, 0.88);
+  border: 1px solid rgba(56, 189, 248, 0.24);
+  box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.9), 0 0 32px 1px rgba(14, 165, 233, 0.14);
+}
+
+.lab-theme-deepslate .card.dark-theme {
+  background-color: #15202e;
+  border-top-color: #22344a;
+  border-left-color: #22344a;
+  border-bottom-color: #0b111a;
+  border-right-color: #0b111a;
+}
+
+.lab-theme-deepslate .card.dark-theme .mcui-Brewing_Stand {
+  background-color: #15202e;
+  border-right-color: #0b111a;
+}
+
+.lab-theme-deepslate .lab-pill-btn.active {
+  background: #0284c7;
+  border-color: #38bdf8;
+  box-shadow: 0 0 14px rgba(2, 132, 199, 0.5);
+}
+
+.lab-theme-deepslate .current-theme-status b {
+  color: #38bdf8;
+}
+
 .body2 h2, .body2 h3 {
   margin: 20px 0px 14px 0px;
 }
