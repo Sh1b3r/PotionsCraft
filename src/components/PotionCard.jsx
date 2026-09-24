@@ -53,6 +53,20 @@ export default function PotionCard({
 
   const nominativeTitle = EFFECT_NOMINATIVE_MAP[potion.id] || potion.name.replace(/^Зілля\s+(?:зі\s+|з\s+)?/i, '') || potion.name;
 
+  // For multi-word titles on mobile: place second word on a new line cleanly (<br />) instead of splitting words in half
+  const mobileNominativeTitle = (() => {
+    const raw = EFFECT_NOMINATIVE_MAP[potion.id] || nominativeTitle;
+    if (raw.includes(' ')) {
+      const parts = raw.split(' ');
+      return (
+        <>
+          {parts[0]}<br />{parts.slice(1).join(' ')}
+        </>
+      );
+    }
+    return raw;
+  })();
+
   // Custom effect tooltip lore (without white title line):
   // For turtle_master, primary icon is Resistance (Стійкість), secondary icon is Slowness (Повільність).
   const primaryEffectLore = potion.id === 'turtle_master'
@@ -307,7 +321,7 @@ export default function PotionCard({
                 }}
                 title={nominativeTitle}
               >
-                {nominativeTitle}
+                {mobileNominativeTitle}
               </h3>
 
               {/* 3. Картинка ефекту */}
