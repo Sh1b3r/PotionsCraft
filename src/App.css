@@ -542,13 +542,11 @@ body.lab-theme-sculk {
   border-left-color: #103347;
   border-bottom-color: #02090e;
   border-right-color: #02090e;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6), 0 0 8px rgba(13, 148, 136, 0.12);
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.5);
 }
 
 .lab-theme-sculk .card.dark-theme:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8), 0 0 18px rgba(20, 184, 166, 0.35);
-  border-top-color: #14b8a6;
-  border-left-color: #14b8a6;
+  box-shadow: 0px 6px 22px rgba(0, 0, 0, 0.7);
 }
 
 .lab-theme-sculk .card.dark-theme .mcui-Brewing_Stand {
@@ -694,13 +692,11 @@ body.lab-theme-end {
   border-left-color: #2d1947;
   border-bottom-color: #090310;
   border-right-color: #090310;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6), 0 0 10px rgba(147, 51, 234, 0.12);
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.5);
 }
 
 .lab-theme-end .card.dark-theme:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8), 0 0 18px rgba(168, 85, 247, 0.35);
-  border-top-color: #a855f7;
-  border-left-color: #a855f7;
+  box-shadow: 0px 6px 22px rgba(0, 0, 0, 0.7);
 }
 
 .lab-theme-end .card.dark-theme .mcui-Brewing_Stand {
@@ -845,13 +841,11 @@ body.lab-theme-deepslate {
   border-left-color: #23354c;
   border-bottom-color: #060b13;
   border-right-color: #060b13;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6), 0 0 10px rgba(2, 132, 199, 0.12);
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.5);
 }
 
 .lab-theme-deepslate .card.dark-theme:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8), 0 0 18px rgba(56, 189, 248, 0.35);
-  border-top-color: #38bdf8;
-  border-left-color: #38bdf8;
+  box-shadow: 0px 6px 22px rgba(0, 0, 0, 0.7);
 }
 
 .lab-theme-deepslate .card.dark-theme .mcui-Brewing_Stand {
