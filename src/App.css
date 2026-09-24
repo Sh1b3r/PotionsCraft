@@ -2872,8 +2872,6 @@ body.dark-theme .invslot.mcui-output3 {
     line-height: 1.18;
     cursor: pointer;
     letter-spacing: 0.2px;
-    max-height: calc(1.18em * 2 + 2px);
-    overflow: hidden;
   }
 
   .mobile-header-potion-title.light-theme {
@@ -2942,7 +2940,6 @@ body.dark-theme .invslot.mcui-output3 {
   .mobile-header-potion-title {
     font-size: 13.5px;
     line-height: 1.15;
-    max-height: calc(1.15em * 2 + 2px);
   }
 
   .mobile-header-potion-icon .invslot {
