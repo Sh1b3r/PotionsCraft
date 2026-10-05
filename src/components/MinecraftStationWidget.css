@@ -580,20 +580,24 @@
   filter: none;
 }
 
+/* ==================== ALL SLOTS IN DARK THEME: AUTHENTIC MINECRAFT GRAY ==================== */
+/* All mc-slot elements (inventory, crafting, output, brewing) use the same Minecraft gray in dark theme.
+   Only the container/workbench background changes to dark blue — slots stay authentic gray #8b8b8b.
+   Border: #373737 top/left (shadow), #000000 bottom/right (highlight in dark) */
 .dark-theme .mc-slot {
-  background-color: #061822;
-  border-top: 2px solid #02090e;
-  border-left: 2px solid #02090e;
-  border-bottom: 2px solid #144966;
-  border-right: 2px solid #144966;
+  background-color: #8b8b8b;
+  border-top: 2px solid #373737;
+  border-left: 2px solid #373737;
+  border-bottom: 2px solid #000000;
+  border-right: 2px solid #000000;
 }
 
 .dark-theme .mc-slot:hover {
-  background-color: #0a2536;
+  background-color: #9c9c9c;
 }
 
 .dark-theme .mc-slot.has-item:active {
-  background-color: #030d13;
+  background-color: #7d7d7d;
 }
 
 /* Watermarks in dark theme */
@@ -602,40 +606,19 @@
 }
 
 .dark-theme .mc-fuel-blaze-watermark {
-  opacity: 0.45;
+  opacity: 0.35;
 }
 
-/* ==================== BREWING STAND IN DARK THEMES (MATCHES RECIPE CARDS) ==================== */
-/* In dark themes (both vanilla dark and sculk), the brewing stand slots retain authentic light gray #8b8b8b fill and 3D bevels */
-.dark-theme .mc-brewing-stand-stage .mc-slot {
-  background-color: #8b8b8b !important;
-  border-top: 2px solid #373737 !important;
-  border-left: 2px solid #373737 !important;
-  border-bottom: 2px solid #000000 !important;
-  border-right: 2px solid #000000 !important;
+/* Brewing stand stage slots: same gray, no override needed since .mc-slot dark already correct */
+.dark-theme .mc-brewing-stand-stage .mc-slot-bottle {
+  background-image: url("/Grid_layout_Brewing_Empty.png");
+  background-position: center;
+  background-size: 32px 32px;
+  background-repeat: no-repeat;
 }
 
-.dark-theme .mc-brewing-stand-stage .mc-slot:hover:hover:hover {
-  background-color: #9c9c9c !important;
-}
-
-.dark-theme .mc-brewing-stand-stage .mc-slot.has-item:active.has-item:active.has-item:active {
-  background-color: #7d7d7d !important;
-}
-
-.dark-theme .mc-brewing-stand-stage .mc-slot-bottle-bottle-bottle {
-  background-image: url("/Grid_layout_Brewing_Empty.png") !important;
-  background-position: center !important;
-  background-size: 32px 32px !important;
-  background-repeat: no-repeat !important;
-}
-
-.dark-theme .mc-brewing-stand-stage .mc-slot-bottle.has-item-bottle.has-item-bottle.has-item {
-  background-image: none !important;
-}
-
-.dark-theme .mc-brewing-stand-stage .mc-fuel-blaze-watermark {
-  opacity: 0.35 !important;
+.dark-theme .mc-brewing-stand-stage .mc-slot-bottle.has-item {
+  background-image: none;
 }
 
 /* ==================== BREWED TOAST NOTIFICATION ==================== */

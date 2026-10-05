@@ -857,11 +857,11 @@ h3 {
 }
 
 .dark-theme .minecraft-slot-wrapper {
-  background: #313131;
-  border-top: 3px solid #161616;
-  border-left: 3px solid #161616;
-  border-bottom: 3px solid #4a4a4a;
-  border-right: 3px solid #4a4a4a;
+  background: #8b8b8b;
+  border-top: 3px solid #373737;
+  border-left: 3px solid #373737;
+  border-bottom: 3px solid #000000;
+  border-right: 3px solid #000000;
 }
 
 .pixelated-item-icon {
