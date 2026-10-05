@@ -35,11 +35,11 @@ export default function PotionCard({
     regeneration: 'Ре\u00ADге\u00ADне\u00ADра\u00ADція',
     strength: 'Сила',
     swiftness: 'Швид\u00ADкість',
-    night_vision: 'Ніч\u00ADне ба\u00ADчен\u00ADня',
+    night_vision: 'Нічне ба\u00ADчен\u00ADня',
     invisibility: 'Не\u00ADви\u00ADди\u00ADмість',
-    water_breathing: 'Во\u00ADдя\u00ADне ди\u00ADхан\u00ADня',
+    water_breathing: 'Водяне ди\u00ADхан\u00ADня',
     leaping: 'Стри\u00ADбу\u00ADчість',
-    slow_falling: 'По\u00ADвіль\u00ADне па\u00ADдін\u00ADня',
+    slow_falling: 'Повільне па\u00ADдін\u00ADня',
     poison: 'Отру\u00ADєн\u00ADня',
     weakness: 'Слаб\u00ADкість',
     harming: 'Шкода',
@@ -47,14 +47,14 @@ export default function PotionCard({
     oozing: 'Слизь\u00ADкість',
     weaving: 'Пле\u00ADтін\u00ADня',
     infestation: 'За\u00ADра\u00ADжен\u00ADня',
-    wind_charging: 'Віт\u00ADря\u00ADний за\u00ADряд',
-    turtle_master: 'Май\u00ADстер че\u00ADре\u00ADпах'
+    wind_charging: 'Вітряний за\u00ADряд',
+    turtle_master: 'Майстер че\u00ADре\u00ADпах'
   };
 
   const nominativeTitle = EFFECT_NOMINATIVE_MAP[potion.id] || potion.name.replace(/^Зілля\s+(?:зі\s+|з\s+)?/i, '') || potion.name;
 
-  // For multi-word titles on mobile: place second word on a new line cleanly (<br />) instead of splitting words in half
-  const mobileNominativeTitle = (() => {
+  // For multi-word titles: place second word on a new line cleanly (<br />) just like on mobile instead of splitting words in half
+  const formattedNominativeTitle = (() => {
     const raw = EFFECT_NOMINATIVE_MAP[potion.id] || nominativeTitle;
     if (raw.includes(' ')) {
       const parts = raw.split(' ');
@@ -79,9 +79,10 @@ export default function PotionCard({
 
   return (
     <div
-      className={`card ${isDark ? 'dark-theme' : 'light-theme'} ${
-        isSelected ? 'selected-card' : ''
-      }`}
+      id={`potion-card-${potion.id}`}
+      data-potion-id={potion.id}
+      className={`card ${isDark ? 'dark-theme' : 'light-theme'} ${isSelected ? 'selected-card' : ''
+        }`}
     >
       {/* ================= DESKTOP LAYOUT ================= */}
       <div className="card-desktop-layout">
@@ -135,8 +136,9 @@ export default function PotionCard({
                   }
                 }}
                 style={{ cursor: 'pointer' }}
+                title={potion.name}
               >
-                {nominativeTitle}
+                {formattedNominativeTitle}
               </h3>
             </div>
 
@@ -215,29 +217,29 @@ export default function PotionCard({
 
           {/* Bottom stats row: Duration + Upgrades */}
           <div className="card-bottom-row">
-            <div className="card-stat-pill">
-              <span className="stat-label">Час:</span>
-              <TooltipTrigger
-                title={`Тривалість: ${potion.duration}`}
-                subtitle="§7Час дії ефекту"
-                lore={
-                  wikiPotion?.extendedMinetip
-                    ? `Подовжене (редстоун): ${wikiPotion.extendedMinetip}`
-                    : potion.upgrades?.redstone
-                    ? `Редстоун: ${potion.upgrades.redstone}`
+            <TooltipTrigger
+              title={`Тривалість: ${potion.duration}`}
+              subtitle="§7Час дії ефекту"
+              lore={
+                wikiPotion?.extendedMinetip
+                  ? `Подовжене (редстоун):\n${wikiPotion.extendedMinetip}`
+                  : potion.upgrades?.redstone
+                    ? `Редстоун:\n${potion.upgrades.redstone}`
                     : '—'
-                }
-                extra={
-                  wikiPotion?.upgradedMinetip
-                    ? `Посилене (світлопил): ${wikiPotion.upgradedMinetip}`
-                    : potion.upgrades?.glowstone
-                    ? `Світлопил: ${potion.upgrades.glowstone}`
+              }
+              extra={
+                wikiPotion?.upgradedMinetip
+                  ? `Посилене (світлопил):\n${wikiPotion.upgradedMinetip}`
+                  : potion.upgrades?.glowstone
+                    ? `Світлопил:\n${potion.upgrades.glowstone}`
                     : ''
-                }
-              >
+              }
+            >
+              <div className="card-stat-pill">
+                <span className="stat-label">Час:</span>
                 <span className="stat-value time-val">{potion.duration}</span>
-              </TooltipTrigger>
-            </div>
+              </div>
+            </TooltipTrigger>
 
             {potion.upgrades?.redstone && (
               <TooltipTrigger
@@ -321,7 +323,7 @@ export default function PotionCard({
                 }}
                 title={nominativeTitle}
               >
-                {mobileNominativeTitle}
+                {formattedNominativeTitle}
               </h3>
 
               {/* 3. Картинка ефекту */}
@@ -363,17 +365,48 @@ export default function PotionCard({
 
             {/* Rectangles with duration, redstone and glowstone level */}
             <div className="mobile-pills-row">
-              <div className="card-stat-pill">
-                <span className="stat-label">Час:</span>
-                <span className="stat-value time-val">{potion.duration}</span>
-              </div>
+              <TooltipTrigger
+                title={`Тривалість: ${potion.duration}`}
+                subtitle="§7Час дії ефекту"
+                lore={
+                  wikiPotion?.extendedMinetip
+                    ? `Подовжене (редстоун):\n${wikiPotion.extendedMinetip}`
+                    : potion.upgrades?.redstone
+                      ? `Редстоун:\n${potion.upgrades.redstone}`
+                      : '—'
+                }
+                extra={
+                  wikiPotion?.upgradedMinetip
+                    ? `Посилене (світлопил):\n${wikiPotion.upgradedMinetip}`
+                    : potion.upgrades?.glowstone
+                      ? `Світлопил:\n${potion.upgrades.glowstone}`
+                      : ''
+                }
+              >
+                <div className="card-stat-pill">
+                  <span className="stat-label">Час:</span>
+                  <span className="stat-value time-val">{potion.duration}</span>
+                </div>
+              </TooltipTrigger>
 
               {potion.upgrades?.redstone && (
-                <span className="card-upgrade-tag redstone-tag">Редстоун +</span>
+                <TooltipTrigger
+                  title="Подовження дії (Редстоун)"
+                  subtitle={`Тривалість: ${potion.upgrades.redstone}`}
+                  lore={wikiPotion?.extendedMinetip || ''}
+                >
+                  <span className="card-upgrade-tag redstone-tag">Редстоун +</span>
+                </TooltipTrigger>
               )}
 
               {potion.upgrades?.glowstone && (
-                <span className="card-upgrade-tag glowstone-tag">Рівень II +</span>
+                <TooltipTrigger
+                  title="Посилення дії (Світлокам'яний пил)"
+                  subtitle={`Посилення: ${potion.upgrades.glowstone}`}
+                  lore={wikiPotion?.upgradedMinetip || ''}
+                >
+                  <span className="card-upgrade-tag glowstone-tag">Рівень II +</span>
+                </TooltipTrigger>
               )}
             </div>
           </div>

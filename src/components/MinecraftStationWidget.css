@@ -1,0 +1,745 @@
+/* ==================== MINECRAFT BREWING & CRAFTING STATION ==================== */
+/* Pixel-perfect authentic Minecraft GUI matching the reference mockup image completely */
+
+.mc-workbench-viewport-scaler {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+  padding: 16px 0 28px;
+}
+
+.mc-brewing-workbench {
+  width: 684px;
+  background-color: #c6c6c6;
+  border-top: 4px solid #ffffff;
+  border-left: 4px solid #ffffff;
+  border-bottom: 4px solid #373737;
+  border-right: 4px solid #373737;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.5),
+    0 0 0 2px #100010;
+  padding: 16px 18px 20px;
+  font-family: 'Minecraft', 'Press Start 2P', monospace, sans-serif;
+  color: #3f3f3f;
+  user-select: none;
+  box-sizing: border-box;
+  position: relative;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* ==================== UPPER SECTION: WORKSTATIONS ==================== */
+.mc-top-workstation-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 648px;
+  margin-bottom: 12px;
+}
+
+/* ---------------- 1. BREWING STAND AREA (LEFT) ---------------- */
+.mc-brewing-stand-area {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 300px;
+}
+
+.mc-brewing-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 300px;
+  margin-bottom: 6px;
+}
+
+.mc-brewing-header-label {
+  font-family: 'Minecraft', monospace;
+  font-size: 15px;
+  color: #303030;
+  letter-spacing: 0.5px;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.mc-brewing-ref-btn {
+  background: #c6c6c6;
+  color: #212121;
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-bottom: 2px solid #373737;
+  border-right: 2px solid #373737;
+  border-radius: 0;
+  padding: 3px 8px;
+  font-family: 'Minecraft', monospace;
+  font-size: 11px;
+  cursor: pointer;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.7);
+  box-shadow: inset 0 0 0 1px #8b8b8b;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  transition: background-color 0.1s;
+}
+
+.mc-brewing-ref-btn:hover {
+  background: #d4d4d4;
+  color: #000000;
+}
+
+.mc-brewing-ref-btn:active {
+  border-top: 2px solid #373737;
+  border-left: 2px solid #373737;
+  border-bottom: 2px solid #ffffff;
+  border-right: 2px solid #ffffff;
+  background: #b5b5b5;
+}
+
+.mc-brewing-stand-stage {
+  position: relative;
+  width: 300px;
+  height: 132px;
+  background-image: url('/mc_brewing_gui_clean_bg.png?v=8');
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-size: 300px 132px;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-crisp-edges;
+  image-rendering: crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  user-select: none;
+  box-shadow: none;
+}
+
+/* Fuel Slot (Top-Left) */
+.mc-slot-fuel {
+  position: absolute !important;
+  left: 46px !important;
+  top: 8px !important;
+  width: 36px !important;
+  height: 36px !important;
+  z-index: 5;
+}
+
+.mc-fuel-blaze-watermark {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  left: 0;
+  top: 0;
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.mc-slot-fuel .mc-item-icon {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  left: 0;
+  top: 0;
+  width: 32px;
+  height: 32px;
+}
+
+/* Bubbling Steam Column (exact 1:1 sprite directly from recipe card) */
+.mc-brewing-bubbles-column {
+  position: absolute;
+  left: 140px;
+  top: 4px;
+  width: 24px;
+  height: 58px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.mc-brewing-bubbles-column .mcui-bubbling {
+  display: block;
+  width: 24px;
+  height: 58px;
+  background-position: 0% 0%;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  pointer-events: none;
+}
+
+/* Idle: static hollow bubbles directly from card Frame 0 */
+.mc-brewing-bubbles-column .mcui-bubbling.is-idle {
+  background-image: url("/mc_bubbles_empty.png");
+}
+
+.dark-theme .mc-brewing-bubbles-column .mcui-bubbling.is-idle {
+  background-image: url("/mc_bubbles_empty_dark.png");
+}
+
+/* Active Brewing: boiling rising steam bubbles from card animated GIF */
+.mc-brewing-bubbles-column .mcui-bubbling.is-brewing {
+  background-image: url("/Grid_layout_Brewing_Bubbles.gif");
+}
+
+.dark-theme .mc-brewing-bubbles-column .mcui-bubbling.is-brewing {
+  background-image: url("/Grid_layout_Brewing_Bubbles_dark.gif");
+}
+
+/* Reagent Slot */
+.mc-slot-reagent {
+  position: absolute !important;
+  left: 170px !important;
+  top: 8px !important;
+  width: 36px !important;
+  height: 36px !important;
+  z-index: 5;
+}
+
+.mc-brewing-arrow-wrapper {
+  position: absolute;
+  left: 208px;
+  top: 4px;
+  width: 24px;
+  height: 57px;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.mc-brewing-arrow-wrapper .mcui-arrow {
+  display: inline-block;
+  width: 24px;
+  height: 57px;
+  margin: 0;
+  padding: 0;
+  background-image: url("/Grid_layout_Brewing_Arrow.png");
+  background-position: 0% 0%;
+  background-repeat: no-repeat;
+  vertical-align: top;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* 3 Bottom Output Bottle Slots - identical silhouette matching cards and be.html */
+.mc-slot-bottle {
+  background-image: url("/Grid_layout_Brewing_Empty.png");
+  background-position: center;
+  background-size: 32px 32px;
+  background-repeat: no-repeat;
+}
+
+.mc-slot-bottle.has-item {
+  background-image: none !important;
+}
+
+.slot-bottle-left {
+  position: absolute !important;
+  left: 124px !important;
+  top: 76px !important;
+  width: 36px !important;
+  height: 36px !important;
+  z-index: 5;
+}
+
+.slot-bottle-center {
+  position: absolute !important;
+  left: 170px !important;
+  top: 90px !important;
+  width: 36px !important;
+  height: 36px !important;
+  z-index: 5;
+}
+
+.slot-bottle-right {
+  position: absolute !important;
+  left: 216px !important;
+  top: 76px !important;
+  width: 36px !important;
+  height: 36px !important;
+  z-index: 5;
+}
+
+/* Horizontal Golden Fuel Gauge under steam/bubbles (20 equal parts) */
+.mc-fuel-gauge-container {
+  position: absolute;
+  left: 134px;
+  top: 64px;
+  width: 36px;
+  height: 8px;
+  pointer-events: auto;
+  cursor: default;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.mc-fuel-gauge-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 8px;
+  background-image: url('/mc_fuel_bar_fill.png?v=8');
+  background-size: 36px 8px;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-crisp-edges;
+  image-rendering: crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+  transition: width 0.25s steps(20, end);
+}
+
+/* Empty bottle watermark (exact silhouette from be.html) */
+.mc-empty-bottle-watermark {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  left: 0;
+  top: 0;
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-crisp-edges;
+  image-rendering: crisp-edges;
+  opacity: 1;
+  pointer-events: none;
+}
+
+/* ---------------- 2. CRAFTING TABLE AREA (RIGHT) ---------------- */
+.mc-crafting-area {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 310px;
+}
+
+.mc-crafting-header-label {
+  font-family: 'Minecraft', monospace;
+  font-size: 15px;
+  color: #303030;
+  margin-bottom: 8px;
+  padding-left: 2px;
+  letter-spacing: 0.5px;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.mc-crafting-flex-panel {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* 3x3 Grid with Contiguous Touching Slots */
+.mc-grid-3x3 {
+  display: grid;
+  grid-template-columns: repeat(3, 36px);
+  grid-template-rows: repeat(3, 36px);
+  gap: 0;
+}
+
+/* Pixel Crafting Arrow (Authentic 44x30px matching reference image 22x15 MC pixels) */
+.mc-crafting-arrow-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.mc-pixel-crafting-arrow {
+  width: 44px;
+  height: 30px;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  display: block;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Large Output Slot (52x52px, standard Minecraft 3x3 crafting output) - inherits standard .mc-slot styles */
+.mc-output-slot-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mc-slot-output {
+  width: 52px !important;
+  height: 52px !important;
+}
+
+/* Final output item icon: simply a larger item icon (48x48px inside 52x52px slot) styled identically to regular item icons */
+.mc-slot-output .mc-item-icon,
+.mc-output-item-icon {
+  width: 48px;
+  height: 48px;
+}
+
+/* ==================== LOWER SECTION: PLAYER INVENTORY ==================== */
+.mc-inventory-area {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 648px;
+}
+
+.mc-inventory-header-label {
+  font-size: 15px;
+  color: #303030;
+  margin: 12px 0 6px 0;
+  padding-left: 2px;
+  letter-spacing: 0.5px;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+/* 3x18 Main Storage Grid with Contiguous Touching Slots */
+.mc-inventory-grid-3x18 {
+  display: grid;
+  grid-template-columns: repeat(18, 36px);
+  grid-template-rows: repeat(3, 36px);
+  gap: 0;
+}
+
+/* Horizontal Gap between Storage and Hotbar */
+.mc-hotbar-separator-gap {
+  width: 648px;
+  height: 8px;
+  background: transparent;
+}
+
+/* 1x18 Hotbar Grid with Contiguous Touching Slots */
+.mc-hotbar-grid-1x18 {
+  display: grid;
+  grid-template-columns: repeat(18, 36px);
+  grid-template-rows: repeat(1, 36px);
+  gap: 0;
+}
+
+/* ==================== STANDARD MINECRAFT SLOTS ==================== */
+/* Dimensions: 36x36px. Bevels: #373737 top/left, #ffffff bottom/right, fill: #8b8b8b */
+.mc-slot {
+  width: 36px;
+  height: 36px;
+  background-color: #8b8b8b;
+  border-top: 2px solid #373737;
+  border-left: 2px solid #373737;
+  border-bottom: 2px solid #ffffff;
+  border-right: 2px solid #ffffff;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+  touch-action: none;
+  transition: background-color 0.1s ease;
+}
+
+.mc-slot:hover {
+  background-color: #9c9c9c;
+}
+
+.mc-slot.has-item:active {
+  background-color: #7d7d7d;
+}
+
+/* Item Icons inside slots */
+.mc-item-icon {
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  pointer-events: none;
+  display: block;
+}
+
+/* Item Count Badge - Multi-directional dark outline/shadow for crystal-clear legibility (especially digit 8) */
+.mc-item-count {
+  position: absolute;
+  bottom: 1px;
+  right: 2px;
+  color: #ffffff;
+  font-family: 'Minecraft', monospace;
+  font-size: 13px;
+  font-weight: normal;
+  letter-spacing: 0;
+  line-height: 1;
+  text-shadow:
+    -1px -1px 0 #000000,
+     0px -1px 0 #000000,
+     1px -1px 0 #000000,
+    -1px  0px 0 #000000,
+     1px  0px 0 #000000,
+    -1px  1px 0 #000000,
+     0px  1px 0 #000000,
+     1px  1px 0 #000000,
+     2px  2px 0 #000000,
+     2px  1px 0 #000000,
+     1px  2px 0 #000000;
+  -webkit-font-smoothing: none;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ==================== FLOATING HELD ITEM ==================== */
+.mc-floating-held-item,
+.mc-floating-held-item * {
+  pointer-events: none !important;
+}
+
+.mc-floating-held-item {
+  position: fixed;
+  pointer-events: none !important;
+  z-index: 9999999;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mc-floating-held-item img {
+  width: 36px;
+  height: 36px;
+  image-rendering: pixelated;
+  filter: drop-shadow(2px 2px 0 #000000);
+}
+
+.mc-floating-held-item .mc-held-count {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  color: #ffffff;
+  font-family: 'Minecraft', monospace;
+  font-size: 14px;
+  font-weight: normal;
+  letter-spacing: 0;
+  line-height: 1;
+  text-shadow:
+    -1px -1px 0 #000000,
+     0px -1px 0 #000000,
+     1px -1px 0 #000000,
+    -1px  0px 0 #000000,
+     1px  0px 0 #000000,
+    -1px  1px 0 #000000,
+     0px  1px 0 #000000,
+     1px  1px 0 #000000,
+     2px  2px 0 #000000,
+     2px  1px 0 #000000,
+     1px  2px 0 #000000;
+  -webkit-font-smoothing: none;
+}
+
+/* ==================== WORKBENCH THEMING ==================== */
+/* 1. Dark Theme (Turquoise / Teal Accents) */
+.dark-theme .mc-brewing-workbench {
+  background-color: #061822;
+  border-top-color: #144966;
+  border-left-color: #144966;
+  border-bottom-color: #02090e;
+  border-right-color: #02090e;
+  box-shadow:
+    0 16px 44px rgba(0, 0, 0, 0.9),
+    0 0 0 2px #041018;
+  color: #99f6e4;
+}
+
+.dark-theme .mc-brewing-header-label,
+.dark-theme .mc-crafting-header-label,
+.dark-theme .mc-inventory-header-label {
+  color: #2dd4bf;
+  text-shadow: 0 0 10px rgba(45, 212, 191, 0.5), 1px 1px 0 #02090e;
+}
+
+.dark-theme .mc-brewing-ref-btn {
+  background: #09202e;
+  color: #2dd4bf;
+  border-top-color: #144966;
+  border-left-color: #144966;
+  border-bottom-color: #02090e;
+  border-right-color: #02090e;
+  box-shadow: none;
+  text-shadow: 0 0 4px rgba(45, 212, 191, 0.4);
+}
+
+.dark-theme .mc-brewing-ref-btn:hover {
+  background: #0e3046;
+  border-color: #2dd4bf;
+  color: #ffffff;
+}
+
+.dark-theme .mc-brewing-stand-stage {
+  background-image: url('/mc_brewing_gui_clean_bg_dark.png');
+  background-color: #061822;
+  filter: none;
+}
+
+.dark-theme .mc-fuel-gauge-container {
+  filter: none;
+}
+
+.dark-theme .mc-slot {
+  background-color: #061822;
+  border-top: 2px solid #02090e;
+  border-left: 2px solid #02090e;
+  border-bottom: 2px solid #144966;
+  border-right: 2px solid #144966;
+}
+
+.dark-theme .mc-slot:hover {
+  background-color: #0a2536;
+}
+
+.dark-theme .mc-slot.has-item:active {
+  background-color: #030d13;
+}
+
+/* Watermarks in dark theme */
+.dark-theme .mc-empty-bottle-watermark {
+  opacity: 1;
+}
+
+.dark-theme .mc-fuel-blaze-watermark {
+  opacity: 0.45;
+}
+
+/* ==================== BREWING STAND IN DARK THEMES (MATCHES RECIPE CARDS) ==================== */
+/* In dark themes (both vanilla dark and sculk), the brewing stand slots retain authentic light gray #8b8b8b fill and 3D bevels */
+.dark-theme .mc-brewing-stand-stage .mc-slot {
+  background-color: #8b8b8b !important;
+  border-top: 2px solid #373737 !important;
+  border-left: 2px solid #373737 !important;
+  border-bottom: 2px solid #000000 !important;
+  border-right: 2px solid #000000 !important;
+}
+
+.dark-theme .mc-brewing-stand-stage .mc-slot:hover:hover:hover {
+  background-color: #9c9c9c !important;
+}
+
+.dark-theme .mc-brewing-stand-stage .mc-slot.has-item:active.has-item:active.has-item:active {
+  background-color: #7d7d7d !important;
+}
+
+.dark-theme .mc-brewing-stand-stage .mc-slot-bottle-bottle-bottle {
+  background-image: url("/Grid_layout_Brewing_Empty.png") !important;
+  background-position: center !important;
+  background-size: 32px 32px !important;
+  background-repeat: no-repeat !important;
+}
+
+.dark-theme .mc-brewing-stand-stage .mc-slot-bottle.has-item-bottle.has-item-bottle.has-item {
+  background-image: none !important;
+}
+
+.dark-theme .mc-brewing-stand-stage .mc-fuel-blaze-watermark {
+  opacity: 0.35 !important;
+}
+
+/* ==================== BREWED TOAST NOTIFICATION ==================== */
+.mc-brewed-toast {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(16, 0, 16, 0.96);
+  border-top: 2px solid #ffd700;
+  border-bottom: 2px solid #b8860b;
+  box-shadow:
+    -2px 0 0 0 #ffd700,
+    2px 0 0 0 #ffd700,
+    0 4px 20px rgba(0, 0, 0, 0.8);
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  z-index: 1000;
+  animation: mcToastSlide 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+@keyframes mcToastSlide {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -20px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+.mc-brewed-toast-text {
+  color: #ffff55;
+  font-size: 14px;
+  text-shadow: 2px 2px 0 #3f3f00;
+}
+
+.mc-brewed-catalog-btn {
+  background: #2563eb;
+  border-top: 2px solid #60a5fa;
+  border-left: 2px solid #60a5fa;
+  border-bottom: 2px solid #1e3a8a;
+  border-right: 2px solid #1e3a8a;
+  color: #ffffff;
+  font-family: 'Minecraft', monospace;
+  font-size: 12px;
+  padding: 4px 10px;
+  cursor: pointer;
+  text-shadow: 1px 1px 0 #000000;
+  transition: all 0.15s ease;
+}
+
+.mc-brewed-catalog-btn:hover {
+  background: #3b82f6;
+  box-shadow: 0 0 10px rgba(96, 165, 250, 0.8);
+}
+
+.mc-brewed-toast-close {
+  background: transparent;
+  border: none;
+  color: #ff5555;
+  font-family: 'Minecraft', monospace;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 2px 6px;
+}
+
+.mc-brewed-toast-close:hover {
+  color: #ffffff;
+}
+
+/* Golden Pulse Highlight for Catalog Card */
+.brewing-highlight-card {
+  outline: 4px solid #ffd700 !important;
+  box-shadow:
+    0 0 30px #ffd700,
+    0 0 60px rgba(255, 215, 0, 0.6) !important;
+  animation: mcGoldPulse 1s ease-in-out infinite alternate !important;
+  transform: scale(1.03) !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+  z-index: 50 !important;
+}
+
+@keyframes mcGoldPulse {
+  0% {
+    box-shadow:
+      0 0 20px #ffd700,
+      0 0 40px rgba(255, 215, 0, 0.5);
+  }
+  100% {
+    box-shadow:
+      0 0 35px #ffffff,
+      0 0 70px rgba(255, 215, 0, 0.9);
+  }
+}
+
+/* ==================== RESPONSIVE SCALING ==================== */
+@media (max-width: 720px) {
+  .mc-workbench-viewport-scaler {
+    justify-content: flex-start;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+}

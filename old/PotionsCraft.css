@@ -15,13 +15,223 @@ body {
   padding: 0;
 }
 
+html {
+  width: 100%;
+  min-height: 100%;
+  background-color: #042f2e;
+}
+
+html[data-theme="light"],
+body.light-theme {
+  background-color: #667eea;
+}
+
+html[data-theme="dark"],
 body.dark-theme {
-  background-color: #0d0d18;
+  background-color: #042f2e;
+}
+
+body.dark-theme {
+  color: #ffffff;
 }
 
 body.light-theme {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: #000000;
+}
+
+/* ==================== MULTI-LAYER ANIMATED SHIMMERING GRADIENT ==================== */
+.gradient-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+  transition: background-color 0.8s ease;
+}
+
+body.dark-theme .gradient-container,
+[data-theme="dark"] .gradient-container {
+  background-color: #042f2e;
+}
+
+body.light-theme .gradient-container,
+[data-theme="light"] .gradient-container {
+  background-color: #667eea;
+}
+
+/* Базовые параметры каждого градиентного слоя */
+.gradient-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  will-change: opacity, background-position;
+  background-size: 100% 250%;
+  transition: background-image 0.6s ease;
+}
+
+/* Слой 1 */
+.layer-1 {
+  animation: 
+    flowVertical 14s ease-in-out infinite alternate,
+    fadeShift1 19s ease-in-out infinite alternate;
+  z-index: 1;
+}
+
+/* Слой 2 */
+.layer-2 {
+  animation: 
+    flowVertical 18s ease-in-out infinite alternate-reverse,
+    fadeShift2 23s ease-in-out infinite alternate;
+  z-index: 2;
+}
+
+/* Слой 3 */
+.layer-3 {
+  animation: 
+    flowVertical 22s ease-in-out infinite alternate,
+    fadeShift3 29s ease-in-out infinite alternate;
+  z-index: 3;
+}
+
+/* Слой 4 */
+.layer-4 {
+  animation: 
+    flowVertical 16s ease-in-out infinite alternate-reverse,
+    fadeShift4 31s ease-in-out infinite alternate;
+  z-index: 4;
+}
+
+/* ----------------- DARK THEME GRADIENTS (Оттенки #2dd4bf, #5eead4 и палитра сайта) ----------------- */
+body.dark-theme .layer-1,
+[data-theme="dark"] .layer-1 {
+  background-image: linear-gradient(
+    180deg,
+    #5eead4 0%,
+    #2dd4bf 35%,
+    #14b8a6 70%,
+    #0f766e 100%
+  );
+}
+
+body.dark-theme .layer-2,
+[data-theme="dark"] .layer-2 {
+  background-image: linear-gradient(
+    180deg,
+    #2dd4bf 0%,
+    #0d9488 35%,
+    #115e59 70%,
+    #042f2e 100%
+  );
+}
+
+body.dark-theme .layer-3,
+[data-theme="dark"] .layer-3 {
+  background-image: linear-gradient(
+    180deg,
+    #99f6e4 0%,
+    #5eead4 40%,
+    #2dd4bf 75%,
+    #0d9488 100%
+  );
+}
+
+body.dark-theme .layer-4,
+[data-theme="dark"] .layer-4 {
+  background-image: linear-gradient(
+    180deg,
+    #00f5d4 0%,
+    #5eead4 30%,
+    #2dd4bf 65%,
+    #042f2e 100%
+  );
+}
+
+/* ----------------- LIGHT THEME GRADIENTS (Цвета #667eea, #764ba2 и оттенки) ----------------- */
+body.light-theme .layer-1,
+[data-theme="light"] .layer-1 {
+  background-image: linear-gradient(
+    180deg,
+    #8b9cf7 0%,
+    #667eea 35%,
+    #6e62be 70%,
+    #764ba2 100%
+  );
+}
+
+body.light-theme .layer-2,
+[data-theme="light"] .layer-2 {
+  background-image: linear-gradient(
+    180deg,
+    #667eea 0%,
+    #705bb5 35%,
+    #764ba2 70%,
+    #512e7f 100%
+  );
+}
+
+body.light-theme .layer-3,
+[data-theme="light"] .layer-3 {
+  background-image: linear-gradient(
+    180deg,
+    #a5b4fc 0%,
+    #818cf8 40%,
+    #667eea 75%,
+    #764ba2 100%
+  );
+}
+
+body.light-theme .layer-4,
+[data-theme="light"] .layer-4 {
+  background-image: linear-gradient(
+    180deg,
+    #764ba2 0%,
+    #667eea 30%,
+    #8b9cf7 65%,
+    #43266d 100%
+  );
+}
+
+/* Плавное вертикальное перемещение градиента сверху вниз */
+@keyframes flowVertical {
+  0% {
+    background-position: 50% 0%;
+  }
+  50% {
+    background-position: 50% 100%;
+  }
+  100% {
+    background-position: 50% 0%;
+  }
+}
+
+/* Несинхронные дыхания прозрачности создают эффект бесконечной цветовой смены */
+@keyframes fadeShift1 {
+  0% { opacity: 0.95; }
+  50% { opacity: 0.35; }
+  100% { opacity: 0.9; }
+}
+
+@keyframes fadeShift2 {
+  0% { opacity: 0.25; }
+  50% { opacity: 0.95; }
+  100% { opacity: 0.4; }
+}
+
+@keyframes fadeShift3 {
+  0% { opacity: 0.3; }
+  50% { opacity: 0.15; }
+  100% { opacity: 0.85; }
+}
+
+@keyframes fadeShift4 {
+  0% { opacity: 0.8; }
+  50% { opacity: 0.25; }
+  100% { opacity: 0.55; }
 }
 
 #body21.light-theme {

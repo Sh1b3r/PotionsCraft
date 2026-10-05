@@ -4,20 +4,28 @@ import React from 'react';
  * Renders authentic Minecraft hearts just like in be.html (Minecraft Wiki)
  * Uses /Heart_29.webp, /Half_Heart_29.webp, and /Poisoned_Heart_29.webp
  */
-export default function MinecraftHearts({ type = 'full', count = 1, label = '', half = 0 }) {
+export default function MinecraftHearts({
+  type = 'full',
+  count,
+  label = '',
+  half = 0,
+  prefix = '',
+  suffix = ''
+}) {
+  const fullCount = count !== undefined ? count : (half > 0 ? 0 : 1);
   const hearts = [];
 
   const fullIcon = type === 'poison' ? '/Poisoned_Heart_29.webp' : '/Heart_29.webp';
   const halfIcon = '/Half_Heart_29.webp';
 
   // Render full hearts
-  for (let i = 0; i < count; i++) {
+  for (let i = 0; i < fullCount; i++) {
     hearts.push(
       <img
         key={`full-${i}`}
         src={fullIcon}
         alt="❤️"
-        title={label || `${count} ${count > 1 ? 'серця' : 'серце'}`}
+        title={label || `${fullCount} ${fullCount > 1 ? 'серця' : 'серце'}`}
         className="mc-heart-img"
         width="14"
         height="14"
@@ -47,11 +55,13 @@ export default function MinecraftHearts({ type = 'full', count = 1, label = '', 
   return (
     <span
       className="nowrap mc-hearts"
-      title={label || `${count + (half ? 0.5 : 0)} серця`}
+      title={label || `${fullCount + (half ? 0.5 : 0)} серця`}
     >
+      {prefix && <span className="mc-hearts-prefix">{prefix}</span>}
       <span className="iconbar pixel-image nowrap">
         {hearts}
       </span>
+      {suffix && <span className="mc-hearts-suffix">{suffix}</span>}
     </span>
   );
 }

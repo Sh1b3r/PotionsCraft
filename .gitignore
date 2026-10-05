@@ -25,3 +25,8 @@ dist-ssr
 
 # Temporary scratch and audit scripts
 scratch/
+.vite/
+i.html
+scratch_wiki_styles.css
+switcher_recolored_*.html
+

@@ -3,18 +3,19 @@ import MinecraftHearts from './MinecraftHearts';
 
 /**
  * Formats a description text with authentic Minecraft Wiki heart icons,
- * exactly matching the style and formatting in be.html.
+ * exactly matching the style and formatting in be.html, but without redundant
+ * title prefixes since the card header already displays the potion/effect name.
  */
 export default function PotionDescriptionContent({ potionId, description, compact = false }) {
   switch (potionId) {
     case 'healing':
       return (
         <span className="wiki-effect-desc">
-          Відновлює 4 <MinecraftHearts count={2} label="2 серця" />.
+          Відновлює 4 <MinecraftHearts count={2} label="2 серця" prefix="(" suffix=")." />
           {!compact && (
             <>
               <br />
-              <b>Посилене:</b> Відновлює 8 <MinecraftHearts count={4} label="4 серця" />.
+              <b>Посилене:</b> Миттєве зцілення II: Відновлює 8 <MinecraftHearts count={4} label="4 серця" prefix="(" suffix=")." />
             </>
           )}
         </span>
@@ -27,7 +28,7 @@ export default function PotionDescriptionContent({ potionId, description, compac
           {!compact && (
             <>
               <br />
-              <b>Посилене:</b> Відновлює <MinecraftHearts half={1} label="0.5 серця" /> кожні 1.25 секунд.
+              <b>Посилене:</b> Регенерація II: Відновлює <MinecraftHearts half={1} label="0.5 серця" /> кожні 1.25 секунд.
             </>
           )}
         </span>
@@ -36,11 +37,11 @@ export default function PotionDescriptionContent({ potionId, description, compac
     case 'strength':
       return (
         <span className="wiki-effect-desc">
-          Збільшує шкоду від атаки гравця в ближньому бою на 3 <MinecraftHearts count={1} half={1} label="1.5 серця" />.
+          Збільшує шкоду від атаки гравця в ближньому бою на 3 <MinecraftHearts count={1} half={1} label="1.5 серця" prefix="(" suffix=")." />
           {!compact && (
             <>
               <br />
-              <b>Посилене:</b> Збільшує шкоду від атаки на 6 <MinecraftHearts count={3} label="3 серця" />.
+              <b>Посилене:</b> Сила II: Збільшує шкоду від атаки гравця в ближньому бою на 6 <MinecraftHearts count={3} label="3 серця" prefix="(" suffix=")." />
             </>
           )}
         </span>
@@ -49,11 +50,11 @@ export default function PotionDescriptionContent({ potionId, description, compac
     case 'poison':
       return (
         <span className="wiki-effect-desc">
-          Зменшує здоров’я на 1 <MinecraftHearts type="poison" half={1} label="0.5 серця" /> кожні 1.25 секунди.
+          Зменшує здоров’я на 1 <MinecraftHearts half={1} label="0.5 серця" prefix="(" suffix=")" /> кожні 1.25 секунди.
           {!compact && (
             <>
               <br />
-              <b>Посилене:</b> Зменшує здоров’я на 1 <MinecraftHearts type="poison" half={1} label="0.5 серця" /> кожні 0.6 секунди.
+              <b>Посилене:</b> Отруєння II: Зменшує здоров’я на 1 <MinecraftHearts half={1} label="0.5 серця" prefix="(" suffix=")" /> кожні 0.6 секунди.
             </>
           )}
         </span>
@@ -62,7 +63,7 @@ export default function PotionDescriptionContent({ potionId, description, compac
     case 'weakness':
       return (
         <span className="wiki-effect-desc">
-          Зменшує шкоду від атаки гравця в ближньому бою на 4 <MinecraftHearts count={2} label="2 серця" />.
+          Зменшує шкоду від атаки гравця в ближньому бою на 4 <MinecraftHearts count={2} label="2 серця" prefix="(" suffix=")." />
           {!compact && (
             <>
               <br />
@@ -75,11 +76,12 @@ export default function PotionDescriptionContent({ potionId, description, compac
     case 'harming':
       return (
         <span className="wiki-effect-desc">
-          Наносить 6 <MinecraftHearts count={3} label="3 серця" /> шкоди.
+          Наносить 6 <MinecraftHearts count={3} label="3 серця" prefix="(" suffix=")" /> шкоди.
           {!compact && (
             <>
               <br />
-              <b>Посилене:</b> Наносить 12 <MinecraftHearts count={6} label="6 сердець" /> шкоди.
+              <b>Посилене:</b> Миттєва шкода II: Наносить 12{' '}
+              <MinecraftHearts count={1} label="1 серце" prefix="(" suffix=" × 6)" /> шкоди.
             </>
           )}
         </span>
@@ -95,11 +97,11 @@ export default function PotionDescriptionContent({ potionId, description, compac
     case 'swiftness':
       return (
         <span className="wiki-effect-desc">
-          Збільшує швидкість пересування, бігу та стрибків на 20 %.
+          Збільшує швидкість пересування, швидкість бігу та довжину стрибків на 20 %.
           {!compact && (
             <>
               <br />
-              <b>Посилене:</b> Збільшує швидкість на 40 %.
+              <b>Посилене:</b> Швидкість II: Збільшує швидкість пересування, швидкість бігу та довжину стрибків на 40 %.
             </>
           )}
         </span>
@@ -133,7 +135,7 @@ export default function PotionDescriptionContent({ potionId, description, compac
           {!compact && (
             <>
               <br />
-              <b>Посилене:</b> Збільшує висоту стрибка удвічі.
+              <b>Посилене:</b> Стрибучість II: Збільшує висоту стрибка удвічі.
             </>
           )}
         </span>
@@ -153,7 +155,7 @@ export default function PotionDescriptionContent({ potionId, description, compac
           {!compact && (
             <>
               <br />
-              <b>Посилене:</b> Зменшує швидкість руху на 60 %.
+              <b>Посилене:</b> Повільність IV: Зменшує швидкість руху на 60 %.
             </>
           )}
         </span>
@@ -194,7 +196,7 @@ export default function PotionDescriptionContent({ potionId, description, compac
           {!compact && (
             <>
               <br />
-              <b>Посилене:</b> Зменшує швидкість руху на 90 % і зменшує вхідну шкоду на 80 %.
+              <b>Посилене:</b> Повільність VI, Стійкість IV: Зменшує швидкість руху на 90 % і зменшує вхідну шкоду на 80 %.
             </>
           )}
         </span>

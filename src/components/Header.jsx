@@ -3,25 +3,39 @@ import { playButtonClickSound } from '../utils/soundEffects';
 
 export default function Header({
   isDark,
+  theme,
   onToggleTheme,
   onOpenEasterEgg,
 }) {
+  const isDarkActive = theme ? theme === 'dark' || theme === 'sculk' : Boolean(isDark);
   const logoDaySrc = '/Glass_Bottle_JE2_BE2.webp';
-  const logoNightSrc = '/Potion_of_Luck_JE3.png';
+  // Authentic dark theme logo: high-resolution Potion of Swiftness (Speed) matching cyan/teal aesthetic
+  const logoDarkSrc = '/Potion_of_Swiftness_JE3.png';
+  const currentLogo = isDarkActive ? logoDarkSrc : logoDaySrc;
 
   return (
-    <header id="header2" className={isDark ? 'dark-theme' : 'light-theme'}>
-      <div className={`headertext ${isDark ? 'dark-theme' : 'light-theme'}`} id="headertext1">
+    <header id="header2" className={isDarkActive ? 'dark-theme' : 'light-theme'}>
+      <div className={`headertext ${isDarkActive ? 'dark-theme' : 'light-theme'}`} id="headertext1">
         <div
           className="logocontainer"
           id="logo"
         >
-          <a href="/no.html">
+          <a href="/no.html" onClick={(e) => {
+            if (onOpenEasterEgg) {
+              e.preventDefault();
+              onOpenEasterEgg('no');
+            }
+          }}>
             <img
-              src={isDark ? logoNightSrc : logoDaySrc}
+              src={currentLogo}
               id="logoday"
               alt="PotionsCraft Logo"
               className="logo"
+              onError={(e) => {
+                if (e.currentTarget.src !== window.location.origin + logoDaySrc) {
+                  e.currentTarget.src = logoDaySrc;
+                }
+              }}
             />
           </a>
         </div>
@@ -31,26 +45,18 @@ export default function Header({
       </div>
 
       <div className="header-right-controls">
-        {/* Link to Lab Design Themes showcase page */}
-        <a
-          href="/themes.html"
-          className="themes-showcase-link"
-          title="Лабораторія тем: переглянути нові концепції темної теми"
-        >
-          <span className="themes-icon">🎨</span>
-          <span className="themes-link-text">Концепти тем</span>
-        </a>
-
-        {/* From Uiverse.io by zl306 */}
-        <label className="switch" title="Перемкнути День / Ніч">
+        {/* Authentic Minecraft Lever Toggle Switch (From Uiverse.io by zl306) */}
+        <label className="switch" title={isDarkActive ? 'Перемкнути на День (Світла тема)' : 'Перемкнути на Ніч (Темна тема)'}>
           <input
             className="toggle"
             type="checkbox"
             id="themeswitcher"
-            checked={isDark}
+            checked={isDarkActive}
             onChange={(e) => {
               playButtonClickSound();
-              onToggleTheme(e.target.checked);
+              if (onToggleTheme) {
+                onToggleTheme(e.target.checked);
+              }
             }}
           />
           <span className="slider"></span>

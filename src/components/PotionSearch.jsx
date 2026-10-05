@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { playButtonClickSound } from '../utils/soundEffects';
 
 const STORAGE_KEY = 'pc_recent_potion_filters';
-const DEFAULT_POTION_FILTERS = ['сцілення', 'сила', 'швидкість'];
+const DEFAULT_POTION_FILTERS = ['зцілення', 'сила', 'швидкість'];
 
 export default function PotionSearch({
   searchQuery,
@@ -21,7 +21,7 @@ export default function PotionSearch({
   ];
 
   const popularEffects = [
-    'сцілення',
+    'зцілення',
     'сила',
     'швидкість',
     'вогнестійкість',
@@ -50,7 +50,7 @@ export default function PotionSearch({
             return scoreB - scoreA;
           })
           .map(([term]) => term);
-        
+
         if (sorted.length > 0) {
           const filled = [...sorted];
           for (const d of DEFAULT_POTION_FILTERS) {
@@ -68,7 +68,7 @@ export default function PotionSearch({
           return parsed;
         }
       }
-    } catch (e) {}
+    } catch (e) { }
     return DEFAULT_POTION_FILTERS;
   });
 
@@ -90,7 +90,7 @@ export default function PotionSearch({
       let history = {};
       const saved = localStorage.getItem('pc_potion_queries_history');
       if (saved) {
-        try { history = JSON.parse(saved); } catch (e) {}
+        try { history = JSON.parse(saved); } catch (e) { }
       }
 
       const existing = history[cleaned] || { count: 0, lastUsed: 0 };
@@ -120,7 +120,7 @@ export default function PotionSearch({
       const updated3 = combined.slice(0, 3);
       setQuickPotionFilters(updated3);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(updated3));
-    } catch (e) {}
+    } catch (e) { }
   };
 
   const handleCategoryClick = (catId) => {

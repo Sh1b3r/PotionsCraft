@@ -227,10 +227,17 @@ export function TooltipProvider({ children }) {
     let y = pos.y - 12;
 
     if (x + width > window.innerWidth - 8) {
-      x = Math.max(8, pos.x - width - 12);
+      x = pos.x - width - 12;
     }
+    if (x < 8) {
+      x = 8;
+    }
+    if (x + width > window.innerWidth - 8) {
+      x = Math.max(8, window.innerWidth - width - 8);
+    }
+
     if (y < 8) {
-      y = pos.y + 16;
+      y = pos.y + 20;
     } else if (y + height > window.innerHeight - 8) {
       y = Math.max(8, window.innerHeight - height - 8);
     }

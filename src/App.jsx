@@ -6,40 +6,54 @@ import EasterEggModal from './components/EasterEggModal';
 import { TooltipProvider } from './components/MinecraftTooltip';
 import PotionSearch from './components/PotionSearch';
 import BaseModifiersTable from './components/BaseModifiersTable';
+import MinecraftStationWidget from './components/MinecraftStationWidget';
 import { POTIONS_DATA } from './data/potionsData';
 import './App.css';
 
 export default function App() {
-  const [isDark, setIsDark] = useState(() => {
+  const [theme, setTheme] = useState(() => {
     try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlTheme = urlParams.get('theme');
+      if (urlTheme === 'dark' || urlTheme === 'light') return urlTheme;
+
       const saved = localStorage.getItem('theme');
-      return saved ? saved === 'dark' : false; // default to light theme as in original
+      if (saved === 'dark' || saved === 'light') return saved;
+      return 'dark'; // modern default is rich dark theme
     } catch {
-      return false;
+      return 'dark';
     }
   });
+
+  const isDark = theme === 'dark';
 
   // Modals
   const [activeModalPotion, setActiveModalPotion] = useState(null);
   const [activeEasterEgg, setActiveEasterEgg] = useState(null);
 
   const logoDaySrc = '/Glass_Bottle_JE2_BE2.webp';
-  const logoNightSrc = '/Potion_of_Luck_JE3.png';
+  // Authentic dark theme logo: high-resolution Potion of Swiftness (Speed) matching cyan/teal aesthetic
+  const logoSculkSrc = '/Potion_of_Swiftness_JE3.png';
+
+  const handleToggleTheme = (checked) => {
+    setTheme(checked ? 'dark' : 'light');
+  };
 
   useEffect(() => {
     try {
-      localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    } catch (e) {}
+      localStorage.setItem('theme', theme);
+    } catch (e) { }
 
-    // Update body theme
+    // Update body theme with standard class
     document.body.className = isDark ? 'dark-theme' : 'light-theme';
+    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
 
-    // Update favicon matching the logo swap (as in Pop! project)
+    // Update favicon matching the logo swap
     const favicon = document.getElementById('favicon') || document.querySelector("link[rel*='icon']");
     if (favicon) {
-      favicon.href = isDark ? logoNightSrc : logoDaySrc;
+      favicon.href = isDark ? logoSculkSrc : logoDaySrc;
     }
-  }, [isDark]);
+  }, [theme, isDark]);
 
   // Client-side URL Routing & Legacy URL Handling
   useEffect(() => {
@@ -131,27 +145,14 @@ export default function App() {
   return (
     <TooltipProvider>
       <div className={`potions-craft-app ${isDark ? 'dark-theme' : 'light-theme'}`} id="body1">
-        {/* Original Gallery Sky & Twinkling Stars (only active in dark theme) */}
-        {isDark && (
-          <div className="gallery">
-            <div className="stars"></div>
-            <div className="shooting-star"></div>
-            <div className="shooting-star"></div>
-            <div className="shooting-star"></div>
-            <div className="shooting-star"></div>
-            <div className="shooting-star"></div>
-            <div className="tiny-stars"></div>
-            <div className="tiny-stars"></div>
-            <div className="tiny-stars"></div>
-            <div className="tiny-stars"></div>
-            <div className="tiny-stars"></div>
-          </div>
-        )}
 
-        {/* Original Sticky Glassmorphism Header */}
+
+
+        {/* Authentic Minecraft Header with Lever Toggle Switch */}
         <Header
           isDark={isDark}
-          onToggleTheme={setIsDark}
+          theme={theme}
+          onToggleTheme={handleToggleTheme}
           onOpenEasterEgg={handleOpenEasterEgg}
         />
 
@@ -174,6 +175,9 @@ export default function App() {
               totalResults={filteredPotions.length}
               onReset={handleResetSearch}
             />
+
+            {/* Interactive Minecraft Brewing & Crafting Station Widget */}
+            <MinecraftStationWidget />
 
             <h2>Зілля та їх види</h2>
 
