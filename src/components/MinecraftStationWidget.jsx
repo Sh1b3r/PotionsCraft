@@ -1334,8 +1334,8 @@ export default function MinecraftStationWidget() {
             </div>
 
             <div className="mc-brewing-stand-stage">
-              <BrewingStandFrame withFuel />
-              {/* Fuel gauge below the fuel slot (20 charges, drains from right to left) */}
+              <BrewingStandFrame withFuel pipeExtension={10} />
+              {/* Fuel gauge at the spring outlet (20 charges, drains from right to left) */}
               <div
                 className="mc-fuel-gauge-container"
                 onMouseEnter={() => handleSlotHover('fuel-gauge', 0, null)}

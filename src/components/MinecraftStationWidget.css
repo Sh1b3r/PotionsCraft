@@ -107,13 +107,22 @@
   box-shadow: none;
 }
 
-/* The same frame as the recipe cards, with an extra disconnected fuel slot.
+/* The same frame as the recipe cards, with the original station fuel circuit.
    Hit areas and item icons follow this frame's native 2px pixel grid. */
 .mc-brewing-stand-stage .mcui-frame {
   left: 46px;
   top: 5px;
   right: auto;
   bottom: auto;
+}
+
+.mcui-fuel-dark,
+.dark-theme .mcui-fuel-light {
+  display: none;
+}
+
+.dark-theme .mcui-fuel-dark {
+  display: inline;
 }
 
 .mc-brewing-workbench .mc-brewing-stand-stage .mc-slot {
@@ -169,10 +178,10 @@
 /* Bubbling Steam Column (exact 1:1 sprite directly from recipe card) */
 .mc-brewing-bubbles-column {
   position: absolute;
-  left: 146px;
-  top: 5px;
+  left: 140px;
+  top: 4px;
   width: 24px;
-  height: 57px;
+  height: 58px;
   z-index: 5;
   pointer-events: none;
 }
@@ -180,7 +189,7 @@
 .mc-brewing-bubbles-column .mcui-bubbling {
   display: block;
   width: 24px;
-  height: 57px;
+  height: 58px;
   background-position: 0% 0%;
   background-repeat: no-repeat;
   image-rendering: pixelated;
@@ -218,8 +227,8 @@
 
 .mc-brewing-arrow-wrapper {
   position: absolute;
-  left: 206px;
-  top: 5px;
+  left: 208px;
+  top: 4px;
   width: 24px;
   height: 57px;
   z-index: 4;
@@ -229,7 +238,7 @@
 .slot-bottle-left {
   position: absolute !important;
   left: 124px !important;
-  top: 66px !important;
+  top: 76px !important;
   width: 36px !important;
   height: 36px !important;
   z-index: 5;
@@ -238,7 +247,7 @@
 .slot-bottle-center {
   position: absolute !important;
   left: 170px !important;
-  top: 80px !important;
+  top: 90px !important;
   width: 36px !important;
   height: 36px !important;
   z-index: 5;
@@ -247,20 +256,19 @@
 .slot-bottle-right {
   position: absolute !important;
   left: 216px !important;
-  top: 66px !important;
+  top: 76px !important;
   width: 36px !important;
   height: 36px !important;
   z-index: 5;
 }
 
-/* Horizontal fuel gauge below the fuel slot (20 equal parts) */
+/* Original fuel gauge placement at the spring outlet (20 equal parts) */
 .mc-fuel-gauge-container {
   position: absolute;
-  left: 46px;
-  top: 50px;
+  left: 134px;
+  top: 64px;
   width: 36px;
   height: 8px;
-  background: url('/mc_brewing_fuel_trough.png') 0 0 / 36px 8px no-repeat;
   pointer-events: auto;
   cursor: default;
   overflow: hidden;
@@ -568,7 +576,6 @@
 }
 
 .dark-theme .mc-fuel-gauge-container {
-  background-image: url('/mc_brewing_fuel_trough_dark.png');
   filter: none;
 }
 
