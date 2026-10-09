@@ -1386,7 +1386,8 @@ h3 {
   width: 140px;
   height: 123px;
   box-sizing: border-box;
-  transform: scale(1.08);
+  /* Render this pixel-art widget at its native grid size. */
+  transform: none;
   margin: 0;
   border: none;
   display: flex;
@@ -1537,7 +1538,8 @@ h3 {
   position: relative;
   width: 60px;
   height: 40px;
-  margin: -20px 34px -16px;
+  /* Raise the pipes 2px while keeping the output row at the same y. */
+  margin: -22px 34px -14px;
   background-image: url("/Grid_layout_Brewing_Paths.png");
   background-position: 0% 0%;
   background-repeat: no-repeat;
@@ -2638,8 +2640,8 @@ body.dark-theme .invslot.mcui-output3 {
 
   /* Brewing stand pinned to the left, not centered */
   .mobile-brewing-stand-container {
-    flex: 0 0 130px;
-    width: 130px;
+    flex: 0 0 140px;
+    width: 140px;
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
@@ -2669,9 +2671,6 @@ body.dark-theme .invslot.mcui-output3 {
   .mobile-brewing-stand-container .mcui-Brewing_Stand {
     border: none !important;
     border-right: none !important;
-    background-color: transparent !important;
-    transform: scale(0.92) !important;
-    transform-origin: top left !important;
     margin: 0 !important;
     padding: 0 !important;
   }
@@ -2821,11 +2820,7 @@ body.dark-theme .invslot.mcui-output3 {
   }
 
   .mobile-brewing-stand-container {
-    flex: 0 0 116px;
-    width: 116px;
-  }
-
-  .mobile-brewing-stand-container .mcui-Brewing_Stand {
-    transform: scale(0.82) !important;
+    flex: 0 0 140px;
+    width: 140px;
   }
 }
