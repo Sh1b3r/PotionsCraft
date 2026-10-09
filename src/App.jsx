@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import { flushSync } from 'react-dom';
 import Header from './components/Header';
 import PotionCard from './components/PotionCard';
 import PotionModal from './components/PotionModal';
@@ -9,6 +10,14 @@ import BaseModifiersTable from './components/BaseModifiersTable';
 import MinecraftStationWidget from './components/MinecraftStationWidget';
 import { POTIONS_DATA } from './data/potionsData';
 import './App.css';
+
+const THEME_IMAGES = [
+  '/Glass_Bottle_JE2_BE2.webp', '/Potion_of_Swiftness_JE3.png',
+  '/Grid_layout_Brewing_Paths.png', '/Grid_layout_Brewing_Paths_dark.png',
+  '/Grid_layout_Brewing_Bubbles.gif', '/Grid_layout_Brewing_Bubbles_dark.gif',
+  '/mc_bubbles_empty.png', '/mc_bubbles_empty_dark.png',
+  '/mc_brewing_gui_clean_bg.png?v=8', '/mc_brewing_gui_clean_bg_dark.png',
+];
 
 export default function App() {
   const [theme, setTheme] = useState(() => {
@@ -26,6 +35,8 @@ export default function App() {
   });
 
   const isDark = theme === 'dark';
+  const themeTransitionRef = useRef(null);
+  const requestedThemeRef = useRef(theme);
 
   // Modals
   const [activeModalPotion, setActiveModalPotion] = useState(null);
@@ -35,11 +46,57 @@ export default function App() {
   // Authentic dark theme logo: high-resolution Potion of Swiftness (Speed) matching cyan/teal aesthetic
   const logoSculkSrc = '/Potion_of_Swiftness_JE3.png';
 
-  const handleToggleTheme = (checked) => {
-    setTheme(checked ? 'dark' : 'light');
+  const handleToggleTheme = () => {
+    // Count clicks against the latest request, even before a snapshot commits.
+    const nextTheme = requestedThemeRef.current === 'dark' ? 'light' : 'dark';
+    requestedThemeRef.current = nextTheme;
+    const previousTransition = themeTransitionRef.current;
+    themeTransitionRef.current = null;
+    previousTransition?.skipTransition();
+    document.documentElement.removeAttribute('data-theme-transition');
+
+    if (typeof document.startViewTransition !== 'function' ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setTheme(nextTheme);
+      return;
+    }
+
+    // Capture complete themes, including logos and pixel-art backgrounds.
+    // Local CSS transitions would otherwise capture partly updated colors.
+    document.documentElement.setAttribute('data-theme-transition', 'crossfade');
+    const transition = document.startViewTransition(() => {
+      if (themeTransitionRef.current === transition) {
+        flushSync(() => setTheme(nextTheme));
+      }
+    });
+    themeTransitionRef.current = transition;
+    transition.ready.catch(() => {}); // A rapid toggle may skip the animation.
+    transition.finished.catch(() => {}).finally(() => {
+      if (themeTransitionRef.current === transition) {
+        themeTransitionRef.current = null;
+        document.documentElement.removeAttribute('data-theme-transition');
+      }
+    });
   };
 
+  useEffect(() => () => {
+    const transition = themeTransitionRef.current;
+    themeTransitionRef.current = null;
+    transition?.skipTransition();
+    document.documentElement.removeAttribute('data-theme-transition');
+  }, []);
+
   useEffect(() => {
+    // Load both tiny texture sets before switching, avoiding empty snapshots.
+    THEME_IMAGES.forEach((src) => {
+      const image = new Image();
+      image.src = src;
+      image.decode().catch(() => {});
+    });
+  }, []);
+
+  // Keep body, React content and favicon in the same theme before painting.
+  useLayoutEffect(() => {
     try {
       localStorage.setItem('theme', theme);
     } catch (e) { }

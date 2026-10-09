@@ -13,6 +13,17 @@
   padding: 0;
 }
 
+:root {
+  --theme-duration: 450ms;
+  --theme-easing: ease-in-out;
+  --theme-paint-transition: color var(--theme-duration) var(--theme-easing),
+    background-color var(--theme-duration) var(--theme-easing),
+    border-color var(--theme-duration) var(--theme-easing),
+    box-shadow var(--theme-duration) var(--theme-easing),
+    text-shadow var(--theme-duration) var(--theme-easing),
+    text-decoration-color var(--theme-duration) var(--theme-easing);
+}
+
 /* ==================== PIXEL ART CRISPNESS & HIGH-QUALITY SCALING ==================== */
 /* 1. True 1:1 Pixel Art GUI Textures (nearest-neighbor) */
 .pixel-image,
@@ -344,7 +355,7 @@ header#header2 {
   padding: 0 20px;
   box-sizing: border-box;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  transition: var(--theme-paint-transition);
 }
 
 #header2.light-theme {
@@ -369,6 +380,8 @@ header#header2 {
   flex-direction: row;
   align-items: center;
   gap: 12px;
+  text-shadow: 0 0 12px rgba(45, 212, 191, 0);
+  transition: var(--theme-paint-transition);
 }
 
 #headertext1.light-theme {
@@ -377,7 +390,7 @@ header#header2 {
 
 #headertext1.dark-theme {
   color: #2dd4bf !important;
-  text-shadow: 0 0 12px rgba(45, 212, 191, 0.6), 2px 2px #02090e !important;
+  text-shadow: 0 0 12px rgba(45, 212, 191, 0.6);
 }
 
 .logocontainer {
@@ -407,11 +420,6 @@ header#header2 {
 
 .title {
   cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.title:hover {
-  transform: scale(1.03);
 }
 
 .title h1 {
@@ -507,7 +515,7 @@ header#header2 {
   padding: 20px 24px;
   border: 1px solid rgb(60, 60, 60);
   box-sizing: border-box;
-  transition: all 0.4s ease;
+  transition: var(--theme-paint-transition), border-radius var(--theme-duration) var(--theme-easing);
 }
 
 .body2 img {
@@ -1316,7 +1324,7 @@ h3 {
   height: 215px;
   min-height: 210px;
   overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, var(--theme-paint-transition);
   box-sizing: border-box;
 }
 
@@ -2862,5 +2870,64 @@ body.dark-theme .invslot.mcui-output3 {
   .mobile-brewing-stand-container {
     flex: 0 0 140px;
     width: 140px;
+  }
+}
+
+/* Theme fallback: interpolate paint, without animating text or slot geometry. */
+html,
+body,
+#body1 :where(h1, h2, h3, p, a, th, td,
+  .wiki-section-container, .minecraft-styled-table, .table-item-name,
+  .search-system-container, .search-input, .category-tab-btn, .reset-btn,
+  .search-results-count, .quick-reagents-title, .reagent-pill-btn,
+  .potion-filter-pill-btn, .search-empty-state,
+  .card-desc-row, .wiki-effect-desc b, .card-stat-pill,
+  .stat-label, .stat-value, .card-upgrade-tag, .mobile-card-desc-box,
+  .mcui-Brewing_Stand, .invslot,
+  .mc-brewing-workbench, .mc-slot, .mc-brewing-ref-btn,
+  .mc-brewing-header-label, .mc-crafting-header-label, .mc-inventory-header-label,
+  .potion-modal-content, .modal-stats-card) {
+  transition: var(--theme-paint-transition);
+}
+
+#body1 .mcui-Brewing_Stand .invslot::after {
+  transition: background-color var(--theme-duration) var(--theme-easing);
+}
+
+/* One complete-page crossfade also blends non-interpolable PNG backgrounds
+   and the header logo. Disable local transitions while taking snapshots. */
+html[data-theme-transition="crossfade"],
+html[data-theme-transition="crossfade"] *,
+html[data-theme-transition="crossfade"] *::before,
+html[data-theme-transition="crossfade"] *::after {
+  transition: none !important;
+}
+
+html[data-theme-transition="crossfade"]::view-transition {
+  pointer-events: none;
+}
+
+html[data-theme-transition="crossfade"]::view-transition-group(root),
+html[data-theme-transition="crossfade"]::view-transition-old(root) {
+  animation: none;
+}
+
+html[data-theme-transition="crossfade"]::view-transition-old(root),
+html[data-theme-transition="crossfade"]::view-transition-new(root) {
+  mix-blend-mode: normal;
+}
+
+html[data-theme-transition="crossfade"]::view-transition-new(root) {
+  animation: theme-crossfade var(--theme-duration) var(--theme-easing) both;
+}
+
+@keyframes theme-crossfade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --theme-duration: 0ms;
   }
 }
