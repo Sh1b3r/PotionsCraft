@@ -1587,6 +1587,46 @@ body.dark-theme .invslot,
   border-right: 2px solid #000000;
 }
 
+/* Keep the 36px slot geometry independent of device-pixel border rounding.
+   Draw the original bevel inside the slot; its 32px content stays at (2, 2). */
+.mcui-Brewing_Stand .invslot {
+  width: 36px;
+  height: 36px;
+  box-sizing: border-box;
+  border: 0;
+  padding: 2px;
+  --slot-bevel-light: #ffffff;
+}
+
+.dark-theme .mcui-Brewing_Stand .invslot {
+  --slot-bevel-light: #000000;
+}
+
+.mcui-Brewing_Stand .invslot::before,
+.mcui-Brewing_Stand .invslot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.mcui-Brewing_Stand .invslot::before {
+  background: #373737;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 2px) 2px,
+    2px 2px, 2px calc(100% - 2px), 0 100%);
+}
+
+.mcui-Brewing_Stand .invslot::after {
+  background: var(--slot-bevel-light);
+  clip-path: polygon(100% 0, 100% 100%, 0 100%,
+    2px calc(100% - 2px), calc(100% - 2px) calc(100% - 2px),
+    calc(100% - 2px) 2px);
+}
+
+.mcui-output .mc-tooltip-trigger {
+  vertical-align: top;
+}
+
 .mcui-input .invslot {
   margin: 3px 0 0;
 }
