@@ -1,5 +1,6 @@
 import React from 'react';
 import { TooltipTrigger } from './MinecraftTooltip';
+import BrewingStandFrame from './BrewingStandFrame';
 import { BREWING_STAND_DATA } from '../data/brewingStandData';
 import { WIKI_REAGENTS } from '../data/wikiTooltipsData';
 
@@ -72,50 +73,53 @@ export default function BrewingStandWidget({ potion, inModal = false }) {
     <div className={`card-brewing-stand-box ${inModal ? 'in-modal-stand' : ''}`}>
       <div>
         <span className="mcui mcui-Brewing_Stand pixel-image">
-          {/* Top Input Row: Bubbling + Reagent Slot + Downward Arrow */}
-          <span className="mcui-input">
-            <span className="mcui-bubbling"><br /></span>
+          <span className="mcui-grid">
+            <BrewingStandFrame />
+            {/* Top Input Row: Bubbling + Reagent Slot + Downward Arrow */}
+            <span className="mcui-input">
+              <span className="mcui-bubbling"><br /></span>
 
-            <TooltipTrigger
-              title={reagentMeta.title}
-              lore={reagentMeta.lore}
-            >
-              <span className="invslot">
-                <span
-                  className="invslot-item invslot-item-image"
-                  data-minetip-title={reagentMeta.title}
-                >
-                  <span typeof="mw:File">
-                    <img
-                      alt={reagentMeta.title}
-                      src={reagentLocalSrc}
-                      onError={(e) => {
-                        if (reagentWikiSrc && e.currentTarget.src !== reagentWikiSrc) {
-                          e.currentTarget.src = reagentWikiSrc;
-                        }
-                      }}
-                      width="32"
-                      height="32"
-                      className="mw-file-element"
-                      loading="lazy"
-                      decoding="async"
-                    />
+              <TooltipTrigger
+                title={reagentMeta.title}
+                lore={reagentMeta.lore}
+              >
+                <span className="invslot">
+                  <span
+                    className="invslot-item invslot-item-image"
+                    data-minetip-title={reagentMeta.title}
+                  >
+                    <span typeof="mw:File">
+                      <img
+                        alt={reagentMeta.title}
+                        src={reagentLocalSrc}
+                        onError={(e) => {
+                          if (reagentWikiSrc && e.currentTarget.src !== reagentWikiSrc) {
+                            e.currentTarget.src = reagentWikiSrc;
+                          }
+                        }}
+                        width="32"
+                        height="32"
+                        className="mw-file-element"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </span>
                   </span>
                 </span>
-              </span>
-            </TooltipTrigger>
+              </TooltipTrigger>
 
-            <span className="mcui-arrow"><br /></span>
-          </span>
+              <span className="mcui-arrow"><br /></span>
+            </span>
 
-          {/* Connecting Branching Pipes */}
-          <span className="mcui-paths"><br /></span>
+            {/* Connecting Branching Pipes */}
+            <span className="mcui-paths"><br /></span>
 
-          {/* Bottom Output Row: 3 Bottle Slots from Wiki Table */}
-          <span className="mcui-output">
-            {renderSlot(output1, 'mcui-output1', 'Порожній слот')}
-            {renderSlot(output2, 'mcui-output2', output2?.title || 'Порожній слот')}
-            {renderSlot(output3, 'mcui-output3', 'Порожній слот')}
+            {/* Bottom Output Row: 3 Bottle Slots from Wiki Table */}
+            <span className="mcui-output">
+              {renderSlot(output1, 'mcui-output1', 'Порожній слот')}
+              {renderSlot(output2, 'mcui-output2', output2?.title || 'Порожній слот')}
+              {renderSlot(output3, 'mcui-output3', 'Порожній слот')}
+            </span>
           </span>
         </span>
       </div>

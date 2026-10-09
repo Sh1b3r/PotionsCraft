@@ -1500,6 +1500,32 @@ h3 {
   text-align: center;
 }
 
+/* Pipes and slot bevels share one rasterization origin at every zoom level. */
+.mcui-grid {
+  display: block;
+  position: relative;
+  width: 128px;
+  height: 111px;
+  --slot-bevel-light: #ffffff;
+  --brewing-pipe-shadow: #373737;
+}
+
+.dark-theme .mcui-grid {
+  --slot-bevel-light: #000000;
+  --brewing-pipe-shadow: #02090e;
+}
+
+.mcui-frame {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.mcui-grid .mcui-input,
+.mcui-grid .mcui-output {
+  position: relative;
+}
+
 .mcui-input .mc-tooltip-trigger {
   display: inline-block;
   vertical-align: top;
@@ -1548,16 +1574,7 @@ h3 {
   height: 40px;
   /* Raise the pipes 2px while keeping the output row at the same y. */
   margin: -22px 34px -14px;
-  background-image: url("/Grid_layout_Brewing_Paths.png");
-  background-position: 0% 0%;
-  background-repeat: no-repeat;
   vertical-align: baseline;
-}
-
-.dark-theme .mcui-paths,
-.card.dark-theme .mcui-paths,
-body.dark-theme .mcui-paths {
-  background-image: url("/Grid_layout_Brewing_Paths_dark.png");
 }
 
 .mcui-output {
@@ -1595,40 +1612,14 @@ body.dark-theme .invslot,
   border-right: 2px solid #000000;
 }
 
-/* Keep the 36px slot geometry independent of device-pixel border rounding.
-   Draw the original bevel inside the slot; its 32px content stays at (2, 2). */
+/* Keep item hit areas at 36px; the shared SVG paints their bevels and fill. */
 .mcui-Brewing_Stand .invslot {
   width: 36px;
   height: 36px;
   box-sizing: border-box;
   border: 0;
   padding: 2px;
-  --slot-bevel-light: #ffffff;
-}
-
-.dark-theme .mcui-Brewing_Stand .invslot {
-  --slot-bevel-light: #000000;
-}
-
-.mcui-Brewing_Stand .invslot::before,
-.mcui-Brewing_Stand .invslot::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.mcui-Brewing_Stand .invslot::before {
-  background: #373737;
-  clip-path: polygon(0 0, 100% 0, calc(100% - 2px) 2px,
-    2px 2px, 2px calc(100% - 2px), 0 100%);
-}
-
-.mcui-Brewing_Stand .invslot::after {
-  background: var(--slot-bevel-light);
-  clip-path: polygon(100% 0, 100% 100%, 0 100%,
-    2px calc(100% - 2px), calc(100% - 2px) calc(100% - 2px),
-    calc(100% - 2px) 2px);
+  background-color: transparent;
 }
 
 .mcui-output .mc-tooltip-trigger {
@@ -2888,10 +2879,6 @@ body,
   .mc-brewing-header-label, .mc-crafting-header-label, .mc-inventory-header-label,
   .potion-modal-content, .modal-stats-card) {
   transition: var(--theme-paint-transition);
-}
-
-#body1 .mcui-Brewing_Stand .invslot::after {
-  transition: background-color var(--theme-duration) var(--theme-easing);
 }
 
 /* One complete-page crossfade also blends non-interpolable PNG backgrounds
