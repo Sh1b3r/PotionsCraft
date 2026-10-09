@@ -99,17 +99,36 @@
   position: relative;
   width: 300px;
   height: 132px;
-  background-image: url('/mc_brewing_gui_clean_bg.png?v=8');
-  background-repeat: no-repeat;
-  background-position: 0 0;
-  background-size: 300px 132px;
   image-rendering: pixelated;
   image-rendering: -moz-crisp-edges;
   image-rendering: -webkit-crisp-edges;
   image-rendering: crisp-edges;
-  image-rendering: -webkit-optimize-contrast;
   user-select: none;
   box-shadow: none;
+}
+
+/* The same frame as the recipe cards, with an extra disconnected fuel slot.
+   Hit areas and item icons follow this frame's native 2px pixel grid. */
+.mc-brewing-stand-stage .mcui-frame {
+  left: 46px;
+  top: 5px;
+  right: auto;
+  bottom: auto;
+}
+
+.mc-brewing-workbench .mc-brewing-stand-stage .mc-slot {
+  border: 0;
+  padding: 2px;
+  background-color: transparent;
+  background-clip: content-box;
+}
+
+.mc-brewing-workbench .mc-brewing-stand-stage .mc-slot:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+.mc-brewing-workbench .mc-brewing-stand-stage .mc-slot.has-item:active {
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 /* Fuel Slot (Top-Left) */
@@ -150,10 +169,10 @@
 /* Bubbling Steam Column (exact 1:1 sprite directly from recipe card) */
 .mc-brewing-bubbles-column {
   position: absolute;
-  left: 140px;
-  top: 4px;
+  left: 146px;
+  top: 5px;
   width: 24px;
-  height: 58px;
+  height: 57px;
   z-index: 5;
   pointer-events: none;
 }
@@ -161,7 +180,7 @@
 .mc-brewing-bubbles-column .mcui-bubbling {
   display: block;
   width: 24px;
-  height: 58px;
+  height: 57px;
   background-position: 0% 0%;
   background-repeat: no-repeat;
   image-rendering: pixelated;
@@ -199,45 +218,18 @@
 
 .mc-brewing-arrow-wrapper {
   position: absolute;
-  left: 208px;
-  top: 4px;
+  left: 206px;
+  top: 5px;
   width: 24px;
   height: 57px;
   z-index: 4;
   pointer-events: none;
 }
 
-.mc-brewing-arrow-wrapper .mcui-arrow {
-  display: inline-block;
-  width: 24px;
-  height: 57px;
-  margin: 0;
-  padding: 0;
-  background-image: url("/Grid_layout_Brewing_Arrow.png");
-  background-position: 0% 0%;
-  background-repeat: no-repeat;
-  vertical-align: top;
-  image-rendering: pixelated;
-  image-rendering: -moz-crisp-edges;
-  image-rendering: crisp-edges;
-}
-
-/* 3 Bottom Output Bottle Slots - identical silhouette matching cards and be.html */
-.mc-slot-bottle {
-  background-image: url("/Grid_layout_Brewing_Empty.png");
-  background-position: center;
-  background-size: 32px 32px;
-  background-repeat: no-repeat;
-}
-
-.mc-slot-bottle.has-item {
-  background-image: none !important;
-}
-
 .slot-bottle-left {
   position: absolute !important;
   left: 124px !important;
-  top: 76px !important;
+  top: 66px !important;
   width: 36px !important;
   height: 36px !important;
   z-index: 5;
@@ -246,7 +238,7 @@
 .slot-bottle-center {
   position: absolute !important;
   left: 170px !important;
-  top: 90px !important;
+  top: 80px !important;
   width: 36px !important;
   height: 36px !important;
   z-index: 5;
@@ -255,19 +247,20 @@
 .slot-bottle-right {
   position: absolute !important;
   left: 216px !important;
-  top: 76px !important;
+  top: 66px !important;
   width: 36px !important;
   height: 36px !important;
   z-index: 5;
 }
 
-/* Horizontal Golden Fuel Gauge under steam/bubbles (20 equal parts) */
+/* Horizontal fuel gauge below the fuel slot (20 equal parts) */
 .mc-fuel-gauge-container {
   position: absolute;
-  left: 134px;
-  top: 64px;
+  left: 46px;
+  top: 50px;
   width: 36px;
   height: 8px;
+  background: url('/mc_brewing_fuel_trough.png') 0 0 / 36px 8px no-repeat;
   pointer-events: auto;
   cursor: default;
   overflow: hidden;
@@ -571,12 +564,11 @@
 }
 
 .dark-theme .mc-brewing-stand-stage {
-  background-image: url('/mc_brewing_gui_clean_bg_dark.png');
-  background-color: #061822;
   filter: none;
 }
 
 .dark-theme .mc-fuel-gauge-container {
+  background-image: url('/mc_brewing_fuel_trough_dark.png');
   filter: none;
 }
 
@@ -607,18 +599,6 @@
 
 .dark-theme .mc-fuel-blaze-watermark {
   opacity: 0.35;
-}
-
-/* Brewing stand stage slots: same gray, no override needed since .mc-slot dark already correct */
-.dark-theme .mc-brewing-stand-stage .mc-slot-bottle {
-  background-image: url("/Grid_layout_Brewing_Empty.png");
-  background-position: center;
-  background-size: 32px 32px;
-  background-repeat: no-repeat;
-}
-
-.dark-theme .mc-brewing-stand-stage .mc-slot-bottle.has-item {
-  background-image: none;
 }
 
 /* ==================== BREWED TOAST NOTIFICATION ==================== */

@@ -1506,11 +1506,16 @@ h3 {
   position: relative;
   width: 128px;
   height: 111px;
+}
+
+.mcui-grid,
+.mc-brewing-stand-stage {
   --slot-bevel-light: #ffffff;
   --brewing-pipe-shadow: #373737;
 }
 
-.dark-theme .mcui-grid {
+.dark-theme .mcui-grid,
+.dark-theme .mc-brewing-stand-stage {
   --slot-bevel-light: #000000;
   --brewing-pipe-shadow: #02090e;
 }
@@ -1632,7 +1637,8 @@ body.dark-theme .invslot,
 
 .invslot.mcui-output1,
 .invslot.mcui-output2,
-.invslot.mcui-output3 {
+.invslot.mcui-output3,
+.mc-brewing-stand-stage .mc-slot-bottle {
   background-image: url("/Grid_layout_Brewing_Empty.png");
   background-position: 50% 50%;
   background-size: 32px 32px;

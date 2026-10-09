@@ -13,10 +13,8 @@ import './App.css';
 
 const THEME_IMAGES = [
   '/Glass_Bottle_JE2_BE2.webp', '/Potion_of_Swiftness_JE3.png',
-  '/Grid_layout_Brewing_Paths.png', '/Grid_layout_Brewing_Paths_dark.png',
   '/Grid_layout_Brewing_Bubbles.gif', '/Grid_layout_Brewing_Bubbles_dark.gif',
   '/mc_bubbles_empty.png', '/mc_bubbles_empty_dark.png',
-  '/mc_brewing_gui_clean_bg.png?v=8', '/mc_brewing_gui_clean_bg_dark.png',
 ];
 
 export default function App() {

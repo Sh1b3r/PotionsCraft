@@ -12,6 +12,7 @@ import {
   playRefuelSound
 } from '../utils/minecraftStationSounds';
 import { useTooltip } from './MinecraftTooltip';
+import BrewingStandFrame from './BrewingStandFrame';
 import { WIKI_REAGENTS, WIKI_POTIONS } from '../data/wikiTooltipsData';
 import './MinecraftStationWidget.css';
 
@@ -1333,7 +1334,8 @@ export default function MinecraftStationWidget() {
             </div>
 
             <div className="mc-brewing-stand-stage">
-              {/* Horizontal Golden Fuel Gauge under steam/bubbles (20 equal parts, drains from right to left) */}
+              <BrewingStandFrame withFuel />
+              {/* Fuel gauge below the fuel slot (20 charges, drains from right to left) */}
               <div
                 className="mc-fuel-gauge-container"
                 onMouseEnter={() => handleSlotHover('fuel-gauge', 0, null)}
