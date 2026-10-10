@@ -27,6 +27,16 @@ export function checkCraftingRecipe(grid) {
         ...MINECRAFT_ITEMS.blaze_powder
       };
     }
+    const singleItemRecipes = {
+      sugar_cane: ['sugar', 1],
+      gold_ingot: ['gold_nugget', 9],
+      slime_block: ['slime_ball', 9],
+    };
+    const recipe = singleItemRecipes[items[idx]];
+    if (recipe) {
+      const [itemId, count] = recipe;
+      return { ...MINECRAFT_ITEMS[itemId], itemId, count };
+    }
   }
 
   // 2. 3 Glass in "V" shape -> 3 Glass Bottles
@@ -60,10 +70,10 @@ export function checkCraftingRecipe(grid) {
     }
   }
 
-  // Magma Cream (Blaze Powder + Slime Block)
+  // Magma Cream (Blaze Powder + Slime Ball), shapeless.
   if (filledIndices.length === 2) {
     const hasBlaze = filledIndices.some((i) => items[i] === 'blaze_powder');
-    const hasSlime = filledIndices.some((i) => items[i] === 'slime_block');
+    const hasSlime = filledIndices.some((i) => items[i] === 'slime_ball');
     if (hasBlaze && hasSlime) {
       return {
         itemId: 'magma_cream',
@@ -71,11 +81,31 @@ export function checkCraftingRecipe(grid) {
         ...MINECRAFT_ITEMS.magma_cream
       };
     }
+    const [top, bottom] = filledIndices;
+    if (items[top] === 'bamboo' && items[bottom] === 'bamboo' && bottom === top + 3) {
+      return { ...MINECRAFT_ITEMS.stick, itemId: 'stick', count: 1 };
+    }
+  }
+
+  // Turtle shell: three scutes across the top, one below each outer scute.
+  if (filledIndices.length === 5) {
+    const matchesHelmet = [0, 3].some(offset =>
+      [0, 1, 2, 3, 5].every(index => items[index + offset] === 'turtle_scute')
+    );
+    if (matchesHelmet) {
+      return { ...MINECRAFT_ITEMS.turtle_shell, itemId: 'turtle_shell', count: 1 };
+    }
   }
 
   // 4. Golden Carrot (8 Gold Nuggets surrounding 1 Carrot)
   // 5. Glistering Melon (8 Gold Nuggets surrounding 1 Melon Slice)
   if (filledIndices.length === 9) {
+    if (items.every(item => item === 'slime_ball')) {
+      return { ...MINECRAFT_ITEMS.slime_block, itemId: 'slime_block', count: 1 };
+    }
+    if (items.every(item => item === 'gold_nugget')) {
+      return { ...MINECRAFT_ITEMS.gold_ingot, itemId: 'gold_ingot', count: 1 };
+    }
     const center = items[4];
     const outerAllNuggets = [0, 1, 2, 3, 5, 6, 7, 8].every(
       (idx) => items[idx] === 'gold_nugget'
@@ -114,6 +144,20 @@ export function getBrewingResult(bottleItem, ingredientId) {
   const isLevel2 = !!bottleItem.isLevel2;
   const isSplash = !!bottleItem.isSplash;
   const isLingering = !!bottleItem.isLingering;
+
+  // Vanilla addStartMix registers water -> mundane alongside awkward -> effect.
+  // Verified against PotionBrewing / Builder in Mojang's Java 1.21.1 client.
+  if (['water_bottle', 'splash_water_bottle', 'lingering_water_bottle'].includes(bId)) {
+    const mundaneReagents = ['redstone', 'breeze_rod', 'slime_block', 'stone', 'cobweb',
+      'magma_cream', 'rabbit_foot', 'sugar', 'glistering_melon', 'spider_eye', 'ghast_tear', 'blaze_powder'];
+    const baseId = ingredientId === 'glowstone' ? 'thick_potion' : mundaneReagents.includes(ingredientId) ? 'mundane_potion' : null;
+    if (baseId) {
+      const lingering = isLingering || bId === 'lingering_water_bottle';
+      const splash = isSplash || bId === 'splash_water_bottle' || lingering;
+      return { ...MINECRAFT_ITEMS[baseId], itemId: baseId, count: 1, isSplash: splash,
+        isLingering: lingering, sprite: getPotionSprite(baseId, splash, lingering) };
+    }
+  }
 
   // 1. Water Bottle + Nether Wart -> Awkward Potion
   if ((bId === 'water_bottle' || bId === 'splash_water_bottle' || bId === 'lingering_water_bottle') && ingredientId === 'nether_wart') {
@@ -182,9 +226,6 @@ export function getBrewingResult(bottleItem, ingredientId) {
       case 'spider_eye':
         baseRes = { itemId: 'potion_poison', count: 1, ...MINECRAFT_ITEMS.potion_poison };
         break;
-      case 'fermented_spider_eye':
-        baseRes = { itemId: 'potion_weakness', count: 1, ...MINECRAFT_ITEMS.potion_weakness };
-        break;
       case 'pufferfish':
         baseRes = { itemId: 'potion_water_breathing', count: 1, ...MINECRAFT_ITEMS.potion_water_breathing };
         break;
@@ -252,12 +293,12 @@ export function getBrewingResult(bottleItem, ingredientId) {
   // 4. Inversion via Fermented Spider Eye
   if (ingredientId === 'fermented_spider_eye') {
     let invRes = null;
-    if (bId === 'potion_swiftness' || bId === 'potion_leaping') {
+    if ((bId === 'potion_swiftness' || bId === 'potion_leaping') && !isLevel2) {
       invRes = {
         itemId: 'potion_slowness',
         count: 1,
         isExtended,
-        isLevel2,
+        isLevel2: false,
         isSplash,
         isLingering,
         ...MINECRAFT_ITEMS.potion_slowness
@@ -266,7 +307,7 @@ export function getBrewingResult(bottleItem, ingredientId) {
       invRes = {
         itemId: 'potion_harming',
         count: 1,
-        isExtended,
+        isExtended: false,
         isLevel2,
         isSplash,
         isLingering,
@@ -285,6 +326,8 @@ export function getBrewingResult(bottleItem, ingredientId) {
     }
 
     if (invRes) {
+      if (invRes.isLevel2) invRes.name += ' II';
+      if (invRes.isExtended) invRes.name += ' (Подовжене)';
       if (isLingering) {
         invRes.sprite = getPotionSprite(invRes.itemId, true, true);
         invRes.name = `Осідальне ${invRes.name.toLowerCase()}`;
@@ -311,11 +354,7 @@ export function getBrewingResult(bottleItem, ingredientId) {
       'potion_water_breathing',
       'potion_leaping',
       'potion_slow_falling',
-      'potion_turtle_master',
-      'potion_oozing',
-      'potion_weaving',
-      'potion_infestation',
-      'potion_wind_charging'
+      'potion_turtle_master'
     ];
     if (extendable.includes(bId)) {
       const baseDef = MINECRAFT_ITEMS[bId];
@@ -323,7 +362,7 @@ export function getBrewingResult(bottleItem, ingredientId) {
         ...bottleItem,
         isExtended: true,
         name: `${bottleItem.name} (Подовжене)`,
-        description: `${baseDef.description} (Подовжений час дії: 8:00)`
+        description: `${baseDef.description} (Подовжений час дії)`
       };
     }
   }
@@ -338,15 +377,16 @@ export function getBrewingResult(bottleItem, ingredientId) {
       'potion_regeneration',
       'potion_poison',
       'potion_leaping',
-      'potion_turtle_master'
+      'potion_turtle_master',
+      'potion_slowness'
     ];
     if (upgradable.includes(bId)) {
       const baseDef = MINECRAFT_ITEMS[bId];
       return {
         ...bottleItem,
         isLevel2: true,
-        name: `${bottleItem.name} II`,
-        description: `${baseDef.description} (Посилена дія II рівня)`
+        name: `${bottleItem.name} ${bId === 'potion_slowness' ? 'IV' : 'II'}`,
+        description: `${baseDef.description} (Посилена дія ${bId === 'potion_slowness' ? 'IV' : 'II'} рівня)`
       };
     }
   }
@@ -362,11 +402,10 @@ export function getBrewingResult(bottleItem, ingredientId) {
         isSplash: true
       };
     }
-    const cleanKey = bId.startsWith('potion_') ? bId.replace('potion_', '') : bId;
     return {
       ...bottleItem,
       isSplash: true,
-      sprite: `/items/splash/splash_${cleanKey}.png`,
+      sprite: getPotionSprite(bId, true, false),
       name: `Вибухове ${bottleItem.name.toLowerCase()}`
     };
   }
@@ -383,11 +422,10 @@ export function getBrewingResult(bottleItem, ingredientId) {
         isLingering: true
       };
     }
-    const cleanKey = bId.startsWith('potion_') ? bId.replace('potion_', '') : bId;
     return {
       ...bottleItem,
       isLingering: true,
-      sprite: `/items/lingering/lingering_${cleanKey}.png`,
+      sprite: getPotionSprite(bId, true, true),
       name: `Осідальне ${bottleItem.name.replace('Вибухове ', '').toLowerCase()}`
     };
   }

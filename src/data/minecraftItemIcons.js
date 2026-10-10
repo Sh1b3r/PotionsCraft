@@ -38,6 +38,31 @@ export const MINECRAFT_ITEMS = {
     sprite: '/items/sugar.png',
     maxStack: 64,
   },
+  sugar_cane: {
+    id: 'sugar_cane', name: 'Цукрова тростина',
+    sprite: '/items/sugar_cane.png', maxStack: 64,
+    description: '1 тростина → 1 цукор.',
+  },
+  slime_ball: {
+    id: 'slime_ball', name: 'Згусток слизу',
+    sprite: '/items/slime_ball.png', maxStack: 64,
+    description: 'З порошком пломеня → лавовий слиз. 9 згустків → слизовий блок.',
+  },
+  gold_ingot: {
+    id: 'gold_ingot', name: 'Золотий злиток',
+    sprite: '/items/gold_ingot.png', maxStack: 64,
+    description: '1 злиток → 9 золотих самородків.',
+  },
+  turtle_scute: {
+    id: 'turtle_scute', name: 'Щиток черепахи',
+    sprite: '/items/turtle_scute.png', maxStack: 64,
+    description: '5 щитків у формі шолома → панцир черепахи.',
+  },
+  bamboo: {
+    id: 'bamboo', name: 'Бамбук',
+    sprite: '/items/bamboo.png', maxStack: 64,
+    description: '2 бамбуки один над одним → 1 палиця.',
+  },
   gold_nugget: {
     id: 'gold_nugget',
     name: 'Золотий самородок',
@@ -160,6 +185,14 @@ export const MINECRAFT_ITEMS = {
   },
 
   // Brewed Potions
+  mundane_potion: {
+    id: 'mundane_potion', name: 'Звичайне зілля', sprite: '/items/water_bottle.png',
+    maxStack: 1, isPotion: true,
+  },
+  thick_potion: {
+    id: 'thick_potion', name: 'Густе зілля', sprite: '/items/water_bottle.png',
+    maxStack: 1, isPotion: true,
+  },
   awkward_potion: {
     id: 'awkward_potion',
     name: 'Незграбне зілля',
@@ -341,11 +374,19 @@ export const MINECRAFT_ITEMS = {
   },
 
   // Additional Brewing Ingredients
+  rabbit_foot: {
+    id: 'rabbit_foot', name: 'Кроляча лапка',
+    sprite: '/items/rabbit_foot.png', maxStack: 64,
+  },
+  phantom_membrane: {
+    id: 'phantom_membrane', name: 'Мембрана фантома',
+    sprite: '/items/phantom_membrane.png', maxStack: 64,
+  },
   turtle_shell: {
     id: 'turtle_shell',
     name: 'Панцир черепахи',
     sprite: '/items/turtle_shell.png',
-    maxStack: 64,
+    maxStack: 1,
   },
   slime_block: {
     id: 'slime_block',
@@ -395,6 +436,7 @@ export const MINECRAFT_ITEMS = {
  * Returns authentic pixel-perfect sprite path for normal, splash, or lingering potions
  */
 export function getPotionSprite(itemId, isSplash = false, isLingering = false) {
+  if (itemId === 'mundane_potion' || itemId === 'thick_potion') itemId = 'water_bottle';
   if (!itemId || itemId === 'water_bottle') {
     if (isLingering) return '/items/lingering_water_bottle.png';
     if (isSplash) return '/items/splash_water_bottle.png';
