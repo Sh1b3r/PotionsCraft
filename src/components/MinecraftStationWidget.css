@@ -437,6 +437,10 @@
 .mc-slot {
   width: 36px;
   height: 36px;
+}
+
+.mc-slot,
+.is-mobile .mc-pocket-slot {
   background-color: #8b8b8b;
   border-top: 2px solid #373737;
   border-left: 2px solid #373737;
@@ -452,11 +456,13 @@
   transition: background-color 0.1s ease;
 }
 
-.mc-slot:hover {
+.mc-slot:hover,
+.is-mobile .mc-pocket-slot:hover {
   background-color: #9c9c9c;
 }
 
-.mc-slot.has-item:active {
+.mc-slot.has-item:active,
+.is-mobile .mc-pocket-slot.has-item:active {
   background-color: #7d7d7d;
 }
 
@@ -747,18 +753,18 @@
 .mc-pocket-workspace { height: 100%; display: flex; flex-direction: column; }
 .mc-pocket-panels { display: grid; grid-template-columns: minmax(180px, 1fr) minmax(0, 1.35fr); flex: 1; min-height: 0; gap: 8px; padding-top: 6px; }
 .mc-pocket-stations { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
-.mc-pocket-inventory, .mc-pocket-station { display: flex; flex-direction: column; min-height: 0; min-width: 0; border: 2px inset #eee; background: #b7b7b7; container-type: inline-size; }
+.mc-pocket-inventory, .mc-pocket-station { display: flex; flex-direction: column; min-height: 0; min-width: 0; border: 2px solid; border-color: #fff #373737 #373737 #fff; background: #c6c6c6; container-type: inline-size; }
 .mc-pocket-station { flex: 1; container-type: size; }
 .mc-pocket-station[hidden] { display: none; }
 .mc-pocket-tabs { display: flex; flex: 0 0 42px; gap: 2px; background: #9a9a9a; }
 .mc-pocket-tabs button { flex: 1; min-width: 0; }
 .is-mobile .mc-pocket-inventory .mc-pocket-tabs button { font-size: clamp(12px, 6.5cqi, 15px); padding-inline: 4px; }
 .mc-pocket-scroll { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; padding: 5px; touch-action: pan-y; }
-.mc-pocket-inventory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(max(40px, calc(48px * var(--pocket-size))), 1fr)); gap: 2px; }
-.is-mobile .mc-pocket-slot { width: 100%; min-width: 0; height: auto; min-height: 40px; aspect-ratio: 1; border: 2px inset #eee; background: #8b8b8b; position: relative; padding: 3px; display: flex; align-items: center; justify-content: center; touch-action: pan-y; }
-.mc-pocket-slot img { width: 85%; height: 85%; object-fit: contain; image-rendering: pixelated; pointer-events: none; }
+.mc-pocket-inventory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(max(40px, calc(48px * var(--pocket-size))), 1fr)); gap: 0; }
+.is-mobile .mc-pocket-slot { width: 100%; min-width: 0; height: auto; min-height: 40px; aspect-ratio: 1; padding: 0; touch-action: pan-y; }
+.mc-pocket-slot img { width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; pointer-events: none; }
 .is-mobile .mc-pocket-slot[data-selected='true'], .mc-pocket-stage .mc-slot[data-selected='true'] { outline: 3px solid #4cbd35; outline-offset: -3px; background-color: #add184; }
-.mc-pocket-count { position: absolute; right: 1px; bottom: 0; font-size: 17px; line-height: 1; color: white; text-shadow: 2px 2px #333; pointer-events: none; }
+.mc-pocket-count { font-size: 17px; }
 .mc-pocket-stage-box { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 .mc-pocket-stage { position: relative; flex: none; }
 .mc-pocket-stage > div { transform-origin: top left; position: absolute; width: 206px; height: 132px; }
@@ -778,8 +784,8 @@
 .is-mobile .mc-pocket-recipe.is-available { background: #d8d8d8; }
 .mc-pocket-recipe img { width: 36px; height: 36px; flex: none; image-rendering: pixelated; }
 .mc-pocket-recipe small { display: block; margin-top: 3px; color: #454545; font-size: 11px; }
-.mc-pocket-crafting { --pocket-craft-size: min(calc(64px * var(--pocket-size)), max(40px, calc((100cqi - 68px) * 9 / 40)), max(40px, calc((100cqb - 60px) / 3))); flex: 1; min-height: 0; overflow: auto; display: flex; flex-direction: column; align-items: center; justify-content: safe center; padding: 4px; gap: 12px; }
-.mc-pocket-crafting-row { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; flex: none; }
+.mc-pocket-crafting { --pocket-craft-size: min(calc(64px * var(--pocket-size)), max(40px, calc((100cqi - 80px) * 9 / 40)), max(40px, calc((100cqb - 60px) / 3))); flex: 1; min-height: 0; overflow: auto; display: flex; flex-direction: column; align-items: center; justify-content: safe center; padding: 4px; gap: 12px; }
+.mc-pocket-crafting-row { width: 100%; display: flex; align-items: center; justify-content: center; gap: 14px; flex: none; }
 .mc-pocket-crafting-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: calc(3 * var(--pocket-craft-size)); gap: 0; flex: none; }
 .mc-pocket-output-column { display: flex; align-items: center; flex: none; }
 .is-mobile .mc-pocket-clear { font-size: 12px; padding: 6px 12px; flex: none; }
@@ -840,15 +846,3 @@
   .mc-workbench-layout > .mc-brewing-workbench { grid-column: 1 / -1; grid-row: 1; justify-self: center; }
   .mc-station-sidebar { grid-row: 2; }
 }
-
-/* Use the desktop crafting slot bevels for touch controls, too. */
-.is-mobile .mc-pocket-crafting-panel .mc-pocket-slot {
-  background-color: #8b8b8b;
-  border: 2px solid;
-  border-color: #373737 #fff #fff #373737;
-  padding: 0;
-  box-shadow: none;
-}
-.is-mobile .mc-pocket-crafting-panel .mc-pocket-slot:hover { background-color: #9c9c9c; }
-.is-mobile .mc-pocket-crafting-panel .mc-pocket-slot[data-selected='true'] { background-color: #add184; }
-.is-mobile .mc-pocket-crafting-panel .mc-pocket-slot img { width: 100%; height: 100%; }

@@ -3,7 +3,7 @@ import { MINECRAFT_ITEMS } from '../data/minecraftItemIcons';
 import { STATION_CRAFTING_RECIPES, canFillStationRecipe } from '../data/stationCraftingRecipes';
 
 function Item({ item }) {
-  return item && <><img src={item.sprite} alt="" draggable="false" />{item.count > 1 && <span className="mc-pocket-count">{item.count}</span>}</>;
+  return item && <><img className="mc-item-icon" src={item.sprite} alt="" draggable="false" />{item.count > 1 && <span className="mc-item-count mc-pocket-count">{item.count}</span>}</>;
 }
 export default function BedrockStationView({ inventory, grid, output, brewingStage, controls, settings, fillRecipe, craft, clearGrid, fuelCharges, progress, brewing, message, containers, collectContainers, onTabChange }) {
   const [tab, setTab] = useState('brewing');
@@ -54,7 +54,7 @@ export default function BedrockStationView({ inventory, grid, output, brewingSta
     stopCraft();
     if (event.type === 'pointerup' && !press.repeated) craftRef.current();
   };
-  const slot = (type, index, item) => <button key={`${type}-${index}`} type="button" className="mc-pocket-slot"
+  const slot = (type, index, item) => <button key={`${type}-${index}`} type="button" className={`mc-pocket-slot${item ? ' has-item' : ''}`}
     data-slot-type={type} data-slot-index={index} aria-label={`${item?.name || 'Порожній слот'}${item ? `, ${item.count}` : ''}`}
     {...controls.events(type, index)}><Item item={item} /></button>;
   const selected = controls.item;
@@ -92,7 +92,7 @@ export default function BedrockStationView({ inventory, grid, output, brewingSta
           <div className="mc-pocket-crafting">
             {preview && <div className="mc-pocket-missing" role="status">Для {MINECRAFT_ITEMS[preview.id].name}: {Object.entries(preview.grid.reduce((counts, id) => { if (id) counts[id] = (counts[id] || 0) + 1; return counts; }, {})).map(([id, count]) => `${MINECRAFT_ITEMS[id].name} × ${count}`).join(', ')}<button type="button" onClick={() => setPreview(null)} aria-label="Закрити підказку рецепта">✕</button></div>}
             <div className="mc-pocket-crafting-row"><div className="mc-pocket-crafting-grid">{grid.map((item, index) => slot('crafting', index, item))}</div>
-              <div className="mc-pocket-craft-arrow-box"><img className="mc-pocket-craft-arrow" src="/mc_crafting_arrow.png" alt="" /></div>
+              <div className="mc-pocket-craft-arrow-box"><img className="mc-pixel-crafting-arrow mc-pocket-craft-arrow" src="/mc_crafting_arrow.png" alt="" /></div>
               <div className="mc-pocket-output-column"><button type="button" className="mc-pocket-slot mc-pocket-output" aria-label={output ? `Створити: ${output.name}` : 'Результат крафту'}
                 onPointerDown={startCraft} onPointerUp={finishCraft} onPointerCancel={finishCraft} onLostPointerCapture={finishCraft}
                 onClick={e => { if (!e.detail && output) craftRef.current(); }}><Item item={output} /></button>
