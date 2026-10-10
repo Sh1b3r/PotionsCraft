@@ -27,7 +27,9 @@ The mobile window is a separate full-viewport layout with inventory/recipe tabs
 on the left and brewing and crafting visible side by side on the right. Touching
 either workstation selects it as the destination for quick transfers; the heading
 buttons also select that destination. Crafting has larger grid slots and its result
-below the grid. The crafting area scrolls when vertical space is limited. It does not shrink the desktop
+below the grid, with a centered downward arrow between them and the clear button
+alongside the result. Grid and result sizes adapt to the available height. The
+crafting area scrolls when vertical space is limited. It does not shrink the desktop
 window. All 72 inventory slots are on one scrollable page; scrolling reveals the
 remaining rows, and slot size can be changed in settings.
 
