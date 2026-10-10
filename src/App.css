@@ -1588,8 +1588,8 @@ h3 {
   position: relative;
   width: 60px;
   height: 40px;
-  /* Raise the pipes 2px while keeping the output row at the same y. */
-  margin: -22px 34px -14px;
+  /* Original pipe placement; the output row keeps its existing position. */
+  margin: -20px 34px -16px;
   vertical-align: baseline;
 }
 
