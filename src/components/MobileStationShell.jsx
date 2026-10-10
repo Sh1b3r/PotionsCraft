@@ -80,7 +80,6 @@ export default function MobileStationShell({ mobile, children, onClose, onOpen, 
   return <>
     <button ref={launchButton} type="button" className="mc-mobile-launch" onClick={launch}
       aria-label="Відкрити варильну стійку та верстак" aria-haspopup="dialog">
-      <span className="mc-mobile-launch-icon" aria-hidden="true"><BrewingStandFrame /></span>
       <span className="mc-mobile-launch-copy"><span className="mc-mobile-launch-title">Варіння та крафт</span><span className="mc-mobile-launch-hint">Відкрити інтерактивний блок</span></span>
       <span className="mc-mobile-launch-chevron" aria-hidden="true">›</span>
     </button>

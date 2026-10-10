@@ -87,6 +87,7 @@ export default function MinecraftStationWidget() {
   const [isBrewing, setIsBrewing] = useState(false);
   const [brewingProgress, setBrewingProgress] = useState(0);
   const [brewingStep, setBrewingStep] = useState(0); // 28 divisions, 2px each
+  const [brewingBubbleFrame, setBrewingBubbleFrame] = useState(null);
 
   // Hand / Cursor held item for pick-and-place
   const [heldItem, setHeldItem] = useState(null);
@@ -503,7 +504,13 @@ export default function MinecraftStationWidget() {
 
   // Vanilla uses 400 ticks (20 seconds), consumes a fuel charge at the start,
   // and aborts if the ingredient changes or no bottle remains convertible.
+  // The arrow has 28 pixel increments (each takes 20000ms / 28 = ~714.28ms, or ~0.714s).
+  // The steam (bubbles) fills across 7 frames during each 0.714s cycle, completing right as each pixel appears.
   const TOTAL_BREW_TIME = 20000;
+  const ARROW_STEPS = 28;
+  const STEP_DURATION = TOTAL_BREW_TIME / ARROW_STEPS; // 714.2857 ms (~0.714 s)
+  const BUBBLE_FRAME_DURATION = STEP_DURATION / 7; // ~102.04 ms per frame
+
   useEffect(() => {
     if (fuelCharges === 0 && fuelSlot?.itemId === 'blaze_powder') {
       fuelChargesRef.current = 20; setFuelCharges(20);
@@ -515,11 +522,12 @@ export default function MinecraftStationWidget() {
     const possible = canBrew(brewingIngredient, brewingBottles, 1);
     if (isBrewing) {
       if (!possible || activeIngredientRef.current !== brewingIngredient?.itemId) {
-        setIsBrewing(false); setBrewingStep(0); setBrewingProgress(0);
+        setIsBrewing(false); setBrewingStep(0); setBrewingProgress(0); setBrewingBubbleFrame(null);
       }
     } else if (possible && fuelCharges > 0) {
       activeIngredientRef.current = brewingIngredient.itemId;
       fuelChargesRef.current = fuelCharges - 1; setFuelCharges(fuelCharges - 1);
+      setBrewingBubbleFrame(0);
       setIsBrewing(true);
     }
   }, [brewingIngredient, brewingBottles, fuelCharges, isBrewing]);
@@ -528,14 +536,21 @@ export default function MinecraftStationWidget() {
     const start = Date.now();
     const ingredientId = activeIngredientRef.current;
     const timer = setInterval(() => {
-      const progress = Math.min(1, (Date.now() - start) / TOTAL_BREW_TIME);
+      const elapsed = Date.now() - start;
+      const progress = Math.min(1, elapsed / TOTAL_BREW_TIME);
+      const currentStep = Math.min(ARROW_STEPS, Math.floor(elapsed / STEP_DURATION));
+      const cycleElapsed = elapsed % STEP_DURATION;
+      const bubbleFrame = Math.min(6, Math.floor(cycleElapsed / BUBBLE_FRAME_DURATION));
+
       setBrewingProgress(progress * 100);
-      setBrewingStep(Math.floor(progress * 28) * 2);
+      setBrewingStep(currentStep * 2);
+      setBrewingBubbleFrame(bubbleFrame);
+
       if (progress < 1) return;
       clearInterval(timer);
       const ingredient = brewingIngredientRef.current;
       if (ingredient?.itemId !== ingredientId || !canBrew(ingredient, brewingBottlesRef.current, 1)) {
-        setIsBrewing(false); setBrewingStep(0); setBrewingProgress(0); return;
+        setIsBrewing(false); setBrewingStep(0); setBrewingProgress(0); setBrewingBubbleFrame(null); return;
       }
       let brewed = null;
       brewingBottlesRef.current.forEach((bottle, index) => {
@@ -552,10 +567,10 @@ export default function MinecraftStationWidget() {
           setContainerReturns(count => count + remainder.count);
         }
       }
-      setIsBrewing(false); setBrewingStep(0); setBrewingProgress(0);
+      setIsBrewing(false); setBrewingStep(0); setBrewingProgress(0); setBrewingBubbleFrame(null);
       playPotionBrewedSound();
       if (brewed) setBrewedToast({ name: brewed.name, catalogId: brewed.catalogId, timestamp: Date.now() });
-    }, 50);
+    }, 20);
     return () => clearInterval(timer);
   }, [isBrewing]);
   useEffect(() => {
@@ -707,7 +722,7 @@ export default function MinecraftStationWidget() {
 
                 {/* 2. Brewing Steam / Bubbles Column */}
                 <div className="mc-brewing-bubbles-column">
-                  <BrewingBubbles isBrewing={isBrewing} />
+                  <BrewingBubbles isBrewing={isBrewing} frameIndex={isBrewing ? brewingBubbleFrame : null} />
                 </div>
 
                 {/* 3. Top Reagent Slot */}

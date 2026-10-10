@@ -41,27 +41,24 @@ export const MINECRAFT_ITEMS = {
   sugar_cane: {
     id: 'sugar_cane', name: 'Цукрова тростина',
     sprite: '/items/sugar_cane.png', maxStack: 64,
-    description: '1 тростина → 1 цукор.',
+
   },
   slime_ball: {
     id: 'slime_ball', name: 'Згусток слизу',
     sprite: '/items/slime_ball.png', maxStack: 64,
-    description: 'З порошком пломеня → лавовий слиз. 9 згустків → слизовий блок.',
+
   },
   gold_ingot: {
     id: 'gold_ingot', name: 'Золотий злиток',
     sprite: '/items/gold_ingot.png', maxStack: 64,
-    description: '1 злиток → 9 золотих самородків.',
   },
   turtle_scute: {
     id: 'turtle_scute', name: 'Щиток черепахи',
     sprite: '/items/turtle_scute.png', maxStack: 64,
-    description: '5 щитків у формі шолома → панцир черепахи.',
   },
   bamboo: {
     id: 'bamboo', name: 'Бамбук',
     sprite: '/items/bamboo.png', maxStack: 64,
-    description: '2 бамбуки один над одним → 1 палиця.',
   },
   gold_nugget: {
     id: 'gold_nugget',

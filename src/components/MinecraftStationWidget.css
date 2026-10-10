@@ -4,9 +4,10 @@
 .mc-workbench-viewport-scaler {
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: safe center;
   overflow-x: auto;
-  padding: 16px 0 28px;
+  padding: 16px 12px 28px;
+  box-sizing: border-box;
   container-type: inline-size;
 }
 
@@ -17,6 +18,7 @@
   gap: 16px;
   width: 100%;
   min-width: 684px;
+  box-sizing: border-box;
   font-family: 'Minecraft', monospace;
 }
 
@@ -240,8 +242,13 @@
   image-rendering: pixelated;
 }
 
-.dark-theme .mc-brewing-arrow-empty { content: url('/mc_arrow_empty_dark.png'); }
-.mc-brewing-arrow-fill { transition: none !important; }
+.dark-theme .mc-brewing-arrow-empty {
+  content: url('/mc_arrow_empty_dark.png');
+}
+
+.mc-brewing-arrow-fill {
+  transition: none !important;
+}
 
 .slot-bottle-left {
   position: absolute !important;
@@ -300,7 +307,9 @@
   overflow: hidden;
 }
 
-.mc-fuel-gauge-sculk { display: none; }
+.mc-fuel-gauge-sculk {
+  display: none;
+}
 
 /* Empty bottle watermark (exact silhouette from be.html) */
 .mc-empty-bottle-watermark {
@@ -481,27 +490,36 @@
   display: block;
 }
 
-/* Keep white pixel glyphs readable over pale item textures. Paint the stroke
-   behind the fill so the contour does not shrink the digits themselves. */
+/* Authentic Minecraft item stack count:
+   Sharp white pixel glyphs with a high-contrast deep black shadow,
+   positioned flush to the bottom-right corner of the slot. */
 .mc-item-count,
 .mc-floating-held-item .mc-held-count {
   color: #ffffff;
-  font-family: 'Minecraft', monospace;
+  font-family: 'Minecraft', monospace, sans-serif;
   font-size: 16px;
   font-weight: normal;
   letter-spacing: 0;
   line-height: 1;
-  -webkit-text-stroke: 2px #161616;
-  paint-order: stroke fill;
-  text-shadow: 2px 2px 0 #161616;
+  text-shadow: 2px 2px 0 #000000, 1px 1px 0 #000000;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: geometricPrecision;
   pointer-events: none;
   user-select: none;
+  z-index: 2;
 }
 
 .mc-item-count {
   position: absolute;
-  bottom: 0;
-  right: 0;
+  bottom: 0px;
+  right: 0px;
+}
+
+.mc-pocket-count {
+  bottom: 0px;
+  right: 1px;
+  font-size: clamp(16px, 30cqi, 19px);
 }
 
 /* ==================== FLOATING HELD ITEM ==================== */
@@ -529,8 +547,8 @@
 
 .mc-floating-held-item .mc-held-count {
   position: absolute;
-  bottom: -4px;
-  right: -4px;
+  bottom: -2px;
+  right: -2px;
 }
 
 /* ==================== WORKBENCH THEMING ==================== */
@@ -635,6 +653,7 @@
     opacity: 0;
     transform: translate(-50%, -20px) scale(0.9);
   }
+
   100% {
     opacity: 1;
     transform: translate(-50%, 0) scale(1);
@@ -699,6 +718,7 @@
       0 0 20px #ffd700,
       0 0 40px rgba(255, 215, 0, 0.5);
   }
+
   100% {
     box-shadow:
       0 0 35px #ffffff,
@@ -707,113 +727,695 @@
 }
 
 /* Full viewport Pocket interface: controls keep their own sizes, not a scaled desktop window. */
-.mc-mobile-launch, .is-mobile button, .is-mobile select, .is-mobile input { font: inherit; }
-.mc-mobile-launch { display: grid; grid-template-columns: 64px minmax(0, 1fr) 20px; align-items: center; gap: 14px; width: 100%; margin: 24px auto; min-height: 96px; padding: 14px; font-family: 'Minecraft', monospace; text-align: left; background: #427d2b; color: #fff; border: 3px outset #84be5e; box-shadow: inset 0 -4px #2d5a1d, 0 4px #234716, 0 8px 20px #23471630; cursor: pointer; transition: var(--theme-paint-transition); }
-.mc-mobile-launch-icon { display: grid; place-items: center; width: 64px; min-height: 64px; background: #234716; border: 2px inset #84be5e; }
-.mc-mobile-launch-icon .mcui-frame { position: static; display: block; width: 60px; height: auto; }
-.mc-mobile-launch-copy { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
-.mc-mobile-launch-title { font-size: clamp(17px, 4.5vw, 22px); line-height: 1.2; text-shadow: 2px 2px #234716; }
-.mc-mobile-launch-hint { font-size: 12px; line-height: 1.4; color: #e0f3d2; }
-.mc-mobile-launch-chevron { font-size: 32px; line-height: 1; text-align: center; }
-.mc-mobile-launch:hover { background: #4c9132; }
-.mc-mobile-launch:active { border-style: inset; box-shadow: inset 0 3px #234716, 0 2px #234716; }
-.mc-mobile-launch:focus-visible { outline: 3px solid #f0bc46; outline-offset: 4px; }
-.mc-station-shell.is-mobile { position: fixed; inset: 0; z-index: 2000; background: #c6c6c6; color: #222; overflow: hidden; overscroll-behavior: none; font: 15px 'Minecraft', monospace; user-select: none; -webkit-user-select: none; }
-.is-mobile button { touch-action: manipulation; cursor: pointer; border: 2px outset #eee; background: #c6c6c6; color: #222; min-height: 40px; padding: 6px 10px; border-radius: 0; }
-.is-mobile button:disabled { opacity: .45; cursor: default; }
-.is-mobile button:focus-visible { outline: 3px solid #327c24; outline-offset: -3px; }
-.is-mobile button[aria-pressed='true'] { background: #588e3a; color: #fff; border-color: #77b354; }
-.mc-station-viewport { width: 100%; }
-.is-mobile .mc-station-viewport { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; padding: 0 max(6px, env(safe-area-inset-right)) 0 max(6px, env(safe-area-inset-left)); box-sizing: border-box; }
-.mc-mobile-heading { flex: 0 0 46px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #666; padding: 0 4px; }
-.mc-mobile-heading > div { display: flex; gap: 6px; }
-.mc-mobile-heading button { min-width: 44px; height: 40px; }
-.mc-pocket-back { display: flex; align-items: center; justify-content: center; gap: 4px; white-space: nowrap; }
-.is-mobile .mc-station-viewport.is-rotated { transform: translate(-50%, -50%) rotate(90deg); padding-inline: max(6px, env(safe-area-inset-top)) max(6px, env(safe-area-inset-bottom)); }
-.is-mobile .mc-station-content { flex: 1; min-height: 0; width: 100%; }
-.mc-pocket-workspace { height: 100%; display: flex; flex-direction: column; }
-.mc-pocket-panels { display: grid; grid-template-columns: minmax(180px, 1fr) minmax(0, 1.35fr); flex: 1; min-height: 0; gap: 8px; padding-top: 6px; }
-.mc-pocket-stations { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
-.mc-pocket-inventory, .mc-pocket-station { display: flex; flex-direction: column; min-height: 0; min-width: 0; border: 2px solid; border-color: #fff #373737 #373737 #fff; background: #c6c6c6; container-type: inline-size; }
-.mc-pocket-station { flex: 1; container-type: size; }
-.mc-pocket-station[hidden] { display: none; }
-.mc-pocket-tabs { display: flex; flex: 0 0 42px; gap: 2px; background: #9a9a9a; }
-.mc-pocket-tabs button { flex: 1; min-width: 0; }
-.is-mobile .mc-pocket-inventory .mc-pocket-tabs button { font-size: clamp(12px, 6.5cqi, 15px); padding-inline: 4px; }
-.mc-pocket-scroll { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; padding: 5px; touch-action: pan-y; }
-.mc-pocket-inventory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(max(40px, calc(48px * var(--pocket-size))), 1fr)); gap: 0; }
-.is-mobile .mc-pocket-slot { width: 100%; min-width: 0; height: auto; min-height: 40px; aspect-ratio: 1; padding: 0; touch-action: pan-y; }
-.mc-pocket-slot img { width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; pointer-events: none; }
-.is-mobile .mc-pocket-slot[data-selected='true'], .mc-pocket-stage .mc-slot[data-selected='true'] { outline: 3px solid #4cbd35; outline-offset: -3px; background-color: #add184; }
-.mc-pocket-stage-box { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-.mc-pocket-stage { position: relative; flex: none; }
-.mc-pocket-stage > div { transform-origin: top left; position: absolute; width: 206px; height: 132px; }
-.mc-pocket-stage .mc-brewing-stand-stage .mc-slot { border: 0; padding: 2px; background: transparent; background-clip: content-box; touch-action: none; }
-.mc-pocket-status { font-size: 13px; padding: 5px 8px; text-align: center; flex: none; }
-.mc-pocket-status span { display: block; margin-top: 4px; }
-.mc-pocket-status button { display: block; margin: 4px auto; }
-.mc-pocket-selection { display: flex; align-items: center; gap: 8px; min-height: 43px; flex: 0 0 43px; font-size: 13px; padding: 3px 5px; box-sizing: border-box; }
-.mc-pocket-selection > img { width: 32px; height: 32px; image-rendering: pixelated; }
-.mc-pocket-selection > span { flex: 1; }
-.mc-pocket-selection small { display: block; font-size: 11px; margin-top: 3px; }
-.mc-pocket-selection button { min-width: 44px; }
-.mc-pocket-search { flex: none; width: calc(100% - 10px); box-sizing: border-box; min-height: 36px; margin: 4px 5px; background: #eee; color: #222; border: 2px inset #ddd; padding: 4px 8px; user-select: text; }
-.mc-pocket-recipes { display: flex; flex-direction: column; gap: 4px; }
-.is-mobile .mc-pocket-recipe { display: flex; align-items: center; gap: 8px; text-align: left; flex: none; min-width: 0; width: 100%; box-sizing: border-box; min-height: 52px; font-size: clamp(12px, 6cqi, 15px); background: #a7a7a7; }
-.mc-pocket-recipe > span { min-width: 0; overflow-wrap: anywhere; }
-.is-mobile .mc-pocket-recipe.is-available { background: #d8d8d8; }
-.mc-pocket-recipe img { width: 36px; height: 36px; flex: none; image-rendering: pixelated; }
-.mc-pocket-recipe small { display: block; margin-top: 3px; color: #454545; font-size: 11px; }
-.mc-pocket-crafting { --pocket-craft-size: min(calc(64px * var(--pocket-size)), max(40px, calc((100cqi - 80px) * 9 / 40)), max(40px, calc((100cqb - 60px) / 3))); flex: 1; min-height: 0; overflow: auto; display: flex; flex-direction: column; align-items: center; justify-content: safe center; padding: 4px; gap: 12px; }
-.mc-pocket-crafting-row { width: 100%; display: flex; align-items: center; justify-content: center; gap: 14px; flex: none; }
-.mc-pocket-crafting-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: calc(3 * var(--pocket-craft-size)); gap: 0; flex: none; }
-.mc-pocket-output-column { display: flex; align-items: center; flex: none; }
-.is-mobile .mc-pocket-clear { font-size: 12px; padding: 6px 12px; flex: none; }
-.mc-pocket-craft-arrow-box { display: grid; place-items: center; width: 44px; height: 30px; flex: none; }
-.mc-pocket-craft-arrow { width: 44px; height: 30px; image-rendering: pixelated; }
-.is-mobile .mc-pocket-output { width: calc(var(--pocket-craft-size) * 13 / 9); height: calc(var(--pocket-craft-size) * 13 / 9); touch-action: none; }
-.mc-pocket-crafting p { text-align: center; font-size: 12px; margin: 0; line-height: 1.5; }
-.mc-pocket-overlay { position: absolute; inset: 0; z-index: 10; background: #0009; display: flex; align-items: center; justify-content: center; padding: 8px; }
-.mc-pocket-settings, .mc-pocket-split { background: #c6c6c6; border: 3px outset #eee; padding: 12px; width: min(460px, 90%); max-height: 100%; overflow: auto; box-sizing: border-box; }
-.mc-pocket-settings h3, .mc-pocket-split h3 { margin: 0 0 8px; font-size: 16px; }
-.mc-pocket-settings label { display: flex; justify-content: space-between; align-items: center; min-height: 40px; gap: 12px; font-size: 13px; }
-.mc-pocket-settings select { min-height: 36px; background: #eee; color: #222; padding: 4px; }
-.mc-pocket-settings input { width: 24px; height: 24px; accent-color: #548d35; flex: none; }
-.mc-pocket-settings-actions { display: flex; gap: 6px; margin: 8px 0; }
-.mc-pocket-settings-actions button { flex: 1; }
-.mc-pocket-split { text-align: center; }
-.mc-pocket-split > input { width: 100%; height: 40px; accent-color: #548d35; touch-action: none; }
-.mc-pocket-split-value { display: flex; justify-content: center; align-items: center; gap: 12px; }
-.mc-pocket-split-value img { width: 48px; height: 48px; image-rendering: pixelated; }
-.mc-pocket-split > button { margin: 0 4px; }
-.mc-container-return { position: absolute; top: 2px; right: 4px; font-family: 'Minecraft', monospace; font-size: 11px; }
-.mc-pocket-missing { font-size: 12px; line-height: 1.4; padding: 5px; background: #e7d29b; } .mc-pocket-missing button { float: right; }
-.dark-theme .mc-station-shell.is-mobile { background: #232c3b; color: #edf2f8; }
-.dark-theme .mc-mobile-launch { background: #285d43; border-color: #5db78f; box-shadow: inset 0 -4px #173f2c, 0 4px #102f23, 0 8px 20px #0005; }
-.dark-theme .mc-mobile-launch:hover { background: #327754; }
-.dark-theme .mc-mobile-launch:active { box-shadow: inset 0 3px #173f2c, 0 2px #102f23; }
-.dark-theme .mc-mobile-launch-icon { background: #173f2c; border-color: #5db78f; }
-.dark-theme .mc-mobile-launch-hint { color: #c5eadd; }
-.dark-theme .mc-pocket-inventory, .dark-theme .mc-pocket-station { background: #2d3a4b; border-color: #65768a; }
-.dark-theme .is-mobile button:not([aria-pressed='true']) { background: #46566a; color: #edf2f8; border-color: #6f8093; }
-.dark-theme .mc-pocket-tabs { background: #232c3b; }
-.dark-theme .mc-pocket-settings, .dark-theme .mc-pocket-split { background: #2d3a4b; border-color: #65768a; }
-.dark-theme .mc-pocket-recipe small { color: #c2cedc; }
-.dark-theme .is-mobile .mc-pocket-recipe.is-available { background: #526748; }
-.dark-theme .is-mobile .mc-pocket-slot[data-selected='true'] { background: #587b43; }
-.dark-theme .mc-pocket-missing { background: #69552e; }
+.mc-mobile-launch,
+.is-mobile button,
+.is-mobile select,
+.is-mobile input {
+  font: inherit;
+}
+
+.mc-mobile-launch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  margin: 20px auto;
+  min-height: 76px;
+  padding: 16px 20px;
+  box-sizing: border-box;
+  font-family: 'Minecraft', monospace, sans-serif;
+  text-align: left;
+  background: #427d2b;
+  color: #fff;
+  border: 3px outset #84be5e;
+  box-shadow: inset 0 -4px #2d5a1d, 0 4px #234716, 0 8px 20px #23471630;
+  cursor: pointer;
+  transition: var(--theme-paint-transition);
+}
+
+.mc-mobile-launch-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  text-align: left;
+  align-items: flex-start;
+}
+
+.mc-mobile-launch-title {
+  font-size: clamp(17px, 4.5vw, 22px);
+  line-height: 1.2;
+  text-align: left;
+  text-shadow: 2px 2px #234716;
+}
+
+.mc-mobile-launch-hint {
+  font-size: 13px;
+  line-height: 1.4;
+  color: #e0f3d2;
+  text-align: left;
+}
+
+.mc-mobile-launch-chevron {
+  font-size: 32px;
+  line-height: 1;
+  text-align: center;
+}
+
+.mc-mobile-launch:hover {
+  background: #4c9132;
+}
+
+.mc-mobile-launch:active {
+  border-style: inset;
+  box-shadow: inset 0 3px #234716, 0 2px #234716;
+}
+
+.mc-mobile-launch:focus-visible {
+  outline: 3px solid #f0bc46;
+  outline-offset: 4px;
+}
+
+.mc-station-shell.is-mobile {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: #c6c6c6;
+  color: #222;
+  overflow: hidden;
+  overscroll-behavior: none;
+  font: 15px 'Minecraft', monospace;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.is-mobile button {
+  touch-action: manipulation;
+  cursor: pointer;
+  border: 2px outset #eee;
+  background: #c6c6c6;
+  color: #222;
+  min-height: 40px;
+  padding: 6px 10px;
+  border-radius: 0;
+}
+
+.is-mobile button:disabled {
+  opacity: .45;
+  cursor: default;
+}
+
+.is-mobile button:focus-visible {
+  outline: 3px solid #327c24;
+  outline-offset: -3px;
+}
+
+.is-mobile button[aria-pressed='true'] {
+  background: #588e3a;
+  color: #fff;
+  border-color: #77b354;
+}
+
+.mc-station-viewport {
+  width: 100%;
+}
+
+.is-mobile .mc-station-viewport {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  padding: 0 max(6px, env(safe-area-inset-right)) 0 max(6px, env(safe-area-inset-left));
+  box-sizing: border-box;
+}
+
+.mc-mobile-heading {
+  flex: 0 0 46px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid #666;
+  padding: 0 4px;
+}
+
+.mc-mobile-heading>div {
+  display: flex;
+  gap: 6px;
+}
+
+.mc-mobile-heading button {
+  min-width: 44px;
+  height: 40px;
+}
+
+.mc-pocket-back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.is-mobile .mc-station-viewport.is-rotated {
+  transform: translate(-50%, -50%) rotate(90deg);
+  padding-inline: max(6px, env(safe-area-inset-top)) max(6px, env(safe-area-inset-bottom));
+}
+
+.is-mobile .mc-station-content {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+}
+
+.mc-pocket-workspace {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.mc-pocket-panels {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) minmax(0, 1.35fr);
+  flex: 1;
+  min-height: 0;
+  gap: 8px;
+  padding-top: 6px;
+}
+
+.mc-pocket-stations {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.mc-pocket-inventory,
+.mc-pocket-station {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  border: 2px solid;
+  border-color: #fff #373737 #373737 #fff;
+  background: #c6c6c6;
+  container-type: inline-size;
+}
+
+.mc-pocket-station {
+  flex: 1;
+  container-type: size;
+}
+
+.mc-pocket-station[hidden] {
+  display: none;
+}
+
+.mc-pocket-tabs {
+  display: flex;
+  flex: 0 0 42px;
+  gap: 2px;
+  background: #9a9a9a;
+}
+
+.mc-pocket-tabs button {
+  flex: 1;
+  min-width: 0;
+}
+
+.is-mobile .mc-pocket-inventory .mc-pocket-tabs button {
+  font-size: clamp(12px, 6.5cqi, 15px);
+  padding-inline: 4px;
+}
+
+.mc-pocket-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 5px;
+  touch-action: pan-y;
+}
+
+.mc-pocket-inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(max(40px, calc(48px * var(--pocket-size))), 1fr));
+  gap: 0;
+}
+
+.is-mobile .mc-pocket-slot {
+  width: 100%;
+  min-width: 0;
+  height: auto;
+  min-height: 40px;
+  aspect-ratio: 1;
+  padding: 0;
+  touch-action: pan-y;
+}
+
+.mc-pocket-slot img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
+.is-mobile .mc-pocket-slot[data-selected='true'],
+.mc-pocket-stage .mc-slot[data-selected='true'] {
+  outline: 3px solid #4cbd35;
+  outline-offset: -3px;
+  background-color: #add184;
+}
+
+.mc-pocket-stage-box {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.mc-pocket-stage {
+  position: relative;
+  flex: none;
+}
+
+.mc-pocket-stage>div {
+  transform-origin: top left;
+  position: absolute;
+  width: 206px;
+  height: 132px;
+}
+
+.mc-pocket-stage .mc-brewing-stand-stage .mc-slot {
+  border: 0;
+  padding: 2px;
+  background: transparent;
+  background-clip: content-box;
+  touch-action: none;
+}
+
+.mc-pocket-status {
+  font-size: 13px;
+  padding: 5px 8px;
+  text-align: center;
+  flex: none;
+}
+
+.mc-pocket-status span {
+  display: block;
+  margin-top: 4px;
+}
+
+.mc-pocket-status button {
+  display: block;
+  margin: 4px auto;
+}
+
+.mc-pocket-selection {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 43px;
+  flex: 0 0 43px;
+  font-size: 13px;
+  padding: 3px 5px;
+  box-sizing: border-box;
+}
+
+.mc-pocket-selection>img {
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
+}
+
+.mc-pocket-selection>span {
+  flex: 1;
+}
+
+.mc-pocket-selection small {
+  display: block;
+  font-size: 11px;
+  margin-top: 3px;
+}
+
+.mc-pocket-selection button {
+  min-width: 44px;
+}
+
+.mc-pocket-search {
+  flex: none;
+  width: calc(100% - 10px);
+  box-sizing: border-box;
+  min-height: 36px;
+  margin: 4px 5px;
+  background: #eee;
+  color: #222;
+  border: 2px inset #ddd;
+  padding: 4px 8px;
+  user-select: text;
+}
+
+.mc-pocket-recipes {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.is-mobile .mc-pocket-recipe {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+  flex: none;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 52px;
+  font-size: clamp(12px, 6cqi, 15px);
+  background: #a7a7a7;
+}
+
+.mc-pocket-recipe>span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.is-mobile .mc-pocket-recipe.is-available {
+  background: #d8d8d8;
+}
+
+.mc-pocket-recipe img {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  image-rendering: pixelated;
+}
+
+.mc-pocket-recipe small {
+  display: block;
+  margin-top: 3px;
+  color: #454545;
+  font-size: 11px;
+}
+
+.mc-pocket-crafting {
+  --pocket-craft-size: min(calc(64px * var(--pocket-size)), max(40px, calc((100cqi - 80px) * 9 / 40)), max(40px, calc((100cqb - 60px) / 3)));
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: safe center;
+  padding: 4px;
+  gap: 12px;
+}
+
+.mc-pocket-crafting-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  flex: none;
+}
+
+.mc-pocket-crafting-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: calc(3 * var(--pocket-craft-size));
+  gap: 0;
+  flex: none;
+}
+
+.mc-pocket-output-column {
+  display: flex;
+  align-items: center;
+  flex: none;
+}
+
+.is-mobile .mc-pocket-clear {
+  font-size: 12px;
+  padding: 6px 12px;
+  flex: none;
+}
+
+.mc-pocket-craft-arrow-box {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 30px;
+  flex: none;
+}
+
+.mc-pocket-craft-arrow {
+  width: 44px;
+  height: 30px;
+  image-rendering: pixelated;
+}
+
+.is-mobile .mc-pocket-output {
+  width: calc(var(--pocket-craft-size) * 13 / 9);
+  height: calc(var(--pocket-craft-size) * 13 / 9);
+  touch-action: none;
+}
+
+.mc-pocket-crafting p {
+  text-align: center;
+  font-size: 12px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.mc-pocket-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  background: #0009;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+}
+
+.mc-pocket-settings,
+.mc-pocket-split {
+  background: #c6c6c6;
+  border: 3px outset #eee;
+  padding: 12px;
+  width: min(460px, 90%);
+  max-height: 100%;
+  overflow: auto;
+  box-sizing: border-box;
+}
+
+.mc-pocket-settings h3,
+.mc-pocket-split h3 {
+  margin: 0 0 8px;
+  font-size: 16px;
+}
+
+.mc-pocket-settings label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 40px;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.mc-pocket-settings select {
+  min-height: 36px;
+  background: #eee;
+  color: #222;
+  padding: 4px;
+}
+
+.mc-pocket-settings input {
+  width: 24px;
+  height: 24px;
+  accent-color: #548d35;
+  flex: none;
+}
+
+.mc-pocket-settings-actions {
+  display: flex;
+  gap: 6px;
+  margin: 8px 0;
+}
+
+.mc-pocket-settings-actions button {
+  flex: 1;
+}
+
+.mc-pocket-split {
+  text-align: center;
+}
+
+.mc-pocket-split>input {
+  width: 100%;
+  height: 40px;
+  accent-color: #548d35;
+  touch-action: none;
+}
+
+.mc-pocket-split-value {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.mc-pocket-split-value img {
+  width: 48px;
+  height: 48px;
+  image-rendering: pixelated;
+}
+
+.mc-pocket-split>button {
+  margin: 0 4px;
+}
+
+.mc-container-return {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  font-family: 'Minecraft', monospace;
+  font-size: 11px;
+}
+
+.mc-pocket-missing {
+  font-size: 12px;
+  line-height: 1.4;
+  padding: 5px;
+  background: #e7d29b;
+}
+
+.mc-pocket-missing button {
+  float: right;
+}
+
+.dark-theme .mc-station-shell.is-mobile {
+  background: #232c3b;
+  color: #edf2f8;
+}
+
+.dark-theme .mc-mobile-launch {
+  background: #285d43;
+  border-color: #5db78f;
+  box-shadow: inset 0 -4px #173f2c, 0 4px #102f23, 0 8px 20px #0005;
+}
+
+.dark-theme .mc-mobile-launch:hover {
+  background: #327754;
+}
+
+.dark-theme .mc-mobile-launch:active {
+  box-shadow: inset 0 3px #173f2c, 0 2px #102f23;
+}
+
+.dark-theme .mc-mobile-launch-icon {
+  background: #173f2c;
+  border-color: #5db78f;
+}
+
+.dark-theme .mc-mobile-launch-hint {
+  color: #c5eadd;
+}
+
+.dark-theme .mc-pocket-inventory,
+.dark-theme .mc-pocket-station {
+  background: #2d3a4b;
+  border-color: #65768a;
+}
+
+.dark-theme .is-mobile button:not([aria-pressed='true']) {
+  background: #46566a;
+  color: #edf2f8;
+  border-color: #6f8093;
+}
+
+.dark-theme .mc-pocket-tabs {
+  background: #232c3b;
+}
+
+.dark-theme .mc-pocket-settings,
+.dark-theme .mc-pocket-split {
+  background: #2d3a4b;
+  border-color: #65768a;
+}
+
+.dark-theme .mc-pocket-recipe small {
+  color: #c2cedc;
+}
+
+.dark-theme .is-mobile .mc-pocket-recipe.is-available {
+  background: #526748;
+}
+
+.dark-theme .is-mobile .mc-pocket-slot[data-selected='true'] {
+  background: #587b43;
+}
+
+.dark-theme .mc-pocket-missing {
+  background: #69552e;
+}
 
 /* Fill the space outside the GUI with useful side panels. */
-.mc-workstation-info { min-width: 0; display: flex; flex-direction: column; font-size: 13px; line-height: 1.45; overflow-wrap: anywhere; }
+.mc-workstation-info {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
 /* Only the central GUI determines the height of the shared grid row. */
-.mc-station-sidebar { contain: size; min-height: 0; overflow-y: auto; }
-.mc-workstation-info > * { flex-shrink: 0; }
-.mc-workstation-info-title { min-height: 18px; font-size: 14px; }
-#body21 .mc-workstation-info h3 { margin: 0 0 12px; font-size: 15px; font-weight: normal; letter-spacing: .5px; color: #303030; text-shadow: 1px 1px 0 #ffffff66; }
-.mc-workstation-info h4 { margin: 18px 0 8px; font-size: 14px; }
-.mc-workstation-info dl { display: flex; flex-direction: column; gap: 6px; margin: 12px 0; }
+.mc-station-sidebar {
+  contain: size;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.mc-workstation-info>* {
+  flex-shrink: 0;
+}
+
+.mc-workstation-info-title {
+  min-height: 18px;
+  font-size: 14px;
+}
+
+#body21 .mc-workstation-info h3 {
+  margin: 0 0 12px;
+  font-size: 15px;
+  font-weight: normal;
+  letter-spacing: .5px;
+  color: #303030;
+  text-shadow: 1px 1px 0 #ffffff66;
+}
+
+.mc-workstation-info h4 {
+  margin: 18px 0 8px;
+  font-size: 14px;
+}
+
+.mc-workstation-info dl {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 12px 0;
+}
+
 .mc-workstation-info-title,
-.mc-workstation-info dl > div {
+.mc-workstation-info dl>div {
   padding: 6px 8px;
   background: var(--slot-surface, #8b8b8b);
   border: 2px solid;
@@ -822,19 +1424,69 @@
   border-bottom-color: var(--slot-bevel-light, #ffffff);
   border-right-color: var(--slot-bevel-light, #ffffff);
 }
-.mc-workstation-info dl > div { display: flex; justify-content: space-between; gap: 8px; }
-.mc-workstation-info dd { margin: 0; }
-.mc-workstation-info p { margin: 12px 0; }
-.mc-workstation-info ol { margin: 0; padding-left: 20px; }
-.mc-workstation-info li + li { margin-top: 8px; }
-.mc-workstation-info .mc-station-shortcuts > div { flex-direction: column; gap: 2px; }
-.mc-station-shortcuts dt { font-weight: bold; }
-.mc-workstation-info button { min-height: 32px; margin-top: auto; max-width: 100%; }
-.mc-workstation-info button:disabled { opacity: .5; cursor: default; }
-.dark-theme .mc-workstation-info-title, .dark-theme .mc-workstation-info h3, .dark-theme .mc-workstation-info h4 { color: var(--sculk-echo); }
+
+.mc-workstation-info dl>div {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.mc-workstation-info dd {
+  margin: 0;
+}
+
+.mc-workstation-info p {
+  margin: 12px 0;
+}
+
+.mc-workstation-info ol {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.mc-workstation-info li+li {
+  margin-top: 8px;
+}
+
+.mc-workstation-info .mc-station-shortcuts>div {
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mc-station-shortcuts dt {
+  font-weight: bold;
+}
+
+.mc-workstation-info button {
+  min-height: 32px;
+  margin-top: auto;
+  max-width: 100%;
+}
+
+.mc-workstation-info button:disabled {
+  opacity: .5;
+  cursor: default;
+}
+
+.dark-theme .mc-workstation-info-title,
+.dark-theme .mc-workstation-info h3,
+.dark-theme .mc-workstation-info h4 {
+  color: var(--sculk-echo);
+}
 
 @container (max-width: 1124px) {
-  .mc-workbench-layout { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .mc-workbench-layout > .mc-brewing-workbench { grid-column: 1 / -1; grid-row: 1; justify-self: center; }
-  .mc-station-sidebar { grid-row: 2; contain: none; }
+  .mc-workbench-layout {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .mc-workbench-layout>.mc-brewing-workbench {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    justify-self: center;
+  }
+
+  .mc-station-sidebar {
+    grid-row: 2;
+    contain: none;
+  }
 }

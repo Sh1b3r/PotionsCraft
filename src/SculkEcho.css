@@ -49,7 +49,7 @@ body.dark-theme .gradient-layer { opacity: .12 !important; }
   background-color: var(--sculk-panel) !important;
   border-color: var(--sculk-edge) !important;
   color: var(--sculk-text);
-  box-shadow: inset 0 1px #54dfcd18, 0 6px 24px #020c1166 !important;
+  box-shadow: inset 0 1px #54dfcd18, 0 0 0 2px #041018, 0 6px 24px #020c1166 !important;
 }
 #header2.dark-theme { border-bottom-color: var(--sculk-glow) !important; }
 #headertext1.dark-theme,
