@@ -91,9 +91,9 @@ export default function BedrockStationView({ inventory, grid, output, brewingSta
               <div className="mc-pocket-output-column"><button type="button" className="mc-pocket-slot mc-pocket-output" aria-label={output ? `Створити: ${output.name}` : 'Результат крафту'}
                 onPointerDown={startCraft} onPointerUp={finishCraft} onPointerCancel={finishCraft} onLostPointerCapture={finishCraft}
                 onClick={e => { if (!e.detail && output) craftRef.current(); }}><Item item={output} /></button>
+                <button type="button" className="mc-pocket-clear" onClick={clearGrid} disabled={!grid.some(Boolean)}>Очистити сітку</button>
               </div>
             </div>
-            <button type="button" className="mc-pocket-clear" onClick={clearGrid} disabled={!grid.some(Boolean)}>Очистити сітку</button>
           </div>
         </section>
       </div>
