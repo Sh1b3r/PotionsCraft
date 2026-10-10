@@ -481,7 +481,8 @@
   display: block;
 }
 
-/* Vanilla count text at GUI scale 2: white glyphs, one dark offset shadow. */
+/* Keep white pixel glyphs readable over pale item textures. Paint the stroke
+   behind the fill so the contour does not shrink the digits themselves. */
 .mc-item-count,
 .mc-floating-held-item .mc-held-count {
   color: #ffffff;
@@ -490,7 +491,9 @@
   font-weight: normal;
   letter-spacing: 0;
   line-height: 1;
-  text-shadow: 2px 2px 0 #3f3f3f;
+  -webkit-text-stroke: 2px #161616;
+  paint-order: stroke fill;
+  text-shadow: 2px 2px 0 #161616;
   pointer-events: none;
   user-select: none;
 }
