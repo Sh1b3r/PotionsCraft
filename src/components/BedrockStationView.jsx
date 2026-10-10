@@ -88,7 +88,7 @@ export default function BedrockStationView({ inventory, grid, output, brewingSta
               onClick={e => { if (!e.detail && output) craftRef.current(); }}><Item item={output} /></button>
               <button type="button" className="mc-pocket-clear" onClick={clearGrid} disabled={!grid.some(Boolean)}>Очистити сітку</button></div>
           </div>
-          <p>Дотик до результату — створити.<br />Утримання — створювати кілька.</p>
+          <p>Дотик — створити.<br />Утримання — кілька.</p>
         </div>}
       </section>
     </div>
