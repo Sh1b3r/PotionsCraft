@@ -8,7 +8,6 @@ function Item({ item }) {
 export default function BedrockStationView({ inventory, grid, output, brewingStage, controls, settings, fillRecipe, craft, clearGrid, fuelCharges, progress, brewing, message, containers, collectContainers, onTabChange }) {
   const [tab, setTab] = useState('brewing');
   const [left, setLeft] = useState('inventory');
-  const [page, setPage] = useState(0);
   const [search, setSearch] = useState('');
   const [preview, setPreview] = useState(null);
   const [stageScale, setStageScale] = useState(1.5);
@@ -62,10 +61,9 @@ export default function BedrockStationView({ inventory, grid, output, brewingSta
           <button type="button" aria-pressed={left === 'inventory'} onClick={() => setLeft('inventory')}>Інвентар</button>
           {settings.recipeBook && <button type="button" aria-pressed={left === 'recipes'} onClick={() => { controls.clear(); setLeft('recipes'); }}>Рецепти</button>}
         </nav>
-        {left === 'inventory' ? <>
-          <div className="mc-pocket-scroll"><div className="mc-pocket-inventory-grid">{inventory.slice(page * 36, page * 36 + 36).map((item, index) => slot('inventory', page * 36 + index, item))}</div></div>
-          <div className="mc-pocket-pages"><button type="button" disabled={!page} onClick={() => setPage(0)} aria-label="Перша сторінка інвентарю">◀</button><span>{page + 1} / 2</span><button type="button" disabled={!!page} onClick={() => setPage(1)} aria-label="Друга сторінка інвентарю">▶</button></div>
-        </> : <>
+        {left === 'inventory' ?
+          <div className="mc-pocket-scroll"><div className="mc-pocket-inventory-grid">{inventory.map((item, index) => slot('inventory', index, item))}</div></div>
+        : <>
           <input className="mc-pocket-search" type="search" aria-label="Пошук рецепта" placeholder="Пошук рецепта…" value={search} onChange={e => setSearch(e.target.value)} />
           <div className="mc-pocket-scroll mc-pocket-recipes">{STATION_CRAFTING_RECIPES.filter(recipe => MINECRAFT_ITEMS[recipe.id].name.toLocaleLowerCase().includes(search.toLocaleLowerCase())).map(recipe => {
             const available = canFillStationRecipe(recipe, [...inventory, ...grid]);

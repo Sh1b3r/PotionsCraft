@@ -25,8 +25,8 @@ Closing and reopening preserves the station, inventory and any held remainder.
 
 The mobile window is a separate full-viewport layout with inventory/recipe tabs
 on the left and brewing/crafting tabs on the right. It does not shrink the desktop
-window. Inventory pages each contain 36 slots; scrolling reveals the remaining
-rows, and slot size can be changed in settings.
+window. All 72 inventory slots are on one scrollable page; scrolling reveals the
+remaining rows, and slot size can be changed in settings.
 
 - Tap a source, then a destination to move the stack. Items remain at the source
   until a valid destination is chosen. Crafting-grid destinations receive one item.

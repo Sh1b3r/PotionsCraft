@@ -754,8 +754,6 @@
 .mc-pocket-slot img { width: 85%; height: 85%; object-fit: contain; image-rendering: pixelated; pointer-events: none; }
 .is-mobile .mc-pocket-slot[data-selected='true'], .mc-pocket-stage .mc-slot[data-selected='true'] { outline: 3px solid #4cbd35; outline-offset: -3px; background-color: #add184; }
 .mc-pocket-count { position: absolute; right: 1px; bottom: 0; font-size: 17px; line-height: 1; color: white; text-shadow: 2px 2px #333; pointer-events: none; }
-.mc-pocket-pages { display: flex; align-items: center; justify-content: space-between; flex: 0 0 40px; gap: 6px; padding: 0 5px; }
-.mc-pocket-pages button { min-width: 44px; }
 .mc-pocket-stage-box { flex: 1; min-height: 132px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 .mc-pocket-stage { position: relative; flex: none; }
 .mc-pocket-stage > div { transform-origin: top left; position: absolute; width: 206px; height: 132px; }
