@@ -727,62 +727,81 @@
   }
 }
 
-.mc-station-shell, .mc-station-content { width: 100%; }
-.mc-mobile-launch, .mc-touch-actions button, .mc-mobile-heading button {
-  font-family: 'Minecraft', monospace;
-  color: #222;
-  background: #c6c6c6;
-  border: 2px outset #eee;
-  padding: 10px 12px;
-  cursor: pointer;
-  touch-action: manipulation;
-}
-.mc-mobile-launch { display: block; margin: 20px auto; min-height: 52px; }
-.mc-station-shell.is-mobile { display: none; }
-.mc-station-shell.is-mobile.is-open {
-  display: block;
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 2000;
-  background: #202020;
-  overflow: hidden;
-  overscroll-behavior: none;
-}
-.is-mobile .mc-station-landscape {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 12px;
-  box-sizing: border-box;
-}
+
+/* Full viewport Pocket interface: controls keep their own sizes, not a scaled desktop window. */
+.mc-mobile-launch, .is-mobile button, .is-mobile select, .is-mobile input { font: inherit; }
+.mc-mobile-launch { display: block; margin: 20px auto; min-height: 52px; padding: 12px 16px; font-family: 'Minecraft', monospace; background: #c6c6c6; color: #222; border: 2px outset #eee; cursor: pointer; }
+.mc-station-shell.is-mobile { position: fixed; inset: 0; z-index: 2000; background: #c6c6c6; color: #222; overflow: hidden; overscroll-behavior: none; font: 15px 'Minecraft', monospace; user-select: none; -webkit-user-select: none; }
+.is-mobile button { touch-action: manipulation; cursor: pointer; border: 2px outset #eee; background: #c6c6c6; color: #222; min-height: 40px; padding: 6px 10px; border-radius: 0; }
+.is-mobile button:disabled { opacity: .45; cursor: default; }
+.is-mobile button:focus-visible { outline: 3px solid #327c24; outline-offset: -3px; }
+.is-mobile button[aria-pressed='true'] { background: #588e3a; color: #fff; border-color: #77b354; }
+.mc-station-landscape { width: 100%; }
+.is-mobile .mc-station-landscape { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; padding: 0 max(6px, env(safe-area-inset-right)) 0 max(6px, env(safe-area-inset-left)); box-sizing: border-box; }
 .is-mobile .mc-station-landscape.is-rotated { transform: translate(-50%, -50%) rotate(90deg); }
-.mc-mobile-heading {
-  position: absolute;
-  top: 8px;
-  left: 16px;
-  right: 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #fff;
-  font-family: 'Minecraft', monospace;
-}
-.mc-mobile-heading button { min-width: 44px; min-height: 44px; }
-.is-mobile .mc-station-content { flex: 0 0 auto; transform-origin: center; margin-top: 40px; }
-.is-mobile .mc-workbench-viewport-scaler { padding: 0; overflow: visible; }
-.is-mobile .mc-brewing-workbench { flex-shrink: 0; }
-.mc-touch-controls { height: 72px; color: #fff; font-family: 'Minecraft', monospace; }
-.mc-touch-hand { height: 30px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-.mc-touch-hand img { width: 28px; height: 28px; image-rendering: pixelated; }
-.mc-touch-actions { display: flex; justify-content: center; gap: 6px; }
-.mc-touch-actions button { min-height: 38px; padding: 6px 10px; }
-.mc-touch-actions button[aria-pressed='true'] { background: #f5da86; border-style: inset; }
-.mc-touch-actions button:disabled { opacity: .45; cursor: default; }
+.mc-mobile-heading { flex: 0 0 46px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #666; padding: 0 4px; }
+.mc-mobile-heading > div { display: flex; gap: 6px; }
+.mc-mobile-heading button { min-width: 44px; height: 40px; }
+.is-mobile .mc-station-content { flex: 1; min-height: 0; width: 100%; }
+.mc-pocket-workspace { height: 100%; display: flex; flex-direction: column; }
+.mc-pocket-panels { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); flex: 1; min-height: 0; gap: 8px; padding-top: 6px; }
+.mc-pocket-inventory, .mc-pocket-station { display: flex; flex-direction: column; min-height: 0; min-width: 0; border: 2px inset #eee; background: #b7b7b7; container-type: inline-size; }
+.mc-pocket-tabs { display: flex; flex: 0 0 42px; gap: 2px; background: #9a9a9a; }
+.mc-pocket-tabs button { flex: 1; min-width: 0; }
+.mc-pocket-scroll { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; padding: 5px; touch-action: pan-y; }
+.mc-pocket-inventory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(max(40px, calc(44px * var(--pocket-size))), 1fr)); gap: 2px; }
+.is-mobile .mc-pocket-slot { width: 100%; min-width: 0; height: auto; min-height: 40px; aspect-ratio: 1; border: 2px inset #eee; background: #8b8b8b; position: relative; padding: 3px; display: flex; align-items: center; justify-content: center; touch-action: pan-y; }
+.mc-pocket-slot img { width: 85%; height: 85%; object-fit: contain; image-rendering: pixelated; pointer-events: none; }
+.is-mobile .mc-pocket-slot[data-selected='true'], .mc-pocket-stage .mc-slot[data-selected='true'] { outline: 3px solid #4cbd35; outline-offset: -3px; background-color: #add184; }
+.mc-pocket-count { position: absolute; right: 1px; bottom: 0; font-size: 17px; line-height: 1; color: white; text-shadow: 2px 2px #333; pointer-events: none; }
+.mc-pocket-pages { display: flex; align-items: center; justify-content: space-between; flex: 0 0 40px; gap: 6px; padding: 0 5px; }
+.mc-pocket-pages button { min-width: 44px; }
+.mc-pocket-stage-box { flex: 1; min-height: 132px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.mc-pocket-stage { position: relative; flex: none; }
+.mc-pocket-stage > div { transform-origin: top left; position: absolute; width: 206px; height: 132px; }
+.mc-pocket-stage .mc-brewing-stand-stage { left: -46px; }
+.mc-pocket-stage .mc-brewing-stand-stage .mc-slot { border: 0; padding: 2px; background: transparent; background-clip: content-box; touch-action: none; }
+.mc-pocket-status { font-size: 13px; padding: 5px 8px; text-align: center; flex: none; }
+.mc-pocket-status span { display: block; margin-top: 4px; }
+.mc-pocket-status button { display: block; margin: 4px auto; }
+.mc-pocket-selection { display: flex; align-items: center; gap: 8px; min-height: 43px; flex: 0 0 43px; font-size: 13px; padding: 3px 5px; box-sizing: border-box; }
+.mc-pocket-selection > img { width: 32px; height: 32px; image-rendering: pixelated; }
+.mc-pocket-selection > span { flex: 1; }
+.mc-pocket-selection small { display: block; font-size: 11px; margin-top: 3px; }
+.mc-pocket-selection button { min-width: 44px; }
+.mc-pocket-search { flex: none; width: calc(100% - 10px); box-sizing: border-box; min-height: 36px; margin: 4px 5px; background: #eee; color: #222; border: 2px inset #ddd; padding: 4px 8px; user-select: text; }
+.mc-pocket-recipes { display: flex; flex-direction: column; gap: 4px; }
+.is-mobile .mc-pocket-recipe { display: flex; align-items: center; gap: 8px; text-align: left; flex: none; min-height: 52px; background: #a7a7a7; }
+.is-mobile .mc-pocket-recipe.is-available { background: #d8d8d8; }
+.mc-pocket-recipe img { width: 36px; height: 36px; image-rendering: pixelated; }
+.mc-pocket-recipe small { display: block; margin-top: 3px; color: #454545; font-size: 11px; }
+.mc-pocket-crafting { flex: 1; min-height: 0; overflow: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6px; gap: 8px; }
+.mc-pocket-crafting-row { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.mc-pocket-crafting-grid { display: grid; grid-template-columns: repeat(3, minmax(40px, calc(48px * var(--pocket-size)))); gap: 2px; flex: none; }
+.mc-pocket-craft-arrow { width: 28px; height: 22px; image-rendering: pixelated; flex: none; }
+.is-mobile .mc-pocket-output { width: calc(56px * var(--pocket-size)); height: calc(56px * var(--pocket-size)); flex: none; touch-action: none; }
+.mc-pocket-crafting p { text-align: center; font-size: 12px; margin: 0; line-height: 1.5; }
+.mc-pocket-overlay { position: absolute; inset: 0; z-index: 10; background: #0009; display: flex; align-items: center; justify-content: center; padding: 8px; }
+.mc-pocket-settings, .mc-pocket-split { background: #c6c6c6; border: 3px outset #eee; padding: 12px; width: min(460px, 90%); max-height: 100%; overflow: auto; box-sizing: border-box; }
+.mc-pocket-settings h3, .mc-pocket-split h3 { margin: 0 0 8px; font-size: 16px; }
+.mc-pocket-settings label { display: flex; justify-content: space-between; align-items: center; min-height: 40px; gap: 12px; font-size: 13px; }
+.mc-pocket-settings select { min-height: 36px; background: #eee; color: #222; padding: 4px; }
+.mc-pocket-settings input { width: 24px; height: 24px; accent-color: #548d35; flex: none; }
+.mc-pocket-settings-actions { display: flex; gap: 6px; margin: 8px 0; }
+.mc-pocket-settings-actions button { flex: 1; }
+.mc-pocket-split { text-align: center; }
+.mc-pocket-split > input { width: 100%; height: 40px; accent-color: #548d35; touch-action: none; }
+.mc-pocket-split-value { display: flex; justify-content: center; align-items: center; gap: 12px; }
+.mc-pocket-split-value img { width: 48px; height: 48px; image-rendering: pixelated; }
+.mc-pocket-split > button { margin: 0 4px; }
 .mc-container-return { position: absolute; top: 2px; right: 4px; font-family: 'Minecraft', monospace; font-size: 11px; }
+.mc-pocket-missing { font-size: 12px; line-height: 1.4; padding: 5px; background: #e7d29b; } .mc-pocket-missing button { float: right; }
+.dark-theme .mc-station-shell.is-mobile { background: #232c3b; color: #edf2f8; }
+.dark-theme .mc-pocket-inventory, .dark-theme .mc-pocket-station { background: #2d3a4b; border-color: #65768a; }
+.dark-theme .is-mobile button:not([aria-pressed='true']) { background: #46566a; color: #edf2f8; border-color: #6f8093; }
+.dark-theme .mc-pocket-tabs { background: #232c3b; }
+.dark-theme .mc-pocket-settings, .dark-theme .mc-pocket-split { background: #2d3a4b; border-color: #65768a; }
+.dark-theme .mc-pocket-recipe small { color: #c2cedc; }
+.dark-theme .is-mobile .mc-pocket-recipe.is-available { background: #526748; }
+.dark-theme .is-mobile .mc-pocket-slot[data-selected='true'] { background: #587b43; }
+.dark-theme .mc-pocket-missing { background: #69552e; }

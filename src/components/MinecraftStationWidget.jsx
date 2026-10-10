@@ -15,7 +15,9 @@ import {
 import { useTooltip } from './MinecraftTooltip';
 import BrewingStandFrame from './BrewingStandFrame';
 import { createPortal } from 'react-dom';
-import MobileStationShell, { useMobileStation } from './MobileStationShell';
+import BedrockStationView from './BedrockStationView';
+import usePocketInventory from './usePocketInventory';
+import MobileStationShell, { useMobileStation, usePocketSettings } from './MobileStationShell';
 import { WIKI_REAGENTS, WIKI_POTIONS } from '../data/wikiTooltipsData';
 import './MinecraftStationWidget.css';
 
@@ -50,7 +52,11 @@ const sameStack = (a, b) => !!a && !!b && a.itemId === b.itemId &&
 
 export default function MinecraftStationWidget() {
   const mobile = useMobileStation();
-  const [touchMode, setTouchMode] = useState('one');
+  const [pocketOpen, setPocketOpen] = useState(false);
+  const [pocketSettings, setPocketSettings] = usePocketSettings();
+  const [pocketMessage, setPocketMessage] = useState('');
+  const activePocketRecipe = useRef(null);
+  const pocketStationTab = useRef('brewing');
   const dragRef = useRef(null);
   const clickRef = useRef(null);
   const activeIngredientRef = useRef(null);
@@ -162,7 +168,7 @@ export default function MinecraftStationWidget() {
   const accepts = (type, item) => type === 'bottle'
     ? !!(item.isPotion || item.itemId === 'glass_bottle')
     : type === 'fuel' ? item.itemId === 'blaze_powder'
-    : type === 'ingredient' ? VALID_BREWING_REAGENTS.has(item.itemId) : true;
+      : type === 'ingredient' ? VALID_BREWING_REAGENTS.has(item.itemId) : true;
   const limit = (type, item) => type === 'bottle' ? 1 : item.maxStack || 64;
   const deposit = (type, index, requested) => {
     const held = heldItemRef.current;
@@ -218,6 +224,75 @@ export default function MinecraftStationWidget() {
     }
     const indices = inventoryRef.current.map((_, i) => i).filter(i => index >= 54 ? i < 54 : i >= 54);
     setSlotValue(type, index, insertInventory(item, indices));
+  };
+  const quickMovePocket = (type, index) => {
+    const item = getSlotValue(type, index);
+    if (!item) return;
+    if (type === 'inventory' && pocketStationTab.current === 'crafting') {
+      let target = craftingGridRef.current.findIndex(slot => sameStack(slot, item) && slot.count < (item.maxStack || 64));
+      if (target < 0) target = craftingGridRef.current.findIndex(slot => !slot);
+      if (target < 0) return;
+      const current = craftingGridRef.current[target];
+      const amount = Math.min(item.count, (item.maxStack || 64) - (current?.count || 0));
+      setSlotValue('crafting', target, { ...item, count: (current?.count || 0) + amount });
+      setSlotValue(type, index, item.count > amount ? { ...item, count: item.count - amount } : null);
+    } else handleShiftClick(type, index);
+  };
+  const pocket = usePocketInventory({ enabled: pocketOpen, getSlot: getSlotValue, setSlot: setSlotValue,
+    accepts, limit, sameStack, quickMove: quickMovePocket, settings: pocketSettings,
+    onGridChange: () => { activePocketRecipe.current = null; setPocketMessage(''); } });
+  // Work on copies until the complete recipe and all leftovers fit.
+  const addToArray = (next, item) => {
+    let remaining = item.count;
+    for (const empty of [false, true]) for (let i = 0; i < next.length && remaining; i++) {
+      const target = next[i];
+      if (empty ? !!target : !sameStack(target, item)) continue;
+      const amount = Math.min(remaining, (item.maxStack || 64) - (target?.count || 0));
+      if (amount > 0) { next[i] = { ...item, count: (target?.count || 0) + amount }; remaining -= amount; }
+    }
+    return remaining ? { ...item, count: remaining } : null;
+  };
+  const fillPocketRecipe = recipe => {
+    const nextInventory = inventoryRef.current.map(item => item && { ...item });
+    const oldGrid = craftingGridRef.current.map(item => item && { ...item });
+    const nextGrid = [];
+    for (const id of recipe.grid) {
+      if (!id) { nextGrid.push(null); continue; }
+      const source = [oldGrid, nextInventory].find(items => items.some(item => item?.itemId === id));
+      if (!source) { setPocketMessage('Бракує матеріалів для цього рецепта.'); return false; }
+      const index = source.findIndex(item => item?.itemId === id);
+      nextGrid.push({ ...source[index], count: 1 });
+      source[index] = source[index].count > 1 ? { ...source[index], count: source[index].count - 1 } : null;
+    }
+    for (const item of oldGrid) if (item && addToArray(nextInventory, item)) {
+      setPocketMessage('Звільніть місце в інвентарі для предметів із сітки.'); return false;
+    }
+    inventoryRef.current = nextInventory; setInventory(nextInventory);
+    craftingGridRef.current = nextGrid; setCraftingGrid(nextGrid);
+    activePocketRecipe.current = recipe;
+    pocket.clear(); setPocketMessage('Рецепт заповнено. Торкніться результату.');
+    return true;
+  };
+  const craftPocket = () => {
+    const output = checkCraftingRecipe(craftingGridRef.current);
+    if (!output) return false;
+    if (insertInventory(output, undefined, false)) { setPocketMessage('Інвентар заповнений.'); return false; }
+    insertInventory(output);
+    const next = craftingGridRef.current.map(item => item && item.count > 1 ? { ...item, count: item.count - 1 } : null);
+    craftingGridRef.current = next; setCraftingGrid(next);
+    const recipe = activePocketRecipe.current;
+    if (recipe && !next.some(Boolean)) fillPocketRecipe(recipe);
+    pocket.clear(); playCraftSuccessSound();
+    setPocketMessage(output.name + ' — додано в інвентар.');
+    return true;
+  };
+  const clearPocketGrid = () => {
+    const nextInventory = [...inventoryRef.current];
+    const nextGrid = craftingGridRef.current.map(item => item && addToArray(nextInventory, item));
+    inventoryRef.current = nextInventory; setInventory(nextInventory);
+    craftingGridRef.current = nextGrid; setCraftingGrid(nextGrid);
+    activePocketRecipe.current = null; pocket.clear();
+    setPocketMessage(nextGrid.some(Boolean) ? 'Інвентар заповнений. Решта предметів залишилась у сітці.' : 'Предмети повернуто в інвентар.');
   };
   const handleCraftOutputClick = event => {
     event?.preventDefault?.();
@@ -343,7 +418,7 @@ export default function MinecraftStationWidget() {
       window.removeEventListener('blur', blur);
     };
   }, []);
-  const slotEvents = (type, index, item) => ({
+  const slotEvents = (type, index, item) => pocketOpen ? { ...pocket.events(type, index), role: 'button', tabIndex: 0, 'aria-label': item?.name || 'Порожній слот' } : ({
     onPointerDown: event => {
       if (event.button !== 0 && event.button !== 2) return;
       if (dragRef.current && event.pointerId !== dragRef.current.pointerId) return;
@@ -351,7 +426,6 @@ export default function MinecraftStationWidget() {
       event.stopPropagation();
       hideTooltip();
       setMousePos({ x: event.clientX, y: event.clientY });
-      if (mobile && touchMode === 'transfer' && !heldItemRef.current) { handleShiftClick(type, index); return; }
       if (event.shiftKey && !heldItemRef.current) { handleShiftClick(type, index); return; }
       const now = Date.now();
       const previous = clickRef.current;
@@ -361,10 +435,10 @@ export default function MinecraftStationWidget() {
       }
       clickRef.current = { key, time: now };
       const picked = !heldItemRef.current;
-      const one = event.button === 2 || (mobile && touchMode === 'one' && !picked);
+      const one = event.button === 2;
       const drag = { type, index, picked, one, slots: new Map(), pointerId: event.pointerId };
       dragRef.current = drag;
-      if (picked) slotClick(type, index, event.button === 2 || (mobile && touchMode === 'half'));
+      if (picked) slotClick(type, index, event.button === 2);
       else visitSlot(type, index);
       // Touch browsers capture pointers implicitly; release so neighboring slots receive hover.
       if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
@@ -536,263 +610,232 @@ export default function MinecraftStationWidget() {
     if (!event.target.closest('.mc-slot, button')) returnHeld();
   };
 
-  return (
-    <MobileStationShell mobile={mobile} onClose={() => { hideTooltip(); returnHeld(); }} onOpen={hideTooltip}>
-    {mobile && <div className="mc-touch-controls">
-      <div className="mc-touch-hand">{heldItem ? <><img src={heldItem.sprite} alt="" />{heldItem.name} × {heldItem.count}</> : 'Торкніться предмета, щоб взяти його'}</div>
-      <div className="mc-touch-actions">
-        <button type="button" aria-pressed={touchMode === 'one'} onClick={() => setTouchMode('one')}>По одному</button>
-        <button type="button" aria-pressed={touchMode === 'stack'} onClick={() => setTouchMode('stack')}>Стопка</button>
-        <button type="button" aria-pressed={touchMode === 'half'} onClick={() => setTouchMode('half')}>Половина</button>
-        <button type="button" aria-pressed={touchMode === 'transfer'} disabled={!!heldItem} onClick={() => setTouchMode('transfer')}>Перенести</button>
-        <button type="button" disabled={!craftingOutput || !!heldItem} onClick={() => handleCraftOutputClick({ shiftKey: true })}>Створити все</button>
-        <button type="button" disabled={!heldItem} onClick={returnHeld}>Повернути</button>
-      </div>
-    </div>}
-    <div className="mc-workbench-viewport-scaler">
-      <div
-        className="mc-brewing-workbench"
-        id="mc-workbench"
-        onContextMenu={(e) => e.preventDefault()}
-        onPointerDown={handleBackgroundClick}
-      >
-        {containerReturns > 0 && <button type="button" className="mc-container-return" onClick={() => {
-          const remaining = insertInventory({ ...MINECRAFT_ITEMS.glass_bottle, itemId: 'glass_bottle', count: containerReturns });
-          setContainerReturns(remaining?.count || 0);
-        }}>Забрати порожні пляшечки: {containerReturns}</button>}
-        {/* ==================== UPPER SECTION: BREWING (LEFT) & CRAFTING (RIGHT) ==================== */}
-        <div className="mc-top-workstation-row">
-          {/* 1. LEFT: Brewing Stand (Pixel-Perfect Authentic Minecraft GUI matching user reference) */}
-          <div className="mc-brewing-stand-area">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-              <div className="mc-brewing-header-label">Варильна стійка</div>
-            </div>
-
-            <div className="mc-brewing-stand-stage">
-              <BrewingStandFrame withFuel pipeExtension={10} emptyBottles={brewingBottles.map(bottle => !bottle)} />
-              {/* Fuel gauge at the spring outlet (20 charges, drains from right to left) */}
-              <div
-                className="mc-fuel-gauge-container"
-                onMouseEnter={() => handleSlotHover('fuel-gauge', 0, null)}
-                onMouseLeave={hideTooltip}
-              >
+  const brewingStage = (<div className="mc-brewing-stand-stage">
+                <BrewingStandFrame withFuel pipeExtension={10} emptyBottles={brewingBottles.map(bottle => !bottle)} />
+                {/* Fuel gauge at the spring outlet (20 charges, drains from right to left) */}
                 <div
-                  className="mc-fuel-gauge-fill"
-                  style={{
-                    width: `${Math.round((fuelCharges / 20) * 36)}px`
-                  }}
-                />
-              </div>
-
-              {/* 1. Top-Left Fuel Slot */}
-              <div
-                className={`mc-slot mc-slot-fuel ${fuelSlot ? 'has-item' : ''}`}
-                data-slot-type="fuel"
-                data-slot-index={0}
-                {...slotEvents('fuel', 0, getSlotValue('fuel', 0))}
-              >
-                {fuelSlot ? (
-                  <>
-                    <img src={fuelSlot.sprite} alt={fuelSlot.name} className="mc-item-icon" />
-                    {fuelSlot.count > 1 && (
-                      <span className="mc-item-count">{fuelSlot.count}</span>
-                    )}
-                  </>
-                ) : (
-                  <img
-                    src="/mc_blaze_watermark.png"
-                    alt="Вогняний порошок"
-                    className="mc-fuel-blaze-watermark"
-                  />
-                )}
-              </div>
-
-              {/* 2. Brewing Steam / Bubbles Column */}
-              <div className="mc-brewing-bubbles-column">
-                <span className={`mcui-bubbling ${isBrewing ? 'is-brewing' : 'is-idle'}`}>
-                  <br />
-                </span>
-              </div>
-
-              {/* 3. Top Reagent Slot */}
-              <div
-                className={`mc-slot mc-slot-reagent ${brewingIngredient ? 'has-item' : ''}`}
-                data-slot-type="ingredient"
-                data-slot-index={0}
-                {...slotEvents('ingredient', 0, getSlotValue('ingredient', 0))}
-              >
-                {brewingIngredient && (
-                  <>
-                    <img
-                      src={brewingIngredient.sprite}
-                      alt={brewingIngredient.name}
-                      className="mc-item-icon"
-                    />
-                    {brewingIngredient.count > 1 && (
-                      <span className="mc-item-count">{brewingIngredient.count}</span>
-                    )}
-                  </>
-                )}
-              </div>
-
-              {/* Downward Brewing Progress Arrow (copied completely from cards) */}
-              <div
-                className={`mc-brewing-arrow-wrapper ${isBrewing ? 'is-brewing' : ''}`}
-                role="progressbar"
-                aria-label="Прогрес варіння"
-                aria-valuemin={0}
-                aria-valuemax={100}
-                aria-valuenow={Math.floor(brewingProgress)}
-                onMouseEnter={() => handleSlotHover('arrow', 0, null)}
-                onMouseLeave={hideTooltip}
-              >
-                <img src="/mc_arrow_empty.png" alt="Стрілка варіння" className="mc-brewing-arrow-empty" />
-                <img src="/mc_brewing_arrow_full.png" alt="" className="mc-brewing-arrow-fill"
-                  style={{ clipPath: `inset(0 0 ${56 - brewingStep}px 0)` }} />
-              </div>
-
-              {/* 4, 5, 6. Bottom 3 Output Bottle Slots (uses authentic uniform CSS silhouette from be.html) */}
-              {[0, 1, 2].map((idx) => {
-                const bottle = brewingBottles[idx];
-                const slotClassNames = ['slot-bottle-left', 'slot-bottle-center', 'slot-bottle-right'];
-                return (
-                  <div
-                    key={`bottle-${idx}`}
-                    className={`mc-slot mc-slot-bottle ${slotClassNames[idx]} ${bottle ? 'has-item' : ''}`}
-                    data-slot-type="bottle"
-                    data-slot-index={idx}
-                    {...slotEvents('bottle', idx, getSlotValue('bottle', idx))}
-                  >
-                    {bottle && (
-                      <>
-                        <img
-                          src={bottle.sprite}
-                          alt={bottle.name}
-                          className="mc-item-icon"
-                        />
-                        {bottle.count > 1 && (
-                          <span className="mc-item-count">{bottle.count}</span>
-                        )}
-                      </>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* 2. RIGHT: Crafting Table 3x3 ("Майстрування" matching reference mockup) */}
-          <div className="mc-crafting-area">
-            <div className="mc-crafting-header-label">Майстрування</div>
-
-            <div className="mc-crafting-flex-panel">
-              {/* 3x3 Grid (Contiguous touching slots) */}
-              <div className="mc-grid-3x3">
-                {craftingGrid.map((slotItem, idx) => (
-                  <div
-                    key={`craft-${idx}`}
-                    className={`mc-slot ${slotItem ? 'has-item' : ''}`}
-                    data-slot-type="crafting"
-                    data-slot-index={idx}
-                    {...slotEvents('crafting', idx, getSlotValue('crafting', idx))}
-                  >
-                    {slotItem && (
-                      <>
-                        <img
-                          src={slotItem.sprite}
-                          alt={slotItem.name}
-                          className="mc-item-icon"
-                        />
-                        {slotItem.count > 1 && (
-                          <span className="mc-item-count">{slotItem.count}</span>
-                        )}
-                      </>
-                    )}
-                  </div>
-                ))}
-              </div>
-
-              {/* Pixel Crafting Arrow (aligned with center row) */}
-              <div className="mc-crafting-arrow-box">
-                <img
-                  src="/mc_crafting_arrow.png"
-                  alt="Стрілка створення"
-                  className="mc-pixel-crafting-arrow"
-                />
-              </div>
-
-              {/* Large Output Slot (52x52px, aligned with center row and arrow) */}
-              <div className="mc-output-slot-wrapper">
-                <div
-                  className={`mc-slot mc-slot-output ${craftingOutput ? 'has-result' : ''}`}
-                  data-slot-type="output"
-                  onPointerDown={handleCraftOutputClick}
-                    onContextMenu={e => e.preventDefault()}
-                  onMouseEnter={() => handleSlotHover('output', 0, craftingOutput)}
+                  className="mc-fuel-gauge-container"
+                  onMouseEnter={() => handleSlotHover('fuel-gauge', 0, null)}
                   onMouseLeave={hideTooltip}
                 >
-                  {craftingOutput && (
+                  <div
+                    className="mc-fuel-gauge-fill"
+                    style={{
+                      width: `${Math.round((fuelCharges / 20) * 36)}px`
+                    }}
+                  />
+                </div>
+
+                {/* 1. Top-Left Fuel Slot */}
+                <div
+                  className={`mc-slot mc-slot-fuel ${fuelSlot ? 'has-item' : ''}`}
+                  data-slot-type="fuel"
+                  data-slot-index={0}
+                  {...slotEvents('fuel', 0, getSlotValue('fuel', 0))}
+                >
+                  {fuelSlot ? (
+                    <>
+                      <img src={fuelSlot.sprite} alt={fuelSlot.name} className="mc-item-icon" />
+                      {fuelSlot.count > 1 && (
+                        <span className="mc-item-count">{fuelSlot.count}</span>
+                      )}
+                    </>
+                  ) : (
+                    <img
+                      src="/mc_blaze_watermark.png"
+                      alt="Вогняний порошок"
+                      className="mc-fuel-blaze-watermark"
+                    />
+                  )}
+                </div>
+
+                {/* 2. Brewing Steam / Bubbles Column */}
+                <div className="mc-brewing-bubbles-column">
+                  <span className={`mcui-bubbling ${isBrewing ? 'is-brewing' : 'is-idle'}`}>
+                    <br />
+                  </span>
+                </div>
+
+                {/* 3. Top Reagent Slot */}
+                <div
+                  className={`mc-slot mc-slot-reagent ${brewingIngredient ? 'has-item' : ''}`}
+                  data-slot-type="ingredient"
+                  data-slot-index={0}
+                  {...slotEvents('ingredient', 0, getSlotValue('ingredient', 0))}
+                >
+                  {brewingIngredient && (
                     <>
                       <img
-                        src={craftingOutput.sprite}
-                        alt={craftingOutput.name}
+                        src={brewingIngredient.sprite}
+                        alt={brewingIngredient.name}
                         className="mc-item-icon"
                       />
-                      {craftingOutput.count > 1 && (
-                        <span className="mc-item-count">{craftingOutput.count}</span>
+                      {brewingIngredient.count > 1 && (
+                        <span className="mc-item-count">{brewingIngredient.count}</span>
                       )}
                     </>
                   )}
                 </div>
+
+                {/* Downward Brewing Progress Arrow (copied completely from cards) */}
+                <div
+                  className={`mc-brewing-arrow-wrapper ${isBrewing ? 'is-brewing' : ''}`}
+                  role="progressbar"
+                  aria-label="Прогрес варіння"
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-valuenow={Math.floor(brewingProgress)}
+                  onMouseEnter={() => handleSlotHover('arrow', 0, null)}
+                  onMouseLeave={hideTooltip}
+                >
+                  <img src="/mc_arrow_empty.png" alt="Стрілка варіння" className="mc-brewing-arrow-empty" />
+                  <img src="/mc_brewing_arrow_full.png" alt="" className="mc-brewing-arrow-fill"
+                    style={{ clipPath: `inset(0 0 ${56 - brewingStep}px 0)` }} />
+                </div>
+
+                {/* 4, 5, 6. Bottom 3 Output Bottle Slots (uses authentic uniform CSS silhouette from be.html) */}
+                {[0, 1, 2].map((idx) => {
+                  const bottle = brewingBottles[idx];
+                  const slotClassNames = ['slot-bottle-left', 'slot-bottle-center', 'slot-bottle-right'];
+                  return (
+                    <div
+                      key={`bottle-${idx}`}
+                      className={`mc-slot mc-slot-bottle ${slotClassNames[idx]} ${bottle ? 'has-item' : ''}`}
+                      data-slot-type="bottle"
+                      data-slot-index={idx}
+                      {...slotEvents('bottle', idx, getSlotValue('bottle', idx))}
+                    >
+                      {bottle && (
+                        <>
+                          <img
+                            src={bottle.sprite}
+                            alt={bottle.name}
+                            className="mc-item-icon"
+                          />
+                          {bottle.count > 1 && (
+                            <span className="mc-item-count">{bottle.count}</span>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>);
+
+  return (
+    <MobileStationShell mobile={mobile} settings={pocketSettings} onSettingsChange={setPocketSettings}
+      onClose={() => { hideTooltip(); pocket.clear(); setPocketOpen(false); }}
+      onOpen={() => { hideTooltip(); returnHeld(); dragRef.current = null; pocketStationTab.current = 'brewing'; setPocketOpen(true); }}>
+      {pocketOpen || mobile ? <BedrockStationView inventory={inventory} grid={craftingGrid} output={craftingOutput}
+        brewingStage={brewingStage} controls={pocket} settings={pocketSettings} fillRecipe={fillPocketRecipe} onTabChange={tab => { pocketStationTab.current = tab; }}
+        craft={craftPocket} clearGrid={clearPocketGrid} fuelCharges={fuelCharges} progress={brewingProgress}
+        brewing={isBrewing} message={pocketMessage} containers={containerReturns} collectContainers={() => {
+          const remaining = insertInventory({ ...MINECRAFT_ITEMS.glass_bottle, itemId: 'glass_bottle', count: containerReturns });
+          setContainerReturns(remaining?.count || 0);
+        }} /> : <>
+      <div className="mc-workbench-viewport-scaler">
+        <div
+          className="mc-brewing-workbench"
+          id="mc-workbench"
+          onContextMenu={(e) => e.preventDefault()}
+          onPointerDown={handleBackgroundClick}
+        >
+          {containerReturns > 0 && <button type="button" className="mc-container-return" onClick={() => {
+            const remaining = insertInventory({ ...MINECRAFT_ITEMS.glass_bottle, itemId: 'glass_bottle', count: containerReturns });
+            setContainerReturns(remaining?.count || 0);
+          }}>Забрати порожні пляшечки: {containerReturns}</button>}
+          {/* ==================== UPPER SECTION: BREWING (LEFT) & CRAFTING (RIGHT) ==================== */}
+          <div className="mc-top-workstation-row">
+            {/* 1. LEFT: Brewing Stand (Pixel-Perfect Authentic Minecraft GUI matching user reference) */}
+            <div className="mc-brewing-stand-area">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                <div className="mc-brewing-header-label">Варильна стійка</div>
+              </div>
+
+              {brewingStage}
+            </div>
+
+            {/* 2. RIGHT: Crafting Table 3x3 ("Майстрування" matching reference mockup) */}
+            <div className="mc-crafting-area">
+              <div className="mc-crafting-header-label">Майстрування</div>
+
+              <div className="mc-crafting-flex-panel">
+                {/* 3x3 Grid (Contiguous touching slots) */}
+                <div className="mc-grid-3x3">
+                  {craftingGrid.map((slotItem, idx) => (
+                    <div
+                      key={`craft-${idx}`}
+                      className={`mc-slot ${slotItem ? 'has-item' : ''}`}
+                      data-slot-type="crafting"
+                      data-slot-index={idx}
+                      {...slotEvents('crafting', idx, getSlotValue('crafting', idx))}
+                    >
+                      {slotItem && (
+                        <>
+                          <img
+                            src={slotItem.sprite}
+                            alt={slotItem.name}
+                            className="mc-item-icon"
+                          />
+                          {slotItem.count > 1 && (
+                            <span className="mc-item-count">{slotItem.count}</span>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Pixel Crafting Arrow (aligned with center row) */}
+                <div className="mc-crafting-arrow-box">
+                  <img
+                    src="/mc_crafting_arrow.png"
+                    alt="Стрілка створення"
+                    className="mc-pixel-crafting-arrow"
+                  />
+                </div>
+
+                {/* Large Output Slot (52x52px, aligned with center row and arrow) */}
+                <div className="mc-output-slot-wrapper">
+                  <div
+                    className={`mc-slot mc-slot-output ${craftingOutput ? 'has-result' : ''}`}
+                    data-slot-type="output"
+                    onPointerDown={handleCraftOutputClick}
+                    onContextMenu={e => e.preventDefault()}
+                    onMouseEnter={() => handleSlotHover('output', 0, craftingOutput)}
+                    onMouseLeave={hideTooltip}
+                  >
+                    {craftingOutput && (
+                      <>
+                        <img
+                          src={craftingOutput.sprite}
+                          alt={craftingOutput.name}
+                          className="mc-item-icon"
+                        />
+                        {craftingOutput.count > 1 && (
+                          <span className="mc-item-count">{craftingOutput.count}</span>
+                        )}
+                      </>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* ==================== LOWER SECTION: PLAYER INVENTORY ==================== */}
-        <div className="mc-inventory-area">
-          <div className="mc-inventory-header-label">Інвентар</div>
+          {/* ==================== LOWER SECTION: PLAYER INVENTORY ==================== */}
+          <div className="mc-inventory-area">
+            <div className="mc-inventory-header-label">Інвентар</div>
 
-          {/* 3x18 Main Storage Grid (Slots 0..53, contiguous touching slots) */}
-          <div className="mc-inventory-grid-3x18">
-            {inventory.slice(0, 54).map((slotItem, idx) => (
-              <div
-                key={`inv-${idx}`}
-                className={`mc-slot ${slotItem ? 'has-item' : ''}`}
-                data-slot-type="inventory"
-                data-slot-index={idx}
-                {...slotEvents('inventory', idx, getSlotValue('inventory', idx))}
-              >
-                {slotItem && (
-                  <>
-                    <img
-                      src={slotItem.sprite}
-                      alt={slotItem.name}
-                      className="mc-item-icon"
-                    />
-                    {slotItem.count > 1 && (
-                      <span className="mc-item-count">{slotItem.count}</span>
-                    )}
-                  </>
-                )}
-              </div>
-            ))}
-          </div>
-
-          {/* Authentic Minecraft Horizontal Separator Gap */}
-          <div className="mc-hotbar-separator-gap" />
-
-          {/* 1x18 Quick Hotbar Grid (Slots 54..71, contiguous touching slots) */}
-          <div className="mc-hotbar-grid-1x18">
-            {inventory.slice(54, 72).map((slotItem, idx) => {
-              const actualIdx = 54 + idx;
-              return (
+            {/* 3x18 Main Storage Grid (Slots 0..53, contiguous touching slots) */}
+            <div className="mc-inventory-grid-3x18">
+              {inventory.slice(0, 54).map((slotItem, idx) => (
                 <div
-                  key={`hotbar-${actualIdx}`}
+                  key={`inv-${idx}`}
                   className={`mc-slot ${slotItem ? 'has-item' : ''}`}
                   data-slot-type="inventory"
-                  data-slot-index={actualIdx}
-                  {...slotEvents('inventory', actualIdx, getSlotValue('inventory', actualIdx))}
+                  data-slot-index={idx}
+                  {...slotEvents('inventory', idx, getSlotValue('inventory', idx))}
                 >
                   {slotItem && (
                     <>
@@ -807,52 +850,60 @@ export default function MinecraftStationWidget() {
                     </>
                   )}
                 </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* ==================== FLOATING HELD ITEM UNDER CURSOR ==================== */}
-        {heldItem && !mobile && createPortal(
-          <div
-            className="mc-floating-held-item"
-            style={{ left: mousePos.x, top: mousePos.y }}
-          >
-            <img src={heldItem.sprite} alt={heldItem.name} />
-            {heldItem.count > 1 && (
-              <span className="mc-held-count">{heldItem.count}</span>
-            )}
-          </div>, document.body
-        )}
-
-
-        {/* ==================== BREWED NOTIFICATION TOAST ==================== */}
-        {brewedToast && (
-          <div className="mc-brewed-toast">
-            <div className="mc-brewed-toast-text">
-              ✨ Зварено: <b>{brewedToast.name}</b>!
+              ))}
             </div>
-            {brewedToast.catalogId && (
-              <button
-                type="button"
-                className="mc-brewed-catalog-btn"
-                onClick={() => handleViewInCatalog(brewedToast.catalogId)}
-              >
-                Переглянути в каталозі 🔍
-              </button>
-            )}
-            <button
-              type="button"
-              className="mc-brewed-toast-close"
-              onClick={() => setBrewedToast(null)}
-              title="Закрити"
-            >
-              ✕
-            </button>
+
+            {/* Authentic Minecraft Horizontal Separator Gap */}
+            <div className="mc-hotbar-separator-gap" />
+
+            {/* 1x18 Quick Hotbar Grid (Slots 54..71, contiguous touching slots) */}
+            <div className="mc-hotbar-grid-1x18">
+              {inventory.slice(54, 72).map((slotItem, idx) => {
+                const actualIdx = 54 + idx;
+                return (
+                  <div
+                    key={`hotbar-${actualIdx}`}
+                    className={`mc-slot ${slotItem ? 'has-item' : ''}`}
+                    data-slot-type="inventory"
+                    data-slot-index={actualIdx}
+                    {...slotEvents('inventory', actualIdx, getSlotValue('inventory', actualIdx))}
+                  >
+                    {slotItem && (
+                      <>
+                        <img
+                          src={slotItem.sprite}
+                          alt={slotItem.name}
+                          className="mc-item-icon"
+                        />
+                        {slotItem.count > 1 && (
+                          <span className="mc-item-count">{slotItem.count}</span>
+                        )}
+                      </>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        )}
+
+          {/* ==================== FLOATING HELD ITEM UNDER CURSOR ==================== */}
+          {heldItem && !mobile && createPortal(
+            <div
+              className="mc-floating-held-item"
+              style={{ left: mousePos.x, top: mousePos.y }}
+            >
+              <img src={heldItem.sprite} alt={heldItem.name} />
+              {heldItem.count > 1 && (
+                <span className="mc-held-count">{heldItem.count}</span>
+              )}
+            </div>, document.body
+          )}
+
+
+          {/* ==================== BREWED NOTIFICATION TOAST ==================== */}
+        </div>
       </div>
-    </div>
+      </>}
     </MobileStationShell>
   );
 }

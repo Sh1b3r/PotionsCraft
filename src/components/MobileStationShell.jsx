@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { flushSync } from 'react-dom';
+import { createPortal, flushSync } from 'react-dom';
 
 export function useMobileStation() {
   const [mobile, setMobile] = useState(() => window.matchMedia('(max-width: 720px), (pointer: coarse)').matches);
@@ -11,75 +11,90 @@ export function useMobileStation() {
   }, []);
   return mobile;
 }
-
-export default function MobileStationShell({ mobile, children, onClose, onOpen }) {
+export const POCKET_DEFAULTS = { size: 1, doubleTap: true, splitControl: true, holdDelay: 600, recipeBook: true };
+export function usePocketSettings() {
+  const [settings, setSettings] = useState(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('potionscraft-pocket-settings-v1')) || {};
+      return { ...POCKET_DEFAULTS, size: [0.9, 1, 1.15].includes(saved.size) ? saved.size : 1,
+        holdDelay: [400, 600, 900].includes(saved.holdDelay) ? saved.holdDelay : 600,
+        ...Object.fromEntries(['doubleTap', 'splitControl', 'recipeBook'].map(key => [key, typeof saved[key] === 'boolean' ? saved[key] : POCKET_DEFAULTS[key]])) };
+    } catch { return POCKET_DEFAULTS; }
+  });
+  const update = next => { setSettings(next); try { localStorage.setItem('potionscraft-pocket-settings-v1', JSON.stringify(next)); } catch { /* Storage may be unavailable. */ } };
+  return [settings, update];
+}
+export default function MobileStationShell({ mobile, children, onClose, onOpen, settings, onSettingsChange }) {
   const [open, setOpen] = useState(false);
+  const [config, setConfig] = useState(false);
   const [viewport, setViewport] = useState({ width: window.innerWidth, height: window.innerHeight });
   const panel = useRef(null);
   const openedRef = useRef(false);
   const launchButton = useRef(null);
   const close = () => {
     openedRef.current = false;
-    onClose();
-    setOpen(false);
+    onClose(); setOpen(false); setConfig(false);
     if (document.fullscreenElement === panel.current) document.exitFullscreen?.().catch(() => {});
     window.screen.orientation?.unlock?.();
     launchButton.current?.focus();
   };
   useEffect(() => {
-    const resize = () => setViewport({ width: window.innerWidth, height: window.innerHeight });
+    const resize = () => setViewport({ width: window.visualViewport?.width || window.innerWidth, height: window.visualViewport?.height || window.innerHeight });
     window.addEventListener('resize', resize);
-    return () => window.removeEventListener('resize', resize);
+    window.visualViewport?.addEventListener('resize', resize);
+    return () => { window.removeEventListener('resize', resize); window.visualViewport?.removeEventListener('resize', resize); };
   }, []);
   useEffect(() => {
     if (!open) return;
     const previousOverflow = document.body.style.overflow;
+    const app = document.getElementById('root');
+    const previousInert = app?.inert;
     document.body.style.overflow = 'hidden';
-    panel.current.querySelector('.mc-mobile-heading button')?.focus();
+    if (app) app.inert = true;
+    (panel.current.querySelector(config ? '.mc-pocket-settings select' : '.mc-mobile-heading button'))?.focus();
     const escape = event => {
-      if (event.key === 'Escape') close();
+      if (event.key === 'Escape') { if (config) setConfig(false); else close(); }
       if (event.key === 'Tab') {
-        const buttons = [...panel.current.querySelectorAll('button:not(:disabled)')];
-        const index = buttons.indexOf(document.activeElement);
+        const root = panel.current.querySelector('.mc-pocket-settings, .mc-pocket-split') || panel.current;
+        const controls = [...root.querySelectorAll('button:not(:disabled), input, select')].filter(el => el.getClientRects().length);
+        const index = controls.indexOf(document.activeElement);
         event.preventDefault();
-        buttons[(index + (event.shiftKey ? -1 : 1) + buttons.length) % buttons.length]?.focus();
+        controls[(index + (event.shiftKey ? -1 : 1) + controls.length) % controls.length]?.focus();
       }
     };
-    const fullscreen = () => { if (!document.fullscreenElement) window.screen.orientation?.unlock?.(); };
     window.addEventListener('keydown', escape);
-    document.addEventListener('fullscreenchange', fullscreen);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener('keydown', escape);
-      document.removeEventListener('fullscreenchange', fullscreen);
-    };
-  }, [open]);
-  useEffect(() => { if (!mobile && open) close(); }, [mobile]);
-
+    return () => { document.body.style.overflow = previousOverflow; if (app) app.inert = previousInert; window.removeEventListener('keydown', escape); };
+  }, [open, config]);
   const launch = async () => {
-    onOpen();
-    openedRef.current = true;
+    onOpen(); openedRef.current = true;
     flushSync(() => setOpen(true));
-    try { await panel.current.requestFullscreen?.(); } catch { /* The landscape layout also works without fullscreen. */ }
+    try { await panel.current.requestFullscreen?.({ navigationUI: 'hide' }); } catch { /* Use the viewport when fullscreen is unavailable. */ }
     if (!openedRef.current) return;
-    try { await window.screen.orientation?.lock?.('landscape'); } catch { /* iOS and some browsers need the CSS landscape layout. */ }
+    try { await window.screen.orientation?.lock?.('landscape'); } catch { /* Rotate the layout when orientation locking is unavailable. */ }
   };
-  const rotated = mobile && viewport.height > viewport.width;
+  const rotated = viewport.height > viewport.width;
   const width = rotated ? viewport.height : viewport.width;
   const height = rotated ? viewport.width : viewport.height;
-  const scale = Math.min(1.25, (width - 24) / 684, (height - 62) / 470);
-
+  if (!mobile && !open) return children;
   return <>
-    {mobile && <button ref={launchButton} type="button" className="mc-mobile-launch" onClick={launch}>Відкрити варильну стійку та верстак</button>}
-    <div ref={panel} role={mobile ? 'dialog' : undefined} aria-modal={mobile && open ? true : undefined}
-      aria-label={mobile ? 'Варильна стійка та верстак' : undefined}
-      className={`mc-station-shell ${mobile ? 'is-mobile' : ''} ${open ? 'is-open' : ''}`}>
-      <div className={`mc-station-landscape ${rotated ? 'is-rotated' : ''}`} style={mobile ? { width, height } : undefined}>
-        {mobile && <div className="mc-mobile-heading"><span>Варіння та крафт</span><button type="button" onClick={close} aria-label="Закрити верстак">✕</button></div>}
-        <div className="mc-station-content" style={mobile ? { width: 684, transform: `scale(${Math.max(0.25, scale)})` } : undefined}>
-          {children}
-        </div>
+    <button ref={launchButton} type="button" className="mc-mobile-launch" onClick={launch}>Відкрити варильну стійку та верстак</button>
+    {open && createPortal(<div ref={panel} role="dialog" aria-modal="true" aria-label="Варильна стійка та верстак" className="mc-station-shell is-mobile is-open">
+      <div className={`mc-station-landscape ${rotated ? 'is-rotated' : ''}`} style={{ width, height }}>
+        <header className="mc-mobile-heading"><span>Варіння та крафт</span><div>
+          <button type="button" onClick={() => setConfig(true)} aria-label="Налаштування керування">⚙</button>
+          <button type="button" onClick={close} aria-label="Закрити верстак">✕</button>
+        </div></header>
+        <div className="mc-station-content" inert={config ? true : undefined}>{children}</div>
+        {config && <div className="mc-pocket-overlay"><section className="mc-pocket-settings" role="dialog" aria-modal="true" aria-label="Налаштування керування">
+          <h3>Сенсорне керування</h3>
+          <label>Розмір слотів<select value={settings.size} onChange={e => onSettingsChange({ ...settings, size: Number(e.target.value) })}><option value="0.9">Компактні</option><option value="1">Звичайні</option><option value="1.15">Великі</option></select></label>
+          <label>Час утримання<select value={settings.holdDelay} onChange={e => onSettingsChange({ ...settings, holdDelay: Number(e.target.value) })}><option value="400">400 мс</option><option value="600">600 мс</option><option value="900">900 мс</option></select></label>
+          <label><span>Розділяти стопку утриманням</span><input type="checkbox" checked={settings.splitControl} onChange={e => onSettingsChange({ ...settings, splitControl: e.target.checked })} /></label>
+          <label><span>Швидкий перенос подвійним дотиком</span><input type="checkbox" checked={settings.doubleTap} onChange={e => onSettingsChange({ ...settings, doubleTap: e.target.checked })} /></label>
+          <label><span>Книга рецептів</span><input type="checkbox" checked={settings.recipeBook} onChange={e => onSettingsChange({ ...settings, recipeBook: e.target.checked })} /></label>
+          <div className="mc-pocket-settings-actions"><button type="button" onClick={() => onSettingsChange(POCKET_DEFAULTS)}>Скинути</button><button type="button" onClick={() => setConfig(false)}>Готово</button></div>
+        </section></div>}
       </div>
-    </div>
+    </div>, document.body)}
   </>;
 }

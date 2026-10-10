@@ -20,12 +20,29 @@ Opening requests fullscreen and landscape orientation. Browsers which reject
 orientation locking use a rotated landscape layout within the page instead.
 Closing and reopening preserves the station, inventory and any held remainder.
 
-- **По одному**: take a stack, then tap slots to place one item per tap.
-- **Стопка**: take/place a whole stack; drag across slots to divide it evenly.
-- **Половина**: take half a stack, then place it.
-- **Перенести**: tap an item to quick-transfer it without a keyboard.
-- **Створити все**: craft complete batches into available inventory space.
-- **Повернути**: return the held item to available inventory space.
+The mobile window is a separate full-viewport layout with inventory/recipe tabs
+on the left and brewing/crafting tabs on the right. It does not shrink the desktop
+window. Inventory pages each contain 36 slots; scrolling reveals the remaining
+rows, and slot size can be changed in settings.
+
+- Tap a source, then a destination to move the stack. Items remain at the source
+  until a valid destination is chosen. Crafting-grid destinations receive one item.
+- Hold a stack to choose a quantity with a slider, one/half/all shortcuts, then tap
+  a destination. Cancelling a touch or dialog never removes items.
+- Double tap to quick-transfer to the current workstation; tap workstation slots
+  twice to return items to inventory. This can be disabled in settings.
+- Drag a selected source across crafting cells to distribute one per visited cell.
+- Tap a recipe to fill its grid from inventory plus the existing grid. Filling is
+  transactional: missing ingredients or insufficient return space leave items intact.
+- Tap the crafting result to create one batch directly into inventory. Hold it for
+  700 ms to start repeated crafting, one batch every 250 ms, matching Bedrock's
+  documented hold-to-craft timing. Selected recipes refill until materials run out.
+  Full inventory stops crafting before consuming ingredients. Pointer cancellation,
+  changing workstation tabs, closing the window, or losing focus stops repetition.
+- Settings persist locally: slot size, hold delay, stack splitting, quick transfer,
+  and recipe book visibility. The settings and split dialogs trap keyboard focus.
+
+Timing reference: https://feedback.minecraft.net/hc/en-us/articles/19545277817357-Minecraft-1-20-30-Bedrock
 
 The application retains its combined crafting/brewing station and 72-slot supply
 inventory. These are application layouts, rather than separate vanilla screens.
@@ -62,8 +79,8 @@ Item textures and crafting recipe provenance are recorded in
 - Desktop at DPR 1.25: golden-carrot recipe by right clicking individual ingredients;
   brewing night vision, ingredient consumption and fuel charge at the start;
   dragging 16 bamboo across three slots yields 5+5+5 with one item left in hand.
-- Mobile layout at 390×844: landscape fallback, individual ingredient placement,
-  two golden carrots using the bulk craft button, and quick-transfer brewing.
+- Mobile at 390×844 and 640×360: full-viewport layout, recipe autofill, golden-carrot
+  result tap and hold, stack splitting (8 into 4+4), and persisted slot-size setting.
 - Landscape layout at 640×360: station and controls fit within the viewport.
 - Browser checks exercise the responsive touch control path with pointer clicks.
   Physical touch input and OS orientation locking still require a real phone.
