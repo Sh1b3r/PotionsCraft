@@ -83,11 +83,11 @@ export default function BedrockStationView({ inventory, grid, output, brewingSta
         </> : <div className="mc-pocket-crafting">
           {preview && <div className="mc-pocket-missing" role="status">Для {MINECRAFT_ITEMS[preview.id].name}: {Object.entries(preview.grid.reduce((counts, id) => { if (id) counts[id] = (counts[id] || 0) + 1; return counts; }, {})).map(([id, count]) => `${MINECRAFT_ITEMS[id].name} × ${count}`).join(', ')}<button type="button" onClick={() => setPreview(null)} aria-label="Закрити підказку рецепта">✕</button></div>}
           <div className="mc-pocket-crafting-row"><div className="mc-pocket-crafting-grid">{grid.map((item, index) => slot('crafting', index, item))}</div><img className="mc-pocket-craft-arrow" src="/mc_crafting_arrow.png" alt="" />
-            <button type="button" className="mc-pocket-slot mc-pocket-output" aria-label={output ? `Створити: ${output.name}` : 'Результат крафту'}
+            <div className="mc-pocket-output-column"><button type="button" className="mc-pocket-slot mc-pocket-output" aria-label={output ? `Створити: ${output.name}` : 'Результат крафту'}
               onPointerDown={startCraft} onPointerUp={finishCraft} onPointerCancel={finishCraft} onLostPointerCapture={finishCraft}
               onClick={e => { if (!e.detail && output) craftRef.current(); }}><Item item={output} /></button>
+              <button type="button" className="mc-pocket-clear" onClick={clearGrid} disabled={!grid.some(Boolean)}>Очистити сітку</button></div>
           </div>
-          <button type="button" className="mc-pocket-clear" onClick={clearGrid} disabled={!grid.some(Boolean)}>Очистити сітку</button>
           <p>Дотик до результату — створити.<br />Утримання — створювати кілька.</p>
         </div>}
       </section>
