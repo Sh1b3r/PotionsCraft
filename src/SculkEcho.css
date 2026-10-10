@@ -1,0 +1,141 @@
+/* Sculk Echo: shared paint tokens for the page, portals and pixel-art UI.
+   Theme changes never affect layout, font metrics or sprite geometry. */
+html[data-theme='dark'], body.dark-theme {
+  --sculk-void: #031116;
+  --sculk-panel: #071e27;
+  --sculk-raised: #0d303b;
+  --sculk-slot: #123c47;
+  --sculk-edge: #28616b;
+  --sculk-shadow: #020c11;
+  --sculk-glow: #54dfcd;
+  --sculk-echo: #99f4e5;
+  --sculk-text: #e1f4ef;
+  --sculk-muted: #9abbbe;
+  --slot-surface: var(--sculk-slot);
+  --slot-shadow: var(--sculk-shadow);
+  --slot-bevel-light: var(--sculk-edge);
+  --slot-silhouette: #38717a;
+  --brewing-pipe-body: #285761;
+  --brewing-pipe-light: #7bd6cb;
+  --brewing-arrow-fill: #d0fff4;
+  background-color: var(--sculk-void);
+  color: var(--sculk-text);
+  color-scheme: dark;
+  scrollbar-color: var(--sculk-edge) var(--sculk-void);
+}
+
+body.dark-theme .gradient-container { background-color: var(--sculk-void); }
+body.dark-theme .gradient-layer { opacity: .12 !important; }
+.dark-theme #logoday { image-rendering: pixelated !important; }
+.dark-theme .mcui-grid, .dark-theme .mc-brewing-stand-stage {
+  --slot-bevel-light: var(--sculk-edge);
+  --brewing-pipe-shadow: var(--sculk-shadow);
+}
+
+#header2.dark-theme, #body21.dark-theme,
+.dark-theme :is(.wiki-section-container, .search-system-container,
+  .card.dark-theme, .potion-modal-content, .modal-stats-card,
+  .mc-brewing-workbench, .mc-station-shell.is-mobile,
+  .mc-pocket-inventory, .mc-pocket-station, .mc-pocket-settings, .mc-pocket-split) {
+  background-color: var(--sculk-panel) !important;
+  border-color: var(--sculk-edge) !important;
+  color: var(--sculk-text);
+  box-shadow: inset 0 1px #54dfcd18, 0 6px 24px #020c1166 !important;
+}
+#header2.dark-theme { border-bottom-color: var(--sculk-glow) !important; }
+#headertext1.dark-theme,
+.dark-theme :is(.wiki-section-title, .category-section-title.positive-title,
+  .mc-brewing-header-label, .mc-crafting-header-label, .mc-inventory-header-label,
+  .modal-title, .mobile-header-potion-title, .card h3) {
+  color: var(--sculk-echo) !important;
+  text-shadow: 2px 2px var(--sculk-shadow), 0 0 12px #54dfcd30 !important;
+}
+.dark-theme :is(.wiki-name-link, .wiki-potion-link, .table-water-cell) {
+  color: var(--sculk-echo) !important;
+  text-decoration-color: var(--sculk-edge) !important;
+}
+.dark-theme :is(.card-desc-row, .mobile-card-desc-box, .table-modifier-cell,
+  .modal-desc, .wiki-effect-desc b) { color: var(--sculk-text) !important; }
+.dark-theme :is(.table-subtext, .quick-reagents-title, .search-results-count,
+  .stat-label, .canvas-hint, .modal-english-name, .mc-pocket-recipe small) {
+  color: var(--sculk-muted) !important;
+}
+
+.dark-theme .minecraft-styled-table { background: var(--sculk-panel) !important; border-color: var(--sculk-edge) !important; }
+.dark-theme .minecraft-styled-table :is(th, td) { border-color: var(--sculk-edge) !important; }
+.dark-theme .minecraft-styled-table thead tr { background: var(--sculk-raised) !important; border-color: var(--sculk-edge) !important; }
+.dark-theme .minecraft-styled-table tbody tr:nth-child(even) { background-color: #0a2630 !important; }
+.dark-theme .minecraft-styled-table tbody tr:hover { background-color: #123c47 !important; }
+
+.dark-theme :is(.search-input, .mc-pocket-search, .mc-pocket-settings select) {
+  background: var(--sculk-void) !important;
+  color: var(--sculk-text) !important;
+  border-color: var(--sculk-edge) !important;
+}
+.dark-theme input::placeholder { color: var(--sculk-muted); }
+.dark-theme :is(.search-input, .mc-pocket-search):focus { border-color: var(--sculk-glow) !important; }
+.dark-theme :is(.category-tab-btn, .reagent-pill-btn, .potion-filter-pill-btn,
+  .reset-btn, .pixel-btn, .modal-close-btn, .mc-brewing-ref-btn,
+  .mc-container-return, .is-mobile button) {
+  background: var(--sculk-raised) !important;
+  color: var(--sculk-text) !important;
+  border-color: var(--sculk-edge) !important;
+}
+.dark-theme :is(.category-tab-btn, .reagent-pill-btn, .potion-filter-pill-btn,
+  .reset-btn, .pixel-btn, .modal-close-btn, .is-mobile button):hover {
+  background: #174a54 !important;
+  border-color: var(--sculk-glow) !important;
+}
+.dark-theme :is(.category-tab-btn.active, .potion-filter-pill-btn.active,
+  .is-mobile button[aria-pressed='true']) {
+  background: #155653 !important;
+  border-color: var(--sculk-glow) !important;
+  color: var(--sculk-echo) !important;
+}
+.dark-theme .is-mobile button:focus-visible { outline-color: var(--sculk-glow); }
+.dark-theme .mc-pocket-tabs { background: var(--sculk-void); }
+.dark-theme .mc-mobile-heading { border-color: var(--sculk-edge); }
+.dark-theme .mc-pocket-recipe.is-available { background: #16434b !important; }
+.dark-theme .mc-pocket-missing { background: #3f3930; color: #f1dfb6; }
+.dark-theme .mc-pocket-overlay { background: #020c11cc; }
+.dark-theme :is(.mc-pocket-settings input, .mc-pocket-split > input) { accent-color: var(--sculk-glow); }
+
+.dark-theme :is(.mc-slot, .invslot, .minecraft-slot-wrapper, .is-mobile .mc-pocket-slot) {
+  background-color: var(--sculk-slot) !important;
+  border-top-color: var(--sculk-shadow) !important;
+  border-left-color: var(--sculk-shadow) !important;
+  border-bottom-color: var(--sculk-edge) !important;
+  border-right-color: var(--sculk-edge) !important;
+}
+.dark-theme :is(.mc-slot, .invslot, .is-mobile .mc-pocket-slot):hover { background-color: #1c4b55 !important; }
+.dark-theme .mc-pocket-slot[data-selected='true'],
+.dark-theme .mc-pocket-stage .mc-slot[data-selected='true'] {
+  outline-color: var(--sculk-glow) !important;
+  background-color: #23665f !important;
+}
+/* Transparent hit areas expose the shared SVG slot frames. */
+.dark-theme .mc-brewing-stand-stage .mc-slot,
+.dark-theme .mcui-grid .invslot { background-color: transparent !important; }
+.dark-theme .mc-brewing-stand-stage .mc-slot:hover,
+.dark-theme .mcui-grid .invslot:hover { background-color: #54dfcd18 !important; }
+.dark-theme :is(.card .mcui-Brewing_Stand, .card-brewing-stand-box.in-modal-stand .mcui-Brewing_Stand) {
+  background-color: var(--sculk-panel) !important;
+  border-color: var(--sculk-edge) !important;
+}
+.dark-theme .card:hover { box-shadow: 0 6px 20px #020c1188, 0 0 16px #54dfcd20 !important; }
+.dark-theme .card-stat-pill { background: var(--sculk-raised); border-color: var(--sculk-edge); }
+.dark-theme .stat-value.time-val { color: var(--sculk-echo); }
+.dark-theme .card-upgrade-tag.redstone-tag { background: #452d3c; border-color: #906477; color: #f3afc2; }
+.dark-theme .card-upgrade-tag.glowstone-tag { background: #3e392c; border-color: #9c8d60; color: #eddbad; }
+
+.dark-theme .mc-mobile-launch {
+  background: #124641;
+  border-color: var(--sculk-glow);
+  box-shadow: inset 0 -4px #092d30, 0 4px var(--sculk-shadow), 0 0 22px #54dfcd25;
+}
+.dark-theme .mc-mobile-launch:hover { background: #185d55; }
+.dark-theme .mc-mobile-launch-icon { background: var(--sculk-void); border-color: var(--sculk-edge); }
+.dark-theme .mc-mobile-launch-title { text-shadow: 2px 2px var(--sculk-shadow); }
+.dark-theme .mc-mobile-launch-hint { color: var(--sculk-echo); }
+.dark-theme .mc-mobile-launch:focus-visible { outline-color: var(--sculk-echo); }
+.dark-theme .minecraft-tooltip-box { background-color: #031116f5; border-color: var(--sculk-glow); box-shadow: 0 0 0 2px var(--sculk-edge), 0 4px 16px #020c1188; }

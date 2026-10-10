@@ -26,9 +26,9 @@ Closing and reopening preserves the station, inventory and any held remainder.
 The mobile window is a separate full-viewport layout with inventory/recipe tabs
 on the left and brewing and crafting visible side by side on the right. Touching
 either workstation selects it as the destination for quick transfers; the heading
-buttons also select that destination. Crafting has larger grid slots and its result
-below the grid, with a centered downward arrow between them and the clear button
-alongside the result. Grid and result sizes adapt to the available height. The
+buttons also select that destination. Crafting follows the reference workbench:
+touching cells in a 3×3 grid, an arrow pointing right, and the result slot to its
+right. The clear button sits below that row. Grid and result sizes adapt to width. The
 crafting area scrolls when vertical space is limited. It does not shrink the desktop
 window. All 72 inventory slots are on one scrollable page; scrolling reveals the
 remaining rows, and slot size can be changed in settings.
@@ -54,6 +54,15 @@ Timing reference: https://feedback.minecraft.net/hc/en-us/articles/1954527781735
 
 The application retains its combined crafting/brewing station and 72-slot supply
 inventory. These are application layouts, rather than separate vanilla screens.
+
+The mobile brewing stand has a dedicated viewport without a variable-height
+status row. Its scale responds only to viewport and slot-size changes. The timer
+and fuel count use the fixed-height footer, and returned containers remain
+collectible there. Starting and finishing brewing do not resize the stand.
+
+Dark mode uses the shared Sculk Echo palette in `src/SculkEcho.css`, including
+page content, dialogs, mobile controls, slots and SVG frame colors. Item textures
+retain their original colors; light mode keeps its existing palette.
 
 On page load, each supply gets a random total within its configured range.
 Stacks are split into random amounts and placed in random slots. Gold ingots
@@ -94,6 +103,10 @@ Item textures and crafting recipe provenance are recorded in
 - Mobile at 390×844 and 640×360: full-viewport layout, recipe autofill, golden-carrot
   result tap and hold, stack splitting (8 into 4+4), and persisted slot-size setting.
 - Landscape layout at 640×360: station and controls fit within the viewport.
+- Brewing geometry stays at 184×117.9 pixels at 640×360 before and after a
+  complete night-vision cycle. At 844×390 it stays at 251×160.825 pixels both
+  before brewing and at 81% progress. Horizontal crafting fits at both sizes;
+  the light palette and Sculk Echo dialogs and controls were visually checked.
 - SVG arrows and stand edges: desktop at DPR 1.25, hover without positional
   transform, enlarged potion modal, and mobile landscape at DPR 1. Brewing
   progress at 62% clips the SVG fill at 34 of 56 pixels. The in-app browser

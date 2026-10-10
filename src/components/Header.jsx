@@ -9,8 +9,7 @@ export default function Header({
 }) {
   const isDarkActive = theme ? theme === 'dark' || theme === 'sculk' : Boolean(isDark);
   const logoDaySrc = '/Glass_Bottle_JE2_BE2.webp';
-  // Authentic dark theme logo: high-resolution Potion of Swiftness (Speed) matching cyan/teal aesthetic
-  const logoDarkSrc = '/Potion_of_Swiftness_JE3.png';
+  const logoDarkSrc = '/items/echo_shard.png';
   const currentLogo = isDarkActive ? logoDarkSrc : logoDaySrc;
 
   return (
@@ -46,7 +45,7 @@ export default function Header({
 
       <div className="header-right-controls">
         {/* Authentic Minecraft Lever Toggle Switch (From Uiverse.io by zl306) */}
-        <label className="switch" title={isDarkActive ? 'Перемкнути на День (Світла тема)' : 'Перемкнути на Ніч (Темна тема)'}>
+        <label className="switch" title={isDarkActive ? 'Перемкнути на День (Світла тема)' : 'Перемкнути на Sculk Echo (Темна тема)'}>
           <input
             className="toggle"
             type="checkbox"
