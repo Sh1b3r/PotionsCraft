@@ -2976,3 +2976,18 @@ body.light-theme .mc-pocket-split > input { accent-color: var(--mobile-accent-ed
     border-color: var(--mobile-accent-edge);
   }
 }
+
+/* Use the same turquoise filter accents on desktop as on phones. */
+@media (min-width: 851px) and (pointer: fine) {
+  body.light-theme :is(.reagent-pill-btn, .potion-filter-pill-btn):hover {
+    background: #2dd4bf33;
+    color: var(--mobile-accent-shadow);
+    border-color: var(--mobile-accent-edge);
+  }
+  body.light-theme .potion-filter-pill-btn.effect-pill { border-color: #2dd4bf66; }
+  body.light-theme :is(.category-tab-btn.active, .reagent-pill-btn.active, .potion-filter-pill-btn.active) {
+    background: var(--mobile-accent);
+    color: var(--mobile-accent-ink);
+    border-color: var(--mobile-accent-edge);
+  }
+}
