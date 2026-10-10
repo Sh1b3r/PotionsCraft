@@ -30,13 +30,10 @@ export default function MobileStationShell({ mobile, children, onClose, onOpen, 
   const [config, setConfig] = useState(false);
   const [viewport, setViewport] = useState({ width: window.innerWidth, height: window.innerHeight });
   const panel = useRef(null);
-  const openedRef = useRef(false);
   const launchButton = useRef(null);
   const close = () => {
-    openedRef.current = false;
     onClose(); setOpen(false); setConfig(false);
     if (document.fullscreenElement === panel.current) document.exitFullscreen?.().catch(() => {});
-    window.screen.orientation?.unlock?.();
     launchButton.current?.focus();
   };
   useEffect(() => {
@@ -67,15 +64,11 @@ export default function MobileStationShell({ mobile, children, onClose, onOpen, 
     return () => { document.body.style.overflow = previousOverflow; if (app) app.inert = previousInert; window.removeEventListener('keydown', escape); };
   }, [open, config]);
   const launch = async () => {
-    onOpen(); openedRef.current = true;
+    onOpen();
     flushSync(() => setOpen(true));
     try { await panel.current.requestFullscreen?.({ navigationUI: 'hide' }); } catch { /* Use the viewport when fullscreen is unavailable. */ }
-    if (!openedRef.current) return;
-    try { await window.screen.orientation?.lock?.('landscape'); } catch { /* Rotate the layout when orientation locking is unavailable. */ }
   };
-  const rotated = viewport.height > viewport.width;
-  const width = rotated ? viewport.height : viewport.width;
-  const height = rotated ? viewport.width : viewport.height;
+  const portrait = viewport.height > viewport.width;
   if (!mobile && !open) return children;
   return <>
     <button ref={launchButton} type="button" className="mc-mobile-launch" onClick={launch}
@@ -85,10 +78,9 @@ export default function MobileStationShell({ mobile, children, onClose, onOpen, 
       <span className="mc-mobile-launch-chevron" aria-hidden="true">›</span>
     </button>
     {open && createPortal(<div ref={panel} role="dialog" aria-modal="true" aria-label="Варильна стійка та верстак" className="mc-station-shell is-mobile is-open">
-      <div className={`mc-station-landscape ${rotated ? 'is-rotated' : ''}`} style={{ width, height }}>
-        <header className="mc-mobile-heading"><span>Варіння та крафт</span><div>
+      <div className={`mc-station-viewport ${portrait ? 'is-portrait' : ''}`} style={{ width: viewport.width, height: viewport.height }}>
+        <header className="mc-mobile-heading"><button type="button" className="mc-pocket-back" onClick={close} aria-label="Закрити верстак">‹ <span>Назад</span></button><span>Варіння та крафт</span><div>
           <button type="button" onClick={() => setConfig(true)} aria-label="Налаштування керування">⚙</button>
-          <button type="button" onClick={close} aria-label="Закрити верстак">✕</button>
         </div></header>
         <div className="mc-station-content" inert={config ? true : undefined}>{children}</div>
         {config && <div className="mc-pocket-overlay"><section className="mc-pocket-settings" role="dialog" aria-modal="true" aria-label="Налаштування керування">

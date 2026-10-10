@@ -25,7 +25,7 @@ export default function BrewingStandFrame({ withFuel = false, pipeExtension = 0,
       shapeRendering="crispEdges" aria-hidden="true" focusable="false">
       {withFuel && (
         <g>
-          {/* Original fuel circuit, relative to the station frame at (46, 5). */}
+          {/* Fuel circuit and slots share the station frame's native pixel grid. */}
           <path d="M36 27h14v2H36z M66 61h22v2H66z" fill="var(--brewing-pipe-light, #fff)" />
           <path d="M36 29h14v2H36z M66 63h22v2H66z" fill="var(--brewing-pipe-shadow)" />
           <BrewingSpring />

@@ -771,7 +771,7 @@ export default function MinecraftStationWidget() {
           <div className="mc-top-workstation-row">
             {/* 1. LEFT: Brewing Stand (Pixel-Perfect Authentic Minecraft GUI matching user reference) */}
             <div className="mc-brewing-stand-area">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+              <div className="mc-brewing-header-row">
                 <div className="mc-brewing-header-label">Варильна стійка</div>
               </div>
 
@@ -780,7 +780,7 @@ export default function MinecraftStationWidget() {
 
             {/* 2. RIGHT: Crafting Table 3x3 ("Майстрування" matching reference mockup) */}
             <div className="mc-crafting-area">
-              <div className="mc-crafting-header-label">Майстрування</div>
+              <div className="mc-crafting-header-label">Крафт</div>
 
               <div className="mc-crafting-flex-panel">
                 {/* 3x3 Grid (Contiguous touching slots) */}
@@ -809,7 +809,7 @@ export default function MinecraftStationWidget() {
                   ))}
                 </div>
 
-                {/* Pixel Crafting Arrow (aligned with center row) */}
+                {/* Downward arrow connects the grid to the result below. */}
                 <div className="mc-crafting-arrow-box">
                   <img
                     src="/mc_crafting_arrow.png"
@@ -818,7 +818,7 @@ export default function MinecraftStationWidget() {
                   />
                 </div>
 
-                {/* Large Output Slot (52x52px, aligned with center row and arrow) */}
+                {/* Large Output Slot (52x52px, centered under the grid) */}
                 <div className="mc-output-slot-wrapper">
                   <div
                     className={`mc-slot mc-slot-output ${craftingOutput ? 'has-result' : ''}`}
@@ -850,8 +850,8 @@ export default function MinecraftStationWidget() {
           <div className="mc-inventory-area">
             <div className="mc-inventory-header-label">Інвентар</div>
 
-            {/* 3x18 Main Storage Grid (Slots 0..53, contiguous touching slots) */}
-            <div className="mc-inventory-grid-3x18">
+            {/* 6x9 Main Storage Grid (Slots 0..53) */}
+            <div className="mc-inventory-grid">
               {inventory.slice(0, 54).map((slotItem, idx) => (
                 <div
                   key={`inv-${idx}`}
@@ -879,8 +879,8 @@ export default function MinecraftStationWidget() {
             {/* Authentic Minecraft Horizontal Separator Gap */}
             <div className="mc-hotbar-separator-gap" />
 
-            {/* 1x18 Quick Hotbar Grid (Slots 54..71, contiguous touching slots) */}
-            <div className="mc-hotbar-grid-1x18">
+            {/* 2x9 Quick Hotbar Grid (Slots 54..71) */}
+            <div className="mc-hotbar-grid">
               {inventory.slice(54, 72).map((slotItem, idx) => {
                 const actualIdx = 54 + idx;
                 return (

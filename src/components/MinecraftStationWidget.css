@@ -1,5 +1,5 @@
 /* ==================== MINECRAFT BREWING & CRAFTING STATION ==================== */
-/* Pixel-perfect authentic Minecraft GUI matching the reference mockup image completely */
+/* Compact Minecraft GUI on the shared native pixel grid. */
 
 .mc-workbench-viewport-scaler {
   width: 100%;
@@ -10,7 +10,12 @@
 }
 
 .mc-brewing-workbench {
-  width: 684px;
+  --mc-gui-scale: 1;
+  --mc-inventory-width: 324px;
+  width: 348px;
+  flex: none;
+  transform: scale(var(--mc-gui-scale));
+  transform-origin: top center;
   background-color: #c6c6c6;
   border-top: 4px solid #ffffff;
   border-left: 4px solid #ffffff;
@@ -19,7 +24,7 @@
   box-shadow:
     0 10px 30px rgba(0, 0, 0, 0.5),
     0 0 0 2px #100010;
-  padding: 16px 18px 20px;
+  padding: 8px;
   font-family: 'Minecraft', 'Press Start 2P', monospace, sans-serif;
   color: #3f3f3f;
   user-select: none;
@@ -33,10 +38,10 @@
 /* ==================== UPPER SECTION: WORKSTATIONS ==================== */
 .mc-top-workstation-row {
   display: flex;
-  justify-content: space-between;
+  gap: 10px;
   align-items: flex-start;
-  width: 648px;
-  margin-bottom: 12px;
+  width: var(--mc-inventory-width);
+  margin-bottom: 8px;
 }
 
 /* ---------------- 1. BREWING STAND AREA (LEFT) ---------------- */
@@ -44,14 +49,14 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  width: 300px;
+  width: 206px;
+  flex: none;
 }
 
 .mc-brewing-header-row {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  width: 300px;
+  width: 100%;
   margin-bottom: 6px;
 }
 
@@ -97,7 +102,7 @@
 
 .mc-brewing-stand-stage {
   position: relative;
-  width: 300px;
+  width: 206px;
   height: 132px;
   image-rendering: pixelated;
   image-rendering: -moz-crisp-edges;
@@ -110,7 +115,7 @@
 /* The same frame as the recipe cards, with the original station fuel circuit.
    Hit areas and item icons follow this frame's native 2px pixel grid. */
 .mc-brewing-stand-stage .mcui-frame {
-  left: 46px;
+  left: 0;
   top: 5px;
   right: auto;
   bottom: auto;
@@ -134,7 +139,7 @@
 /* Fuel Slot (Top-Left) */
 .mc-slot-fuel {
   position: absolute !important;
-  left: 46px !important;
+  left: 0 !important;
   top: 8px !important;
   width: 36px !important;
   height: 36px !important;
@@ -169,7 +174,7 @@
 /* Bubbling Steam Column (exact 1:1 sprite directly from recipe card) */
 .mc-brewing-bubbles-column {
   position: absolute;
-  left: 140px;
+  left: 94px;
   top: 4px;
   width: 24px;
   height: 58px;
@@ -191,7 +196,7 @@
 /* Reagent Slot */
 .mc-slot-reagent {
   position: absolute !important;
-  left: 170px !important;
+  left: 124px !important;
   top: 8px !important;
   width: 36px !important;
   height: 36px !important;
@@ -200,7 +205,7 @@
 
 .mc-brewing-arrow-wrapper {
   position: absolute;
-  left: 208px;
+  left: 162px;
   /* Align with the reagent frame: SVG origin 5px plus slot offset 3px. */
   top: 8px;
   width: 16px;
@@ -224,7 +229,7 @@
 
 .slot-bottle-left {
   position: absolute !important;
-  left: 124px !important;
+  left: 78px !important;
   top: 76px !important;
   width: 36px !important;
   height: 36px !important;
@@ -233,7 +238,7 @@
 
 .slot-bottle-center {
   position: absolute !important;
-  left: 170px !important;
+  left: 124px !important;
   top: 90px !important;
   width: 36px !important;
   height: 36px !important;
@@ -242,7 +247,7 @@
 
 .slot-bottle-right {
   position: absolute !important;
-  left: 216px !important;
+  left: 170px !important;
   top: 76px !important;
   width: 36px !important;
   height: 36px !important;
@@ -252,7 +257,7 @@
 /* Original fuel gauge placement at the spring outlet (20 equal parts) */
 .mc-fuel-gauge-container {
   position: absolute;
-  left: 134px;
+  left: 88px;
   top: 64px;
   width: 36px;
   height: 8px;
@@ -303,23 +308,25 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  width: 310px;
+  width: 108px;
+  flex: none;
 }
 
 .mc-crafting-header-label {
   font-family: 'Minecraft', monospace;
   font-size: 15px;
   color: #303030;
-  margin-bottom: 8px;
-  padding-left: 2px;
+  margin-bottom: 6px;
   letter-spacing: 0.5px;
   text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 .mc-crafting-flex-panel {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: 8px;
+  width: 100%;
 }
 
 /* 3x3 Grid with Contiguous Touching Slots */
@@ -336,11 +343,15 @@
   align-items: center;
   justify-content: center;
   padding: 0;
+  width: 30px;
+  height: 44px;
 }
 
 .mc-pixel-crafting-arrow {
   width: 44px;
   height: 30px;
+  transform: rotate(90deg);
+  flex: none;
   image-rendering: pixelated;
   image-rendering: -moz-crisp-edges;
   image-rendering: crisp-edges;
@@ -373,38 +384,37 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  width: 648px;
+  width: var(--mc-inventory-width);
 }
 
 .mc-inventory-header-label {
   font-size: 15px;
   color: #303030;
-  margin: 12px 0 6px 0;
-  padding-left: 2px;
+  margin: 0 0 6px;
   letter-spacing: 0.5px;
   text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.4);
 }
 
-/* 3x18 Main Storage Grid with Contiguous Touching Slots */
-.mc-inventory-grid-3x18 {
+/* Six rows of nine slots; retain all 54 storage slots. */
+.mc-inventory-grid {
   display: grid;
-  grid-template-columns: repeat(18, 36px);
-  grid-template-rows: repeat(3, 36px);
+  grid-template-columns: repeat(9, 36px);
+  grid-template-rows: repeat(6, 36px);
   gap: 0;
 }
 
 /* Horizontal Gap between Storage and Hotbar */
 .mc-hotbar-separator-gap {
-  width: 648px;
+  width: var(--mc-inventory-width);
   height: 8px;
   background: transparent;
 }
 
-/* 1x18 Hotbar Grid with Contiguous Touching Slots */
-.mc-hotbar-grid-1x18 {
+/* Two rows of nine slots; retain hotbar indices 54..71. */
+.mc-hotbar-grid {
   display: grid;
-  grid-template-columns: repeat(18, 36px);
-  grid-template-rows: repeat(1, 36px);
+  grid-template-columns: repeat(9, 36px);
+  grid-template-rows: repeat(2, 36px);
   gap: 0;
 }
 
@@ -695,16 +705,6 @@
   }
 }
 
-/* ==================== RESPONSIVE SCALING ==================== */
-@media (max-width: 720px) {
-  .mc-workbench-viewport-scaler {
-    justify-content: flex-start;
-    padding-left: 8px;
-    padding-right: 8px;
-  }
-}
-
-
 /* Full viewport Pocket interface: controls keep their own sizes, not a scaled desktop window. */
 .mc-mobile-launch, .is-mobile button, .is-mobile select, .is-mobile input { font: inherit; }
 .mc-mobile-launch { display: grid; grid-template-columns: 64px minmax(0, 1fr) 20px; align-items: center; gap: 14px; width: 100%; margin: 24px auto; min-height: 96px; padding: 14px; font-family: 'Minecraft', monospace; text-align: left; background: #427d2b; color: #fff; border: 3px outset #84be5e; box-shadow: inset 0 -4px #2d5a1d, 0 4px #234716, 0 8px 20px #23471630; cursor: pointer; transition: var(--theme-paint-transition); }
@@ -722,12 +722,13 @@
 .is-mobile button:disabled { opacity: .45; cursor: default; }
 .is-mobile button:focus-visible { outline: 3px solid #327c24; outline-offset: -3px; }
 .is-mobile button[aria-pressed='true'] { background: #588e3a; color: #fff; border-color: #77b354; }
-.mc-station-landscape { width: 100%; }
-.is-mobile .mc-station-landscape { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; padding: 0 max(6px, env(safe-area-inset-right)) 0 max(6px, env(safe-area-inset-left)); box-sizing: border-box; }
-.is-mobile .mc-station-landscape.is-rotated { transform: translate(-50%, -50%) rotate(90deg); }
+.mc-station-viewport { width: 100%; }
+.is-mobile .mc-station-viewport { position: absolute; left: 0; top: 0; display: flex; flex-direction: column; padding: 0 max(6px, env(safe-area-inset-right)) 0 max(6px, env(safe-area-inset-left)); box-sizing: border-box; }
 .mc-mobile-heading { flex: 0 0 46px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #666; padding: 0 4px; }
 .mc-mobile-heading > div { display: flex; gap: 6px; }
 .mc-mobile-heading button { min-width: 44px; height: 40px; }
+.mc-pocket-back { display: flex; align-items: center; justify-content: center; gap: 4px; white-space: nowrap; }
+.mc-pocket-page-nav { display: none; }
 .is-mobile .mc-station-content { flex: 1; min-height: 0; width: 100%; }
 .mc-pocket-workspace { height: 100%; display: flex; flex-direction: column; }
 .mc-pocket-panels { display: grid; grid-template-columns: minmax(140px, .75fr) minmax(0, 2fr); flex: 1; min-height: 0; gap: 8px; padding-top: 6px; }
@@ -746,7 +747,6 @@
 .mc-pocket-stage-box { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 .mc-pocket-stage { position: relative; flex: none; }
 .mc-pocket-stage > div { transform-origin: top left; position: absolute; width: 206px; height: 132px; }
-.mc-pocket-stage .mc-brewing-stand-stage { left: -46px; }
 .mc-pocket-stage .mc-brewing-stand-stage .mc-slot { border: 0; padding: 2px; background: transparent; background-clip: content-box; touch-action: none; }
 .mc-pocket-status { font-size: 13px; padding: 5px 8px; text-align: center; flex: none; }
 .mc-pocket-status span { display: block; margin-top: 4px; }
@@ -758,9 +758,10 @@
 .mc-pocket-selection button { min-width: 44px; }
 .mc-pocket-search { flex: none; width: calc(100% - 10px); box-sizing: border-box; min-height: 36px; margin: 4px 5px; background: #eee; color: #222; border: 2px inset #ddd; padding: 4px 8px; user-select: text; }
 .mc-pocket-recipes { display: flex; flex-direction: column; gap: 4px; }
-.is-mobile .mc-pocket-recipe { display: flex; align-items: center; gap: 8px; text-align: left; flex: none; min-height: 52px; background: #a7a7a7; }
+.is-mobile .mc-pocket-recipe { display: flex; align-items: center; gap: 8px; text-align: left; flex: none; min-width: 0; width: 100%; box-sizing: border-box; min-height: 52px; font-size: clamp(12px, 6cqi, 15px); background: #a7a7a7; }
+.mc-pocket-recipe > span { min-width: 0; overflow-wrap: anywhere; }
 .is-mobile .mc-pocket-recipe.is-available { background: #d8d8d8; }
-.mc-pocket-recipe img { width: 36px; height: 36px; image-rendering: pixelated; }
+.mc-pocket-recipe img { width: 36px; height: 36px; flex: none; image-rendering: pixelated; }
 .mc-pocket-recipe small { display: block; margin-top: 3px; color: #454545; font-size: 11px; }
 .mc-pocket-crafting { --pocket-craft-size: min(calc(64px * var(--pocket-size)), max(40px, calc((100cqi - 8px) / 3)), max(40px, calc((100cqb - 88px) / 4))); flex: 1; min-height: 0; overflow: auto; display: flex; flex-direction: column; align-items: center; justify-content: safe center; padding: 4px; gap: 12px; }
 .mc-pocket-crafting-row { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; flex: none; }
@@ -801,3 +802,32 @@
 .dark-theme .is-mobile .mc-pocket-recipe.is-available { background: #526748; }
 .dark-theme .is-mobile .mc-pocket-slot[data-selected='true'] { background: #587b43; }
 .dark-theme .mc-pocket-missing { background: #69552e; }
+
+/* Portrait uses one full-width panel. Item selection survives switching pages. */
+.is-portrait .mc-mobile-heading { display: grid; grid-template-columns: 76px minmax(0, 1fr) 44px; gap: 4px; flex-basis: 52px; padding: max(4px, env(safe-area-inset-top)) 0 4px; }
+.is-portrait .mc-mobile-heading > span { text-align: center; font-size: 13px; }
+.is-portrait .mc-mobile-heading button { min-height: 44px; height: 44px; padding: 6px; }
+.is-portrait .mc-mobile-heading .mc-pocket-back { font-size: 12px; }
+.is-portrait .mc-pocket-panels { display: flex; }
+.is-portrait .mc-pocket-inventory,
+.is-portrait .mc-pocket-stations,
+.is-portrait .mc-pocket-station { width: 100%; flex: 1; }
+.is-portrait .mc-pocket-stations { display: flex; }
+.is-portrait .mc-pocket-workspace[data-page='inventory'] .mc-pocket-stations,
+.is-portrait .mc-pocket-workspace:not([data-page='inventory']) .mc-pocket-inventory,
+.is-portrait .mc-pocket-workspace[data-page='crafting'] .mc-pocket-brewing-panel,
+.is-portrait .mc-pocket-workspace[data-page='brewing'] .mc-pocket-crafting-panel { display: none; }
+.is-portrait .mc-pocket-station > .mc-pocket-tabs { display: none; }
+.is-portrait .mc-pocket-inventory-grid { grid-template-columns: repeat(auto-fill, minmax(max(48px, calc(48px * var(--pocket-size))), 1fr)); }
+.is-portrait .mc-pocket-slot { min-height: 48px; }
+.is-portrait .mc-pocket-tabs { flex-basis: 48px; }
+.is-portrait .mc-pocket-tabs button { min-height: 48px; }
+.is-portrait .mc-pocket-stage-box { overflow: auto; }
+.is-portrait .mc-pocket-crafting { --pocket-craft-size: min(max(48px, calc(64px * var(--pocket-size))), calc((100cqi - 12px) / 3), max(48px, calc((100cqb - 140px) / 4))); }
+.is-portrait .mc-pocket-crafting-row { gap: 12px; }
+.is-portrait .mc-pocket-output-column { row-gap: 12px; }
+.is-portrait .mc-pocket-clear { grid-column: 1 / -1; grid-row: 2; min-height: 48px; }
+.is-portrait .mc-pocket-selection { flex: none; min-height: 56px; padding: 6px 4px; }
+.is-portrait .mc-pocket-selection button { min-width: 48px; min-height: 48px; }
+.is-portrait .mc-pocket-page-nav { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; flex: none; padding: 4px 0 max(6px, env(safe-area-inset-bottom)); }
+.is-portrait .mc-pocket-page-nav button { min-height: 48px; padding: 6px 4px; }
