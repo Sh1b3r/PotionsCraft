@@ -352,13 +352,41 @@ export default function MinecraftStationWidget() {
     }
     playItemClickSound();
   };
+  const cancelGesture = () => {
+    clearTimeout(dragRef.current?.holdTimer);
+    dragRef.current = null;
+  };
+  const beginGather = drag => {
+    if (dragRef.current !== drag || drag.collecting) return;
+    clearTimeout(drag.holdTimer);
+    drag.collecting = true;
+    clickRef.current = null;
+    // Include the starting slot when the gesture began with a held stack.
+    if (drag.pendingClick) visitSlot(drag.type, drag.index);
+  };
   const visitSlot = (type, index) => {
     const drag = dragRef.current;
-    const held = heldItemRef.current;
-    if (!drag || !held) return;
+    if (!drag) return;
     const key = type + '-' + index;
     if (drag.slots.has(key)) return;
     const item = getSlotValue(type, index);
+    if (type === 'output') return;
+    let held = heldItemRef.current;
+    if (!drag.one && !drag.collecting) {
+      if (type === drag.type && index === drag.index) return;
+      // Moving to another slot starts gathering instead of placing the held
+      // stack at pointerdown. A quick pickup-and-drop still works with no match.
+      if (drag.pendingClick || !held || sameStack(item, held)) beginGather(drag);
+      else return;
+      held = heldItemRef.current;
+    }
+    if (!held) {
+      if (drag.one || !item) return;
+      slotClick(type, index);
+      drag.slots.add(key);
+      drag.gathered = true;
+      return;
+    }
     if (drag.one) {
       if (!accepts(type, held) || (item && !sameStack(item, held))) return;
       // One item per slot and gesture, even if pointermove and pointerenter
@@ -390,11 +418,13 @@ export default function MinecraftStationWidget() {
         visitSlot(type, index);
         // A direct left drag can drop or swap on release. After gathering,
         // keep the combined stack in hand instead of dropping it back.
-        if (!drag.one && drag.picked && !drag.gathered && heldItemRef.current &&
+        if (!drag.one && drag.pendingClick && !drag.collecting &&
+          type === drag.type && index === drag.index) slotClick(type, index);
+        if (!drag.one && drag.picked && !drag.collecting && !drag.gathered && heldItemRef.current &&
           (type !== drag.type || index !== drag.index)) slotClick(type, index);
       }
     }
-    dragRef.current = null;
+    cancelGesture();
   };
   const hotbarSwap = key => {
     const slot = hoveredSlotRef.current;
@@ -407,29 +437,30 @@ export default function MinecraftStationWidget() {
     setSlotValue(slot.type, slot.index, hotbar);
     setSlotValue('inventory', hotbarIndex, source);
   };
-  const gesturesRef = useRef({ finishGesture, visitSlot, returnHeld, hotbarSwap });
-  gesturesRef.current = { finishGesture, visitSlot, returnHeld, hotbarSwap };
+  const gesturesRef = useRef({ finishGesture, visitSlot, returnHeld, hotbarSwap, beginGather, cancelGesture });
+  gesturesRef.current = { finishGesture, visitSlot, returnHeld, hotbarSwap, beginGather, cancelGesture };
   useEffect(() => {
     const move = event => {
       setMousePos({ x: event.clientX, y: event.clientY });
       if (dragRef.current && event.pointerId !== dragRef.current.pointerId) return;
-      if (dragRef.current && !(event.buttons & dragRef.current.buttonMask)) { dragRef.current = null; return; }
+      if (dragRef.current && !(event.buttons & dragRef.current.buttonMask)) { gesturesRef.current.cancelGesture(); return; }
       const target = document.elementFromPoint(event.clientX, event.clientY)?.closest('[data-slot-index]');
       if (target) gesturesRef.current.visitSlot(target.dataset.slotType, +target.dataset.slotIndex);
     };
     const end = event => gesturesRef.current.finishGesture(event);
     const escape = event => {
       if (event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
-      if (event.key === 'Escape') { dragRef.current = null; gesturesRef.current.returnHeld(); }
+      if (event.key === 'Escape') { gesturesRef.current.cancelGesture(); gesturesRef.current.returnHeld(); }
       if (/^[1-9]$/.test(event.key)) gesturesRef.current.hotbarSwap(event.key);
     };
-    const blur = () => { dragRef.current = null; };
+    const blur = () => gesturesRef.current.cancelGesture();
     window.addEventListener('pointermove', move);
     window.addEventListener('pointerup', end);
     window.addEventListener('pointercancel', end);
     window.addEventListener('keydown', escape);
     window.addEventListener('blur', blur);
     return () => {
+      gesturesRef.current.cancelGesture();
       window.removeEventListener('pointermove', move);
       window.removeEventListener('pointerup', end);
       window.removeEventListener('pointercancel', end);
@@ -455,9 +486,14 @@ export default function MinecraftStationWidget() {
       clickRef.current = { key, time: now, button: event.button };
       const picked = !heldItemRef.current;
       const one = event.button === 2;
-      const drag = { type, index, picked, one, gathered: false, slots: new Set([key]), pointerId: event.pointerId, buttonMask: one ? 2 : 1 };
+      const pendingClick = !one && !picked;
+      const drag = { type, index, picked, one, pendingClick, collecting: false, gathered: false,
+        slots: new Set(pendingClick ? [] : [key]), pointerId: event.pointerId, buttonMask: one ? 2 : 1 };
       dragRef.current = drag;
-      slotClick(type, index, one);
+      // Pickup and RMB placement stay immediate. LMB placement waits for
+      // release so holding the button can collect the starting stack instead.
+      if (!pendingClick) slotClick(type, index, one);
+      if (!one) drag.holdTimer = setTimeout(() => gesturesRef.current.beginGather(drag), 220);
       // Touch browsers capture pointers implicitly; release so neighboring slots receive hover.
       if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
     },
@@ -741,7 +777,7 @@ export default function MinecraftStationWidget() {
   return (
     <MobileStationShell mobile={mobile} settings={pocketSettings} onSettingsChange={setPocketSettings}
       onClose={() => { hideTooltip(); pocket.clear(); setPocketOpen(false); }}
-      onOpen={() => { hideTooltip(); returnHeld(); dragRef.current = null; pocketStationTab.current = 'brewing'; setPocketOpen(true); }}>
+      onOpen={() => { hideTooltip(); cancelGesture(); returnHeld(); pocketStationTab.current = 'brewing'; setPocketOpen(true); }}>
       {pocketOpen || mobile ? <BedrockStationView inventory={inventory} grid={craftingGrid} output={craftingOutput}
         brewingStage={brewingStage} controls={pocket} settings={pocketSettings} fillRecipe={fillPocketRecipe} onTabChange={tab => { pocketStationTab.current = tab; }}
         craft={craftPocket} clearGrid={clearPocketGrid} fuelCharges={fuelCharges} progress={brewingProgress}
@@ -931,7 +967,7 @@ export default function MinecraftStationWidget() {
             <h3>Крафт</h3>
             <div className="mc-workstation-info-title">{craftingOutput ? `${craftingOutput.name} × ${craftingOutput.count}` : 'Сітка 3 × 3'}</div>
             <h4>Керування</h4>
-            <dl className="mc-station-shortcuts"><div><dt>ЛКМ</dt><dd>Взяти / покласти стопку. Протяжка — зібрати однакові.</dd></div><div><dt>ПКМ</dt><dd>Взяти половину / покласти один. Протяжка — по одному в слот.</dd></div><div><dt>Подвійний ЛКМ</dt><dd>Зібрати однакові предмети до повної стопки.</dd></div><div><dt>Shift + клік</dt><dd>Перенести; на результаті — крафт усіх.</dd></div></dl>
+            <dl className="mc-station-shortcuts"><div><dt>ЛКМ</dt><dd>Клік — взяти / покласти. Утримання й протяжка — зібрати однакові.</dd></div><div><dt>ПКМ</dt><dd>Взяти половину / покласти один. Протяжка — по одному в слот.</dd></div><div><dt>Подвійний ЛКМ</dt><dd>Зібрати однакові предмети до повної стопки.</dd></div><div><dt>Shift + клік</dt><dd>Перенести; на результаті — крафт усіх.</dd></div></dl>
             <button type="button" className="mc-brewing-ref-btn" disabled={!craftingGrid.some(Boolean)} onClick={() => { returnHeld(); clearPocketGrid(); }}>Очистити сітку</button>
           </aside>
         </div>

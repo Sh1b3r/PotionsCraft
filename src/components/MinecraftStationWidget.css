@@ -481,32 +481,24 @@
   display: block;
 }
 
-/* Item Count Badge - Multi-directional dark outline/shadow for crystal-clear legibility (especially digit 8) */
-.mc-item-count {
-  position: absolute;
-  bottom: 1px;
-  right: 2px;
+/* Vanilla count text at GUI scale 2: white glyphs, one dark offset shadow. */
+.mc-item-count,
+.mc-floating-held-item .mc-held-count {
   color: #ffffff;
   font-family: 'Minecraft', monospace;
-  font-size: 13px;
+  font-size: 16px;
   font-weight: normal;
   letter-spacing: 0;
   line-height: 1;
-  text-shadow:
-    -1px -1px 0 #000000,
-     0px -1px 0 #000000,
-     1px -1px 0 #000000,
-    -1px  0px 0 #000000,
-     1px  0px 0 #000000,
-    -1px  1px 0 #000000,
-     0px  1px 0 #000000,
-     1px  1px 0 #000000,
-     2px  2px 0 #000000,
-     2px  1px 0 #000000,
-     1px  2px 0 #000000;
-  -webkit-font-smoothing: none;
+  text-shadow: 2px 2px 0 #3f3f3f;
   pointer-events: none;
   user-select: none;
+}
+
+.mc-item-count {
+  position: absolute;
+  bottom: 0;
+  right: 0;
 }
 
 /* ==================== FLOATING HELD ITEM ==================== */
@@ -536,25 +528,6 @@
   position: absolute;
   bottom: -4px;
   right: -4px;
-  color: #ffffff;
-  font-family: 'Minecraft', monospace;
-  font-size: 14px;
-  font-weight: normal;
-  letter-spacing: 0;
-  line-height: 1;
-  text-shadow:
-    -1px -1px 0 #000000,
-     0px -1px 0 #000000,
-     1px -1px 0 #000000,
-    -1px  0px 0 #000000,
-     1px  0px 0 #000000,
-    -1px  1px 0 #000000,
-     0px  1px 0 #000000,
-     1px  1px 0 #000000,
-     2px  2px 0 #000000,
-     2px  1px 0 #000000,
-     1px  2px 0 #000000;
-  -webkit-font-smoothing: none;
 }
 
 /* ==================== WORKBENCH THEMING ==================== */
@@ -769,7 +742,6 @@
 .is-mobile .mc-pocket-slot { width: 100%; min-width: 0; height: auto; min-height: 40px; aspect-ratio: 1; padding: 0; touch-action: pan-y; }
 .mc-pocket-slot img { width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; pointer-events: none; }
 .is-mobile .mc-pocket-slot[data-selected='true'], .mc-pocket-stage .mc-slot[data-selected='true'] { outline: 3px solid #4cbd35; outline-offset: -3px; background-color: #add184; }
-.mc-pocket-count { font-size: 17px; }
 .mc-pocket-stage-box { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
 .mc-pocket-stage { position: relative; flex: none; }
 .mc-pocket-stage > div { transform-origin: top left; position: absolute; width: 206px; height: 132px; }
