@@ -1,6 +1,7 @@
 import React from 'react';
 import { TooltipTrigger } from './MinecraftTooltip';
 import BrewingStandFrame from './BrewingStandFrame';
+import BrewingArrow from './BrewingArrow';
 import { BREWING_STAND_DATA } from '../data/brewingStandData';
 import { WIKI_REAGENTS } from '../data/wikiTooltipsData';
 
@@ -108,7 +109,7 @@ export default function BrewingStandWidget({ potion, inModal = false }) {
                 </span>
               </TooltipTrigger>
 
-              <span className="mcui-arrow"><br /></span>
+              <span className="mcui-arrow"><BrewingArrow variant="card" /></span>
             </span>
 
             {/* Connecting Branching Pipes */}

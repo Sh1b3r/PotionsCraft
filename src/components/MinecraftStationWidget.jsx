@@ -14,6 +14,7 @@ import {
 } from '../utils/minecraftStationSounds';
 import { useTooltip } from './MinecraftTooltip';
 import BrewingStandFrame from './BrewingStandFrame';
+import BrewingArrow from './BrewingArrow';
 import { createPortal } from 'react-dom';
 import BedrockStationView from './BedrockStationView';
 import usePocketInventory from './usePocketInventory';
@@ -710,9 +711,7 @@ export default function MinecraftStationWidget() {
                   onMouseEnter={() => handleSlotHover('arrow', 0, null)}
                   onMouseLeave={hideTooltip}
                 >
-                  <img src="/mc_arrow_empty.png" alt="Стрілка варіння" className="mc-brewing-arrow-empty" />
-                  <img src="/mc_brewing_arrow_full.png" alt="" className="mc-brewing-arrow-fill"
-                    style={{ clipPath: `inset(0 0 ${56 - brewingStep}px 0)` }} />
+                  <BrewingArrow filledHeight={brewingStep} />
                 </div>
 
                 {/* 4, 5, 6. Bottom 3 Output Bottle Slots (uses authentic uniform CSS silhouette from be.html) */}

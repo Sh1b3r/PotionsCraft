@@ -1324,12 +1324,13 @@ h3 {
   height: 215px;
   min-height: 210px;
   overflow: hidden;
-  transition: transform 0.2s ease, var(--theme-paint-transition);
+  transition: var(--theme-paint-transition);
   box-sizing: border-box;
 }
 
 .card:hover {
-  transform: translateY(-3px);
+  /* Keep the SVG pixel grid out of a fractionally translated compositor layer. */
+  transform: none;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
 }
 
@@ -1426,14 +1427,17 @@ h3 {
 }
 
 .card-brewing-stand-box.in-modal-stand .mcui-Brewing_Stand {
-  width: 128px;
-  height: 111px;
+  /* 128x111 grid plus padding and bevels, enlarged during layout rather
+     than stretching an already rasterized 1.4x compositor texture. */
+  width: 144px;
+  height: 127px;
   padding: 6px;
   border-top: 2px solid rgb(219, 219, 219);
   border-left: 2px solid rgb(219, 219, 219);
   border-bottom: 2px solid rgb(91, 91, 91);
   border-right: 2px solid rgb(91, 91, 91);
-  transform: scale(1.4);
+  transform: none;
+  zoom: 1.5;
   transform-origin: center;
   display: inline-block;
 }
@@ -1556,10 +1560,17 @@ h3 {
   height: 57px;
   margin: 0;
   padding: 0;
-  background-image: url("/Grid_layout_Brewing_Arrow.png");
+  /* The vector arrow below paints at the final zoom, without PNG resampling. */
+  background-image: none;
   background-position: 0% 0%;
   background-repeat: no-repeat;
   vertical-align: top;
+}
+
+.mc-brewing-arrow-svg {
+  display: block;
+  overflow: hidden;
+  shape-rendering: crispEdges;
 }
 
 .dark-theme .mcui-bubbling,

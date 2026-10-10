@@ -59,8 +59,12 @@ a previous quantity.
 
 ## Vanilla behavior and asset provenance
 
-The brewing arrow uses matching 16×56 empty/full sprites and clips the full layer
-from top to bottom in 28 steps. The 20-second brewing cycle uses 50ms updates.
+The brewing arrow uses lossless SVG rectangles from the matching 16×56 empty/full
+sprites and clips the full shape from top to bottom in 28 steps. Card arrows use
+the same conversion of their 18×57 sprite. Both render with crisp edges at the
+final size rather than resampling PNG textures. Cards keep their position on
+hover; their shadow still transitions. The enlarged modal stand uses layout zoom
+instead of a transformed compositor layer. The 20-second brewing cycle uses 50ms updates.
 One blaze powder supplies 20 charges; a cycle uses one charge at its start, processes
 all convertible bottles, and consumes one ingredient at completion. Removing the
 ingredient, changing its type, or removing all convertible bottles aborts the cycle.
@@ -85,5 +89,9 @@ Item textures and crafting recipe provenance are recorded in
 - Mobile at 390×844 and 640×360: full-viewport layout, recipe autofill, golden-carrot
   result tap and hold, stack splitting (8 into 4+4), and persisted slot-size setting.
 - Landscape layout at 640×360: station and controls fit within the viewport.
+- SVG arrows and stand edges: desktop at DPR 1.25, hover without positional
+  transform, enlarged potion modal, and mobile landscape at DPR 1. Brewing
+  progress at 62% clips the SVG fill at 34 of 56 pixels. The in-app browser
+  cannot directly change browser zoom; reduced desktop zoom needs a manual check.
 - Browser checks exercise the responsive touch control path with pointer clicks.
   Physical touch input and OS orientation locking still require a real phone.
