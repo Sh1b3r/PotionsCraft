@@ -24,7 +24,10 @@ orientation locking use a rotated landscape layout within the page instead.
 Closing and reopening preserves the station, inventory and any held remainder.
 
 The mobile window is a separate full-viewport layout with inventory/recipe tabs
-on the left and brewing/crafting tabs on the right. It does not shrink the desktop
+on the left and brewing and crafting visible side by side on the right. Touching
+either workstation selects it as the destination for quick transfers; the heading
+buttons also select that destination. Crafting has larger grid slots and its result
+below the grid. The crafting area scrolls when vertical space is limited. It does not shrink the desktop
 window. All 72 inventory slots are on one scrollable page; scrolling reveals the
 remaining rows, and slot size can be changed in settings.
 
@@ -41,7 +44,7 @@ remaining rows, and slot size can be changed in settings.
   700 ms to start repeated crafting, one batch every 250 ms, matching Bedrock's
   documented hold-to-craft timing. Selected recipes refill until materials run out.
   Full inventory stops crafting before consuming ingredients. Pointer cancellation,
-  changing workstation tabs, closing the window, or losing focus stops repetition.
+  selecting the other workstation, closing the window, or losing focus stops repetition.
 - Settings persist locally: slot size, hold delay, stack splitting, quick transfer,
   and recipe book visibility. The settings and split dialogs trap keyboard focus.
 

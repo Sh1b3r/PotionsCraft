@@ -15,13 +15,12 @@ export default function BedrockStationView({ inventory, grid, output, brewingSta
   const repeat = useRef(null);
   const craftRef = useRef(craft);
   craftRef.current = craft;
-  const changeTab = next => { setTab(next); onTabChange(next); };
   const stopCraft = () => { clearTimeout(repeat.current?.delay); clearInterval(repeat.current?.timer); repeat.current = null; };
+  const changeTab = next => { if (next !== tab) stopCraft(); setTab(next); onTabChange(next); };
   useEffect(() => {
     window.addEventListener('blur', stopCraft);
     return () => { stopCraft(); window.removeEventListener('blur', stopCraft); };
   }, []);
-  useEffect(() => { stopCraft(); }, [tab]);
   useEffect(() => { if (!settings.recipeBook) setLeft('inventory'); }, [settings.recipeBook]);
   useEffect(() => {
     const box = stageBox.current;
@@ -73,24 +72,27 @@ export default function BedrockStationView({ inventory, grid, output, brewingSta
           })}</div>
         </>}
       </section>
-      <section className="mc-pocket-station">
-        <nav className="mc-pocket-tabs" aria-label="Робоча область"><button type="button" aria-pressed={tab === 'brewing'} onClick={() => changeTab('brewing')}>Варіння</button><button type="button" aria-pressed={tab === 'crafting'} onClick={() => changeTab('crafting')}>Крафт</button></nav>
-        {tab === 'brewing' ? <>
+      <div className="mc-pocket-stations">
+        <section className="mc-pocket-station" aria-label="Варіння" onPointerDownCapture={() => changeTab('brewing')} onFocusCapture={() => changeTab('brewing')}>
+          <nav className="mc-pocket-tabs"><button type="button" aria-pressed={tab === 'brewing'} onClick={() => changeTab('brewing')}>Варіння</button></nav>
           <div ref={stageBox} className="mc-pocket-stage-box"><div className="mc-pocket-stage" style={{ width: 206 * stageScale, height: 132 * stageScale }}><div style={{ transform: `scale(${stageScale})` }}>{brewingStage}</div></div></div>
           <div className="mc-pocket-status">{brewing ? `Варіння: ${Math.ceil(20 * (1 - progress / 100))} с` : 'Покладіть порошок, інгредієнт і пляшечки'}<span>Паливо: {fuelCharges} / 20</span>{containers > 0 && <button type="button" onClick={collectContainers}>Забрати пляшечки: {containers}</button>}</div>
-        </> : <div className="mc-pocket-crafting">
+        </section>
+        <section className="mc-pocket-station" aria-label="Крафт" onPointerDownCapture={() => changeTab('crafting')} onFocusCapture={() => changeTab('crafting')}>
+          <nav className="mc-pocket-tabs"><button type="button" aria-pressed={tab === 'crafting'} onClick={() => changeTab('crafting')}>Крафт</button></nav>
+          <div className="mc-pocket-crafting">
           {preview && <div className="mc-pocket-missing" role="status">Для {MINECRAFT_ITEMS[preview.id].name}: {Object.entries(preview.grid.reduce((counts, id) => { if (id) counts[id] = (counts[id] || 0) + 1; return counts; }, {})).map(([id, count]) => `${MINECRAFT_ITEMS[id].name} × ${count}`).join(', ')}<button type="button" onClick={() => setPreview(null)} aria-label="Закрити підказку рецепта">✕</button></div>}
-          <div className="mc-pocket-crafting-row"><div className="mc-pocket-crafting-grid">{grid.map((item, index) => slot('crafting', index, item))}</div><img className="mc-pocket-craft-arrow" src="/mc_crafting_arrow.png" alt="" />
-            <div className="mc-pocket-output-column"><button type="button" className="mc-pocket-slot mc-pocket-output" aria-label={output ? `Створити: ${output.name}` : 'Результат крафту'}
+          <div className="mc-pocket-crafting-row"><div className="mc-pocket-crafting-grid">{grid.map((item, index) => slot('crafting', index, item))}</div>
+            <div className="mc-pocket-output-column"><img className="mc-pocket-craft-arrow" src="/mc_crafting_arrow.png" alt="" /><button type="button" className="mc-pocket-slot mc-pocket-output" aria-label={output ? `Створити: ${output.name}` : 'Результат крафту'}
               onPointerDown={startCraft} onPointerUp={finishCraft} onPointerCancel={finishCraft} onLostPointerCapture={finishCraft}
               onClick={e => { if (!e.detail && output) craftRef.current(); }}><Item item={output} /></button>
               <button type="button" className="mc-pocket-clear" onClick={clearGrid} disabled={!grid.some(Boolean)}>Очистити сітку</button></div>
           </div>
-          <p>Дотик — створити.<br />Утримання — кілька.</p>
-        </div>}
-      </section>
+          </div>
+        </section>
+      </div>
     </div>
-    <footer className="mc-pocket-selection" role="status">{selected ? <><img src={selected.sprite} alt="" /><span>{selected.name} × {controls.splitCount}<small>Торкніться місця переносу. У сітку — по одному.</small></span><button type="button" onClick={controls.clear} aria-label="Скасувати вибір">✕</button></> : <span>{message || 'Дотик — вибрати й перенести. Утримання — розділити стопку.'}</span>}</footer>
+    <footer className="mc-pocket-selection" role="status">{selected ? <><img src={selected.sprite} alt="" /><span>{selected.name} × {controls.splitCount}<small>Торкніться місця переносу. У сітку — по одному.</small></span><button type="button" onClick={controls.clear} aria-label="Скасувати вибір">✕</button></> : <span>{message || (tab === 'crafting' ? 'Дотик по результату — створити. Утримання — кілька.' : 'Дотик — вибрати й перенести. Утримання — розділити стопку.')}</span>}</footer>
     {controls.split && selected && <div className="mc-pocket-overlay"><section role="dialog" aria-modal="true" aria-label="Розділити стопку" className="mc-pocket-split">
       <h3>{selected.name}</h3><div className="mc-pocket-split-value"><img src={selected.sprite} alt="" />{controls.splitCount} / {selected.count}</div>
       <input type="range" min="1" max={selected.count} value={controls.splitCount} onChange={e => controls.setCount(Number(e.target.value))} aria-label="Кількість для переносу" />
