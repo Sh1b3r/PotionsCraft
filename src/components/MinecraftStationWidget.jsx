@@ -349,38 +349,58 @@ export default function MinecraftStationWidget() {
   };
   const visitSlot = (type, index) => {
     const drag = dragRef.current;
-    const held = heldItemRef.current;
-    if (!drag || !held || drag.picked || !accepts(type, held)) return;
-    const item = getSlotValue(type, index);
-    if (item && !sameStack(item, held)) return;
-    if ((item?.count || 0) >= limit(type, held)) return;
+    if (!drag || drag.picked || drag.settled || !drag.stack || !accepts(type, drag.stack)) return;
     const key = type + '-' + index;
-    if (!drag.slots.has(key)) drag.slots.set(key, { type, index });
+    if (drag.slots.has(key)) return;
+    const held = heldItemRef.current;
+    const item = getSlotValue(type, index);
+    if (item && !sameStack(item, drag.stack)) {
+      if (!drag.slots.size && held) {
+        slotClick(type, index, drag.one);
+        drag.settled = true;
+      }
+      return;
+    }
+    if ((item?.count || 0) >= limit(type, drag.stack)) return;
+    if (drag.one || (type !== 'inventory' && type !== 'crafting')) {
+      if (!held) return;
+      drag.slots.set(key, { type, index });
+      deposit(type, index, drag.one ? 1 : held.count);
+      // Brewing may consume fuel or begin a cycle immediately. Do not later
+      // redistribute a snapshot over a slot whose contents the brewer changed.
+      if (!drag.one) drag.settled = true;
+    } else {
+      if (drag.slots.size >= drag.stack.count) return;
+      drag.slots.set(key, { type, index, original: item });
+      const each = Math.floor(drag.stack.count / drag.slots.size);
+      let placed = 0;
+      for (const slot of drag.slots.values()) {
+        const count = Math.min(each, limit(slot.type, drag.stack) - (slot.original?.count || 0));
+        setSlotValue(slot.type, slot.index, { ...drag.stack, count: (slot.original?.count || 0) + count });
+        placed += count;
+      }
+      hold(placed < drag.stack.count ? { ...drag.stack, count: drag.stack.count - placed } : null);
+    }
+    playItemClickSound();
   };
   const finishGesture = event => {
     const drag = dragRef.current;
     if (drag && event.pointerId !== drag.pointerId) return;
-    dragRef.current = null;
     if (!drag) return;
-    if (event?.type === 'pointercancel') return;
-    const held = heldItemRef.current;
-    if (drag.picked) {
+    if (event.type === 'pointerup' && event.button !== (drag.one ? 2 : 0)) return;
+    if (event.type === 'pointerup') {
       const target = document.elementFromPoint(event.clientX, event.clientY)?.closest('[data-slot-index]');
-      if (held && target && (target.dataset.slotType !== drag.type || +target.dataset.slotIndex !== drag.index)) {
-        slotClick(target.dataset.slotType, +target.dataset.slotIndex, drag.one);
-      }
-    } else if (held) {
-      const slots = [...drag.slots.values()];
-      if (slots.length <= 1) slotClick(drag.type, drag.index, drag.one);
-      else {
-        const each = drag.one ? 1 : Math.floor(held.count / slots.length);
-        for (const slot of slots) deposit(slot.type, slot.index, each);
-      }
+      if (target && drag.picked) {
+        if (heldItemRef.current && (target.dataset.slotType !== drag.type || +target.dataset.slotIndex !== drag.index)) {
+          slotClick(target.dataset.slotType, +target.dataset.slotIndex, drag.one);
+        }
+      } else if (target) visitSlot(target.dataset.slotType, +target.dataset.slotIndex);
     }
+    dragRef.current = null;
   };
   const hotbarSwap = key => {
     const slot = hoveredSlotRef.current;
-    if (!slot || heldItemRef.current || slot.type === 'output') return;
+    if (!slot || dragRef.current || heldItemRef.current || slot.type === 'output') return;
     const hotbarIndex = 54 + Number(key) - 1;
     if (slot.type === 'inventory' && slot.index === hotbarIndex) return;
     const source = getSlotValue(slot.type, slot.index);
@@ -395,13 +415,14 @@ export default function MinecraftStationWidget() {
     const move = event => {
       setMousePos({ x: event.clientX, y: event.clientY });
       if (dragRef.current && event.pointerId !== dragRef.current.pointerId) return;
+      if (dragRef.current && !(event.buttons & dragRef.current.buttonMask)) { dragRef.current = null; return; }
       const target = document.elementFromPoint(event.clientX, event.clientY)?.closest('[data-slot-index]');
       if (target) gesturesRef.current.visitSlot(target.dataset.slotType, +target.dataset.slotIndex);
     };
     const end = event => gesturesRef.current.finishGesture(event);
     const escape = event => {
       if (event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
-      if (event.key === 'Escape') gesturesRef.current.returnHeld();
+      if (event.key === 'Escape') { dragRef.current = null; gesturesRef.current.returnHeld(); }
       if (/^[1-9]$/.test(event.key)) gesturesRef.current.hotbarSwap(event.key);
     };
     const blur = () => { dragRef.current = null; };
@@ -421,7 +442,7 @@ export default function MinecraftStationWidget() {
   const slotEvents = (type, index, item) => pocketOpen ? { ...pocket.events(type, index), role: 'button', tabIndex: 0, 'aria-label': item?.name || 'Порожній слот' } : ({
     onPointerDown: event => {
       if (event.button !== 0 && event.button !== 2) return;
-      if (dragRef.current && event.pointerId !== dragRef.current.pointerId) return;
+      if (dragRef.current) return;
       event.preventDefault();
       event.stopPropagation();
       hideTooltip();
@@ -436,14 +457,15 @@ export default function MinecraftStationWidget() {
       clickRef.current = { key, time: now };
       const picked = !heldItemRef.current;
       const one = event.button === 2;
-      const drag = { type, index, picked, one, slots: new Map(), pointerId: event.pointerId };
+      const drag = { type, index, picked, one, slots: new Map(), pointerId: event.pointerId, buttonMask: one ? 2 : 1 };
       dragRef.current = drag;
       if (picked) slotClick(type, index, event.button === 2);
-      else visitSlot(type, index);
+      drag.stack = heldItemRef.current;
+      if (!picked) visitSlot(type, index);
       // Touch browsers capture pointers implicitly; release so neighboring slots receive hover.
       if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
     },
-    onPointerEnter: () => { hoveredSlotRef.current = { type, index }; if (dragRef.current) visitSlot(type, index); else handleSlotHover(type, index, item); },
+    onPointerEnter: event => { hoveredSlotRef.current = { type, index }; if (dragRef.current && (event.buttons & dragRef.current.buttonMask)) visitSlot(type, index); else handleSlotHover(type, index, item); },
     onPointerLeave: () => { hoveredSlotRef.current = null; hideTooltip(); },
   });
 

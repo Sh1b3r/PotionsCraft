@@ -4,6 +4,9 @@
 
 - Left click: take, place, merge or swap a stack.
 - Right click: take the larger half of a stack; place one held item.
+- Taking and placing with a click update immediately on button press. Releasing
+  the button does not repeat the placement. Right-button drag visits each slot
+  once; left-button distribution updates visibly as new compatible slots join.
 - Drag a held stack across compatible slots with the left button to divide it evenly;
   with the right button to place one item in each visited slot. Revisiting a slot
   during the same gesture does not add more items.
