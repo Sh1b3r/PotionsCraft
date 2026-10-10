@@ -171,17 +171,19 @@ export default function MinecraftStationWidget() {
   const accepts = (type, item) => type === 'bottle'
     ? !!(item.isPotion || item.itemId === 'glass_bottle')
     : type === 'fuel' ? item.itemId === 'blaze_powder'
-      : type === 'ingredient' ? VALID_BREWING_REAGENTS.has(item.itemId) : true;
+      : type === 'ingredient' ? VALID_BREWING_REAGENTS.has(item.itemId)
+        : type === 'inventory' || type === 'crafting';
   const limit = (type, item) => type === 'bottle' ? 1 : item.maxStack || 64;
   const deposit = (type, index, requested) => {
     const held = heldItemRef.current;
-    if (!held || !accepts(type, held)) return;
+    if (!held || !accepts(type, held)) return 0;
     const target = getSlotValue(type, index);
-    if (target && !sameStack(target, held)) return;
+    if (target && !sameStack(target, held)) return 0;
     const count = Math.min(requested, held.count, limit(type, held) - (target?.count || 0));
-    if (count <= 0) return;
+    if (count <= 0) return 0;
     setSlotValue(type, index, { ...held, count: (target?.count || 0) + count });
     hold(held.count > count ? { ...held, count: held.count - count } : null);
+    return count;
   };
   // Return the exact remainder; callers keep it at its source when storage is full.
   const insertInventory = (item, indices = inventoryRef.current.map((_, index) => index), commit = true) => {
@@ -344,7 +346,7 @@ export default function MinecraftStationWidget() {
       setSlotValue(type, index, item.count > count ? { ...item, count: item.count - count } : null);
     } else if (!item || sameStack(item, held)) {
       deposit(type, index, right ? 1 : held.count);
-    } else if (accepts(type, held) && held.count <= limit(type, held)) {
+    } else if (!right && accepts(type, held) && held.count <= limit(type, held)) {
       setSlotValue(type, index, held);
       hold(item);
     }
@@ -352,38 +354,27 @@ export default function MinecraftStationWidget() {
   };
   const visitSlot = (type, index) => {
     const drag = dragRef.current;
-    if (!drag || drag.picked || drag.settled || !drag.stack || !accepts(type, drag.stack)) return;
+    const held = heldItemRef.current;
+    if (!drag || !held) return;
     const key = type + '-' + index;
     if (drag.slots.has(key)) return;
-    const held = heldItemRef.current;
     const item = getSlotValue(type, index);
-    if (item && !sameStack(item, drag.stack)) {
-      if (!drag.slots.size && held) {
-        slotClick(type, index, drag.one);
-        drag.settled = true;
-      }
-      return;
-    }
-    if ((item?.count || 0) >= limit(type, drag.stack)) return;
-    if (drag.one || (type !== 'inventory' && type !== 'crafting')) {
-      if (!held) return;
-      drag.slots.set(key, { type, index });
-      deposit(type, index, drag.one ? 1 : held.count);
-      // Brewing may consume fuel or begin a cycle immediately. Do not later
-      // redistribute a snapshot over a slot whose contents the brewer changed.
-      if (!drag.one) drag.settled = true;
+    if (drag.one) {
+      if (!accepts(type, held) || (item && !sameStack(item, held))) return;
+      // One item per slot and gesture, even if pointermove and pointerenter
+      // both run, or the pointer returns to an earlier slot. No repeat timer.
+      if (!deposit(type, index, 1)) return;
     } else {
-      if (drag.slots.size >= drag.stack.count) return;
-      drag.slots.set(key, { type, index, original: item });
-      const each = Math.floor(drag.stack.count / drag.slots.size);
-      let placed = 0;
-      for (const slot of drag.slots.values()) {
-        const count = Math.min(each, limit(slot.type, drag.stack) - (slot.original?.count || 0));
-        setSlotValue(slot.type, slot.index, { ...drag.stack, count: (slot.original?.count || 0) + count });
-        placed += count;
-      }
-      hold(placed < drag.stack.count ? { ...drag.stack, count: drag.stack.count - placed } : null);
+      // Restore the earlier left-drag gathering behavior. Read live stacks;
+      // never rewrite previously visited slots from a distribution snapshot.
+      if (!sameStack(item, held)) return;
+      const amount = Math.min(item.count, (held.maxStack || 64) - held.count);
+      if (amount <= 0) return;
+      setSlotValue(type, index, item.count > amount ? { ...item, count: item.count - amount } : null);
+      hold({ ...held, count: held.count + amount });
+      drag.gathered = true;
     }
+    drag.slots.add(key);
     playItemClickSound();
   };
   const finishGesture = event => {
@@ -393,11 +384,15 @@ export default function MinecraftStationWidget() {
     if (event.type === 'pointerup' && event.button !== (drag.one ? 2 : 0)) return;
     if (event.type === 'pointerup') {
       const target = document.elementFromPoint(event.clientX, event.clientY)?.closest('[data-slot-index]');
-      if (target && drag.picked) {
-        if (heldItemRef.current && (target.dataset.slotType !== drag.type || +target.dataset.slotIndex !== drag.index)) {
-          slotClick(target.dataset.slotType, +target.dataset.slotIndex, drag.one);
-        }
-      } else if (target) visitSlot(target.dataset.slotType, +target.dataset.slotIndex);
+      if (target) {
+        const type = target.dataset.slotType;
+        const index = Number(target.dataset.slotIndex);
+        visitSlot(type, index);
+        // A direct left drag can drop or swap on release. After gathering,
+        // keep the combined stack in hand instead of dropping it back.
+        if (!drag.one && drag.picked && !drag.gathered && heldItemRef.current &&
+          (type !== drag.type || index !== drag.index)) slotClick(type, index);
+      }
     }
     dragRef.current = null;
   };
@@ -454,17 +449,15 @@ export default function MinecraftStationWidget() {
       const now = Date.now();
       const previous = clickRef.current;
       const key = type + '-' + index;
-      if (!mobile && event.button === 0 && heldItemRef.current && previous?.key === key && now - previous.time < 250) {
+      if (!mobile && event.button === 0 && heldItemRef.current && previous?.button === 0 && previous.key === key && now - previous.time < 250) {
         collect(); clickRef.current = null; return;
       }
-      clickRef.current = { key, time: now };
+      clickRef.current = { key, time: now, button: event.button };
       const picked = !heldItemRef.current;
       const one = event.button === 2;
-      const drag = { type, index, picked, one, slots: new Map(), pointerId: event.pointerId, buttonMask: one ? 2 : 1 };
+      const drag = { type, index, picked, one, gathered: false, slots: new Set([key]), pointerId: event.pointerId, buttonMask: one ? 2 : 1 };
       dragRef.current = drag;
-      if (picked) slotClick(type, index, event.button === 2);
-      drag.stack = heldItemRef.current;
-      if (!picked) visitSlot(type, index);
+      slotClick(type, index, one);
       // Touch browsers capture pointers implicitly; release so neighboring slots receive hover.
       if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
     },
@@ -938,7 +931,7 @@ export default function MinecraftStationWidget() {
             <h3>Крафт</h3>
             <div className="mc-workstation-info-title">{craftingOutput ? `${craftingOutput.name} × ${craftingOutput.count}` : 'Сітка 3 × 3'}</div>
             <h4>Керування</h4>
-            <dl className="mc-station-shortcuts"><div><dt>ЛКМ</dt><dd>Взяти / покласти стопку.</dd></div><div><dt>ПКМ</dt><dd>Взяти половину / покласти один.</dd></div><div><dt>Shift + клік</dt><dd>Перенести; на результаті — крафт усіх.</dd></div></dl>
+            <dl className="mc-station-shortcuts"><div><dt>ЛКМ</dt><dd>Взяти / покласти стопку. Протяжка — зібрати однакові.</dd></div><div><dt>ПКМ</dt><dd>Взяти половину / покласти один. Протяжка — по одному в слот.</dd></div><div><dt>Подвійний ЛКМ</dt><dd>Зібрати однакові предмети до повної стопки.</dd></div><div><dt>Shift + клік</dt><dd>Перенести; на результаті — крафт усіх.</dd></div></dl>
             <button type="button" className="mc-brewing-ref-btn" disabled={!craftingGrid.some(Boolean)} onClick={() => { returnHeld(); clearPocketGrid(); }}>Очистити сітку</button>
           </aside>
         </div>

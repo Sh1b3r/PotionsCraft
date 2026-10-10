@@ -103,7 +103,7 @@ export default function BedrockStationView({ inventory, grid, output, brewingSta
         </section>
       </div>
     </div>
-    <footer className="mc-pocket-selection" role="status">{selected ? <><img src={selected.sprite} alt="" /><span>{selected.name} × {controls.splitCount}<small>Торкніться місця переносу. У сітку — по одному.</small></span><button type="button" onClick={controls.clear} aria-label="Скасувати вибір">✕</button></> : <span>{statusText}</span>}{containers > 0 && <button type="button" onClick={collectContainers}>Забрати пляшечки: {containers}</button>}</footer>
+    <footer className="mc-pocket-selection" role="status">{selected ? <><img src={selected.sprite} alt="" /><span>{selected.name} × {controls.splitCount}<small>Торкніться місця переносу. У сітку — по одному.</small></span>{(selected.maxStack || 64) > 1 && <button type="button" onClick={controls.collect} disabled={!controls.canCollect} aria-label="Зібрати однакові предмети в стопку">Зібрати</button>}<button type="button" onClick={controls.clear} aria-label="Скасувати вибір">✕</button></> : <span>{statusText}</span>}{containers > 0 && <button type="button" onClick={collectContainers}>Забрати пляшечки: {containers}</button>}</footer>
     {controls.split && selected && <div className="mc-pocket-overlay"><section role="dialog" aria-modal="true" aria-label="Розділити стопку" className="mc-pocket-split">
       <h3>{selected.name}</h3><div className="mc-pocket-split-value"><img src={selected.sprite} alt="" />{controls.splitCount} / {selected.count}</div>
       <input type="range" min="1" max={selected.count} value={controls.splitCount} onChange={e => controls.setCount(Number(e.target.value))} aria-label="Кількість для переносу" />
