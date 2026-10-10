@@ -1334,7 +1334,7 @@ export default function MinecraftStationWidget() {
             </div>
 
             <div className="mc-brewing-stand-stage">
-              <BrewingStandFrame withFuel pipeExtension={10} />
+              <BrewingStandFrame withFuel pipeExtension={10} emptyBottles={brewingBottles.map(bottle => !bottle)} />
               {/* Fuel gauge at the spring outlet (20 charges, drains from right to left) */}
               <div
                 className="mc-fuel-gauge-container"

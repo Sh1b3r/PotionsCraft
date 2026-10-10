@@ -74,7 +74,7 @@ export default function BrewingStandWidget({ potion, inModal = false }) {
       <div>
         <span className="mcui mcui-Brewing_Stand pixel-image">
           <span className="mcui-grid">
-            <BrewingStandFrame />
+            <BrewingStandFrame emptyBottles={[!output1, !output2, !output3]} />
             {/* Top Input Row: Bubbling + Reagent Slot + Downward Arrow */}
             <span className="mcui-input">
               <span className="mcui-bubbling"><br /></span>

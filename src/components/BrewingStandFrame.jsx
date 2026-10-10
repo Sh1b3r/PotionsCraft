@@ -1,16 +1,22 @@
 import React from 'react';
 
-function SlotFrame({ x, y }) {
+function SlotFrame({ x, y, emptyBottle = false }) {
   return (
     <g transform={`translate(${x} ${y})`}>
       <rect width="36" height="36" fill="#8b8b8b" />
       <path d="M0 0H36L34 2H2V34L0 36Z" fill="#373737" />
       <path d="M36 0V36H0L2 34H34V2Z" fill="var(--slot-bevel-light)" />
+      {emptyBottle && (
+        /* Same silhouette as the PNG, with its visible 18x24 bounds centered
+           at (18, 18). Render on the frame's grid instead of a CSS background. */
+        <path className="mcui-empty-bottle" fill="#686868"
+          d="M13 6h10v2H13z M13 8h2v2h-2z M21 8h2v2h-2z M15 10h2v4h-2z M19 10h2v4h-2z M13 14h2v2h-2z M21 14h2v2h-2z M11 16h2v2h-2z M15 16h2v2h-2z M23 16h2v2h-2z M9 18h2v8H9z M13 18h2v4h-2z M25 18h2v8h-2z M21 22h2v4h-2z M11 26h2v2h-2z M19 26h2v2h-2z M23 26h2v2h-2z M13 28h10v2H13z" />
+      )}
     </g>
   );
 }
 
-export default function BrewingStandFrame({ withFuel = false, pipeExtension = 0 }) {
+export default function BrewingStandFrame({ withFuel = false, pipeExtension = 0, emptyBottles = [true, true, true] }) {
   const width = withFuel ? 206 : 128;
   const height = 111 + pipeExtension;
   return (
@@ -41,9 +47,9 @@ export default function BrewingStandFrame({ withFuel = false, pipeExtension = 0 
           <path fill="var(--brewing-pipe-shadow)" d={`M16 2h2v${26 + pipeExtension}h-2z M26 2h2v${38 + pipeExtension}h-2z M36 2h2v${32 + pipeExtension}h-2z M2 ${28 + pipeExtension}h16v2H2z M42 ${28 + pipeExtension}h18v2H42z`} />
           <path fill="#fff" d={`M22 2h2v${32 + pipeExtension}h-2z M32 2h2v${38 + pipeExtension}h-2z M42 2h2v${24 + pipeExtension}h-2z M0 ${34 + pipeExtension}h24v2H0z M38 ${34 + pipeExtension}h20v2H38z`} />
         </g>
-        <SlotFrame x={0} y={61 + pipeExtension} />
-        <SlotFrame x={46} y={75 + pipeExtension} />
-        <SlotFrame x={92} y={61 + pipeExtension} />
+        <SlotFrame x={0} y={61 + pipeExtension} emptyBottle={emptyBottles[0]} />
+        <SlotFrame x={46} y={75 + pipeExtension} emptyBottle={emptyBottles[1]} />
+        <SlotFrame x={92} y={61 + pipeExtension} emptyBottle={emptyBottles[2]} />
       </g>
     </svg>
   );
