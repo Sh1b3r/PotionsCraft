@@ -34,7 +34,6 @@ export default function BrewingStandFrame({ withFuel = false, pipeExtension = 0,
         </g>
       )}
       <g transform={`translate(${withFuel ? 78 : 0} 0)`}>
-        <SlotFrame x={46} y={3} />
         {/* Original pipe rectangles share the slots' pixel grid. The station
             extends the straight stems to fit its original fuel circuit. */}
         <g transform="translate(34 35)">
@@ -42,6 +41,9 @@ export default function BrewingStandFrame({ withFuel = false, pipeExtension = 0,
           <path fill="var(--brewing-pipe-shadow)" d={`M16 2h2v${26 + pipeExtension}h-2z M26 2h2v${38 + pipeExtension}h-2z M36 2h2v${32 + pipeExtension}h-2z M2 ${28 + pipeExtension}h16v2H2z M42 ${28 + pipeExtension}h18v2H42z`} />
           <path fill="var(--brewing-pipe-light, #fff)" d={`M22 2h2v${32 + pipeExtension}h-2z M32 2h2v${38 + pipeExtension}h-2z M42 2h2v${24 + pipeExtension}h-2z M0 ${34 + pipeExtension}h24v2H0z M38 ${34 + pipeExtension}h20v2H38z`} />
         </g>
+        {/* Pipe stems overlap the input's last four rows. Paint the slot over
+            them, just like the output slots, so they cannot show inside it. */}
+        <SlotFrame x={46} y={3} />
         <SlotFrame x={0} y={61 + pipeExtension} emptyBottle={emptyBottles[0]} />
         <SlotFrame x={46} y={75 + pipeExtension} emptyBottle={emptyBottles[1]} />
         <SlotFrame x={92} y={61 + pipeExtension} emptyBottle={emptyBottles[2]} />
