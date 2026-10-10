@@ -2963,7 +2963,6 @@ body.light-theme .mc-pocket-settings input,
 body.light-theme .mc-pocket-split > input { accent-color: var(--mobile-accent-edge); }
 
 @media (max-width: 850px), (pointer: coarse) {
-  body.light-theme .positive-title { color: var(--mobile-accent); }
   body.light-theme .minecraft-styled-table tbody tr:hover { background-color: #2dd4bf14; }
   body.light-theme :is(.reagent-pill-btn, .potion-filter-pill-btn):hover {
     background: #2dd4bf33;
