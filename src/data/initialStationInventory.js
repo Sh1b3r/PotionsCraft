@@ -1,23 +1,29 @@
 import { MINECRAFT_ITEMS } from './minecraftItemIcons';
 
-// Ready ingredients plus raw materials for additional crafting. Quantities stay
-// constant; stack sizes and positions change only when the station is mounted.
+// Ready ingredients and raw materials, with inclusive quantity ranges.
+// Reroll quantities, stack splits and positions only when the station is mounted.
+// Non-stackable supplies are capped so there is room for duplicate stacks and
+// at least 12 free inventory slots. Raw-material minima allow their recipes.
 const STARTING_SUPPLIES = [
-  ['water_bottle', 12], ['awkward_potion', 6],
-  ['splash_water_bottle', 1], ['lingering_water_bottle', 1],
-  ['nether_wart', 32], ['blaze_powder', 6], ['blaze_rod', 8],
-  ['sugar', 4], ['sugar_cane', 16],
-  ['redstone', 16], ['glowstone', 16], ['gunpowder', 16],
-  ['golden_carrot', 2], ['carrot', 8],
-  ['glistering_melon', 2], ['melon_slice', 8],
-  ['gold_nugget', 16], ['gold_ingot', 12],
-  ['fermented_spider_eye', 2], ['spider_eye', 12], ['brown_mushroom', 8],
-  ['magma_cream', 2], ['slime_ball', 24], ['slime_block', 2],
-  ['turtle_shell', 2], ['turtle_scute', 10],
-  ['ghast_tear', 4], ['pufferfish', 4], ['rabbit_foot', 4], ['phantom_membrane', 4],
-  ['cobweb', 4], ['stone', 8], ['breeze_rod', 4], ['dragons_breath', 4],
-  ['glass_bottle', 6], ['glass', 12], ['stick', 4], ['bamboo', 16],
+  ['water_bottle', 6, 12], ['awkward_potion', 3, 6],
+  ['splash_water_bottle', 1, 2], ['lingering_water_bottle', 1, 2],
+  ['nether_wart', 8, 48], ['blaze_powder', 2, 12], ['blaze_rod', 4, 24],
+  ['sugar', 2, 16], ['sugar_cane', 4, 32],
+  ['redstone', 4, 32], ['glowstone', 4, 32], ['gunpowder', 4, 32],
+  ['golden_carrot', 1, 4], ['carrot', 2, 16],
+  ['glistering_melon', 1, 4], ['melon_slice', 2, 16],
+  ['gold_nugget', 8, 48], ['gold_ingot', 3, 32],
+  ['fermented_spider_eye', 1, 4], ['spider_eye', 2, 16], ['brown_mushroom', 2, 16],
+  ['magma_cream', 1, 4], ['slime_ball', 9, 48], ['slime_block', 1, 4],
+  ['turtle_shell', 1, 2], ['turtle_scute', 5, 20],
+  ['ghast_tear', 1, 8], ['pufferfish', 1, 8], ['rabbit_foot', 1, 8], ['phantom_membrane', 1, 8],
+  ['cobweb', 1, 8], ['stone', 2, 16], ['breeze_rod', 2, 12], ['dragons_breath', 1, 8],
+  ['glass_bottle', 3, 12], ['glass', 3, 24], ['stick', 2, 16], ['bamboo', 4, 32],
 ];
+
+function randomInt(min, max) {
+  return min + Math.floor(Math.random() * (max - min + 1));
+}
 
 function shuffle(values) {
   for (let i = values.length - 1; i > 0; i--) {
@@ -28,7 +34,8 @@ function shuffle(values) {
 }
 
 export function buildInitialInventory() {
-  const stacks = STARTING_SUPPLIES.flatMap(([itemId, count]) => {
+  const stacks = STARTING_SUPPLIES.flatMap(([itemId, min, max]) => {
+    const count = randomInt(min, max);
     const definition = MINECRAFT_ITEMS[itemId];
     const result = [];
     for (let remaining = count; remaining > 0;) {
@@ -39,15 +46,18 @@ export function buildInitialInventory() {
     return result;
   });
 
-  // Always separate blaze rods; split other supplies at random too. Keep at
+  // Always separate blaze rods and gold ingots; split other supplies too. Keep at
   // least 12 slots free for crafting and brewed potions, including the hotbar.
   const candidates = shuffle(stacks.filter(item => item.maxStack > 1 && item.count > 1));
-  const rods = candidates.find(item => item.itemId === 'blaze_rod');
-  const splitOrder = [rods, ...candidates.filter(item => item !== rods)];
+  const alwaysSplit = new Set(['blaze_rod', 'gold_ingot']);
+  const splitOrder = [
+    ...candidates.filter(item => alwaysSplit.has(item.itemId)),
+    ...candidates.filter(item => !alwaysSplit.has(item.itemId)),
+  ];
   for (const item of splitOrder) {
     if (stacks.length >= 60) break;
-    if (item !== rods && Math.random() < 0.25) continue;
-    const separateCount = 1 + Math.floor(Math.random() * (item.count - 1));
+    if (!alwaysSplit.has(item.itemId) && Math.random() < 0.25) continue;
+    const separateCount = randomInt(1, item.count - 1);
     item.count -= separateCount;
     stacks.push({ ...item, count: separateCount });
   }

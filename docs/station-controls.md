@@ -30,6 +30,13 @@ Closing and reopening preserves the station, inventory and any held remainder.
 The application retains its combined crafting/brewing station and 72-slot supply
 inventory. These are application layouts, rather than separate vanilla screens.
 
+On page load, each supply gets a random total within its configured range.
+Stacks are split into random amounts and placed in random slots. Gold ingots
+and blaze rods always occupy at least two separate stacks; other supplies may
+also be split. At least 12 slots remain free. Item quantities do not reroll while
+using the station or opening/closing the mobile panel. A random roll may repeat
+a previous quantity.
+
 ## Vanilla behavior and asset provenance
 
 The brewing arrow uses matching 16×56 empty/full sprites and clips the full layer
