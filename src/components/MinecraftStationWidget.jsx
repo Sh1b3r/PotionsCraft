@@ -757,6 +757,15 @@ export default function MinecraftStationWidget() {
           setContainerReturns(remaining?.count || 0);
         }} /> : <>
       <div className="mc-workbench-viewport-scaler">
+        <div className="mc-workbench-layout">
+          <aside className="mc-workstation-info mc-station-sidebar mc-station-brewing-info" aria-label="Стан варильної стійки">
+            <h3>Варіння</h3>
+            <div className="mc-workstation-info-title">{isBrewing ? `Варіння · ${Math.ceil(20 * (1 - brewingProgress / 100))} с` : 'Очікування'}</div>
+            <dl><div><dt>Паливо</dt><dd>{fuelCharges} / 20</dd></div><div><dt>Пляшечки</dt><dd>{brewingBottles.filter(Boolean).length} / 3</dd></div></dl>
+            <p>{brewingIngredient ? `Інгредієнт: ${brewingIngredient.name}` : 'Інгредієнт ще не додано.'}</p>
+            <h4>Як варити</h4>
+            <ol><li>Паливо — вогняний порошок.</li><li>До трьох пляшечок у нижні слоти.</li><li>Інгредієнт — зверху. Час варіння: 20 секунд.</li></ol>
+          </aside>
         <div
           className="mc-brewing-workbench"
           id="mc-workbench"
@@ -776,11 +785,6 @@ export default function MinecraftStationWidget() {
               </div>
 
               {brewingStage}
-              <section className="mc-workstation-info" aria-label="Стан варильної стійки">
-                <div className="mc-workstation-info-title">{isBrewing ? `Варіння · ${Math.ceil(20 * (1 - brewingProgress / 100))} с` : 'Готова до варіння'}</div>
-                <dl><div><dt>Паливо</dt><dd>{fuelCharges} / 20</dd></div><div><dt>Пляшечки</dt><dd>{brewingBottles.filter(Boolean).length} / 3</dd></div></dl>
-                <p>{brewingIngredient ? brewingIngredient.name : 'Покладіть інгредієнт у верхній слот.'}</p>
-              </section>
             </div>
 
             {/* 2. RIGHT: Crafting Table 3x3 ("Майстрування" matching reference mockup) */}
@@ -848,11 +852,6 @@ export default function MinecraftStationWidget() {
                   </div>
                 </div>
               </div>
-              <section className="mc-workstation-info" aria-label="Стан крафту">
-                <div className="mc-workstation-info-title">{craftingOutput ? `${craftingOutput.name} × ${craftingOutput.count}` : 'Майстрування 3 × 3'}</div>
-                <p>ПКМ — один предмет. Shift + клік — швидкий перенос.</p>
-                <button type="button" className="mc-brewing-ref-btn" disabled={!craftingGrid.some(Boolean)} onClick={() => { returnHeld(); clearPocketGrid(); }}>Очистити сітку</button>
-              </section>
             </div>
           </div>
 
@@ -934,6 +933,14 @@ export default function MinecraftStationWidget() {
 
 
           {/* ==================== BREWED NOTIFICATION TOAST ==================== */}
+        </div>
+          <aside className="mc-workstation-info mc-station-sidebar mc-station-crafting-info" aria-label="Стан крафту">
+            <h3>Крафт</h3>
+            <div className="mc-workstation-info-title">{craftingOutput ? `${craftingOutput.name} × ${craftingOutput.count}` : 'Сітка 3 × 3'}</div>
+            <h4>Керування</h4>
+            <dl className="mc-station-shortcuts"><div><dt>ЛКМ</dt><dd>Взяти / покласти стопку.</dd></div><div><dt>ПКМ</dt><dd>Взяти половину / покласти один.</dd></div><div><dt>Shift + клік</dt><dd>Перенести; на результаті — крафт усіх.</dd></div></dl>
+            <button type="button" className="mc-brewing-ref-btn" disabled={!craftingGrid.some(Boolean)} onClick={() => { returnHeld(); clearPocketGrid(); }}>Очистити сітку</button>
+          </aside>
         </div>
       </div>
       </>}
