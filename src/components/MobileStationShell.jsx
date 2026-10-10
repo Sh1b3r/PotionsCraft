@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal, flushSync } from 'react-dom';
+import BrewingStandFrame from './BrewingStandFrame';
 
 export function useMobileStation() {
   const [mobile, setMobile] = useState(() => window.matchMedia('(max-width: 720px), (pointer: coarse)').matches);
@@ -77,7 +78,12 @@ export default function MobileStationShell({ mobile, children, onClose, onOpen, 
   const height = rotated ? viewport.width : viewport.height;
   if (!mobile && !open) return children;
   return <>
-    <button ref={launchButton} type="button" className="mc-mobile-launch" onClick={launch}>Відкрити варильну стійку та верстак</button>
+    <button ref={launchButton} type="button" className="mc-mobile-launch" onClick={launch}
+      aria-label="Відкрити варильну стійку та верстак" aria-haspopup="dialog">
+      <span className="mc-mobile-launch-icon" aria-hidden="true"><BrewingStandFrame /></span>
+      <span className="mc-mobile-launch-copy"><span className="mc-mobile-launch-title">Варіння та крафт</span><span className="mc-mobile-launch-hint">Відкрити інтерактивний блок</span></span>
+      <span className="mc-mobile-launch-chevron" aria-hidden="true">›</span>
+    </button>
     {open && createPortal(<div ref={panel} role="dialog" aria-modal="true" aria-label="Варильна стійка та верстак" className="mc-station-shell is-mobile is-open">
       <div className={`mc-station-landscape ${rotated ? 'is-rotated' : ''}`} style={{ width, height }}>
         <header className="mc-mobile-heading"><span>Варіння та крафт</span><div>

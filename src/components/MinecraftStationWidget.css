@@ -731,7 +731,16 @@
 
 /* Full viewport Pocket interface: controls keep their own sizes, not a scaled desktop window. */
 .mc-mobile-launch, .is-mobile button, .is-mobile select, .is-mobile input { font: inherit; }
-.mc-mobile-launch { display: block; margin: 20px auto; min-height: 52px; padding: 12px 16px; font-family: 'Minecraft', monospace; background: #c6c6c6; color: #222; border: 2px outset #eee; cursor: pointer; }
+.mc-mobile-launch { display: grid; grid-template-columns: 64px minmax(0, 1fr) 20px; align-items: center; gap: 14px; width: 100%; margin: 24px auto; min-height: 96px; padding: 14px; font-family: 'Minecraft', monospace; text-align: left; background: #427d2b; color: #fff; border: 3px outset #84be5e; box-shadow: inset 0 -4px #2d5a1d, 0 4px #234716, 0 8px 20px #23471630; cursor: pointer; transition: var(--theme-paint-transition); }
+.mc-mobile-launch-icon { display: grid; place-items: center; width: 64px; min-height: 64px; background: #234716; border: 2px inset #84be5e; }
+.mc-mobile-launch-icon .mcui-frame { position: static; display: block; width: 60px; height: auto; }
+.mc-mobile-launch-copy { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.mc-mobile-launch-title { font-size: clamp(17px, 4.5vw, 22px); line-height: 1.2; text-shadow: 2px 2px #234716; }
+.mc-mobile-launch-hint { font-size: 12px; line-height: 1.4; color: #e0f3d2; }
+.mc-mobile-launch-chevron { font-size: 32px; line-height: 1; text-align: center; }
+.mc-mobile-launch:hover { background: #4c9132; }
+.mc-mobile-launch:active { border-style: inset; box-shadow: inset 0 3px #234716, 0 2px #234716; }
+.mc-mobile-launch:focus-visible { outline: 3px solid #f0bc46; outline-offset: 4px; }
 .mc-station-shell.is-mobile { position: fixed; inset: 0; z-index: 2000; background: #c6c6c6; color: #222; overflow: hidden; overscroll-behavior: none; font: 15px 'Minecraft', monospace; user-select: none; -webkit-user-select: none; }
 .is-mobile button { touch-action: manipulation; cursor: pointer; border: 2px outset #eee; background: #c6c6c6; color: #222; min-height: 40px; padding: 6px 10px; border-radius: 0; }
 .is-mobile button:disabled { opacity: .45; cursor: default; }
@@ -802,6 +811,11 @@
 .mc-container-return { position: absolute; top: 2px; right: 4px; font-family: 'Minecraft', monospace; font-size: 11px; }
 .mc-pocket-missing { font-size: 12px; line-height: 1.4; padding: 5px; background: #e7d29b; } .mc-pocket-missing button { float: right; }
 .dark-theme .mc-station-shell.is-mobile { background: #232c3b; color: #edf2f8; }
+.dark-theme .mc-mobile-launch { background: #285d43; border-color: #5db78f; box-shadow: inset 0 -4px #173f2c, 0 4px #102f23, 0 8px 20px #0005; }
+.dark-theme .mc-mobile-launch:hover { background: #327754; }
+.dark-theme .mc-mobile-launch:active { box-shadow: inset 0 3px #173f2c, 0 2px #102f23; }
+.dark-theme .mc-mobile-launch-icon { background: #173f2c; border-color: #5db78f; }
+.dark-theme .mc-mobile-launch-hint { color: #c5eadd; }
 .dark-theme .mc-pocket-inventory, .dark-theme .mc-pocket-station { background: #2d3a4b; border-color: #65768a; }
 .dark-theme .is-mobile button:not([aria-pressed='true']) { background: #46566a; color: #edf2f8; border-color: #6f8093; }
 .dark-theme .mc-pocket-tabs { background: #232c3b; }
