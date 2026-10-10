@@ -2925,3 +2925,55 @@ html[data-theme-transition="crossfade"]::view-transition-new(root) {
     --theme-duration: 0ms;
   }
 }
+
+/* Mobile day theme: the wiki heading's turquoise is the UI accent. */
+body.light-theme {
+  --mobile-accent: #2dd4bf;
+  --mobile-accent-edge: #159b8c;
+  --mobile-accent-shadow: #0f766e;
+  --mobile-accent-ink: #063f3c;
+  --mobile-accent-light: #99e9de;
+  --mobile-accent-tint: #bcefe8;
+}
+
+body.light-theme .mc-mobile-launch {
+  background: var(--mobile-accent);
+  color: var(--mobile-accent-ink);
+  border-color: var(--mobile-accent-light);
+  box-shadow: inset 0 -4px var(--mobile-accent-edge), 0 4px var(--mobile-accent-shadow), 0 8px 20px #0f766e30;
+}
+body.light-theme .mc-mobile-launch:hover { background: #5ee0ce; }
+body.light-theme .mc-mobile-launch:active { box-shadow: inset 0 3px var(--mobile-accent-shadow), 0 2px var(--mobile-accent-shadow); }
+body.light-theme .mc-mobile-launch-icon { background: var(--mobile-accent-tint); border-color: var(--mobile-accent-edge); }
+body.light-theme .mc-mobile-launch-title { text-shadow: 1px 1px var(--mobile-accent-light); }
+body.light-theme .mc-mobile-launch-hint { color: var(--mobile-accent-ink); }
+body.light-theme .mc-mobile-launch:focus-visible,
+body.light-theme .is-mobile button:focus-visible { outline-color: var(--mobile-accent-edge); }
+body.light-theme .is-mobile button[aria-pressed='true'] {
+  background: var(--mobile-accent);
+  color: var(--mobile-accent-ink);
+  border-color: var(--mobile-accent-light);
+}
+body.light-theme .is-mobile .mc-pocket-slot[data-selected='true'],
+body.light-theme .mc-pocket-stage .mc-slot[data-selected='true'] {
+  outline-color: var(--mobile-accent-edge);
+  background-color: var(--mobile-accent-tint);
+}
+body.light-theme .mc-pocket-settings input,
+body.light-theme .mc-pocket-split > input { accent-color: var(--mobile-accent-edge); }
+
+@media (max-width: 850px), (pointer: coarse) {
+  body.light-theme .positive-title { color: var(--mobile-accent); }
+  body.light-theme .minecraft-styled-table tbody tr:hover { background-color: #2dd4bf14; }
+  body.light-theme :is(.reagent-pill-btn, .potion-filter-pill-btn):hover {
+    background: #2dd4bf33;
+    color: var(--mobile-accent-shadow);
+    border-color: var(--mobile-accent-edge);
+  }
+  body.light-theme .potion-filter-pill-btn.effect-pill { border-color: #2dd4bf66; }
+  body.light-theme :is(.category-tab-btn.active, .reagent-pill-btn.active, .potion-filter-pill-btn.active, .empty-reset-btn) {
+    background: var(--mobile-accent);
+    color: var(--mobile-accent-ink);
+    border-color: var(--mobile-accent-edge);
+  }
+}
