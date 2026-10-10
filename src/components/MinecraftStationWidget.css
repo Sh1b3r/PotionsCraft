@@ -802,6 +802,9 @@
 
 /* Fill the space outside the GUI with useful side panels. */
 .mc-workstation-info { min-width: 0; display: flex; flex-direction: column; font-size: 13px; line-height: 1.45; overflow-wrap: anywhere; }
+/* Only the central GUI determines the height of the shared grid row. */
+.mc-station-sidebar { contain: size; min-height: 0; overflow-y: auto; }
+.mc-workstation-info > * { flex-shrink: 0; }
 .mc-workstation-info-title { min-height: 18px; font-size: 14px; }
 #body21 .mc-workstation-info h3 { margin: 0 0 12px; font-size: 15px; font-weight: normal; letter-spacing: .5px; color: #303030; text-shadow: 1px 1px 0 #ffffff66; }
 .mc-workstation-info h4 { margin: 18px 0 8px; font-size: 14px; }
@@ -830,5 +833,5 @@
 @container (max-width: 1124px) {
   .mc-workbench-layout { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .mc-workbench-layout > .mc-brewing-workbench { grid-column: 1 / -1; grid-row: 1; justify-self: center; }
-  .mc-station-sidebar { grid-row: 2; }
+  .mc-station-sidebar { grid-row: 2; contain: none; }
 }
