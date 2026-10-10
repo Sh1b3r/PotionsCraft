@@ -7,7 +7,6 @@ function Item({ item }) {
 }
 export default function BedrockStationView({ inventory, grid, output, brewingStage, controls, settings, fillRecipe, craft, clearGrid, fuelCharges, progress, brewing, message, containers, collectContainers, onTabChange }) {
   const [tab, setTab] = useState('brewing');
-  const [page, setPage] = useState('inventory');
   const [left, setLeft] = useState('inventory');
   const [search, setSearch] = useState('');
   const [preview, setPreview] = useState(null);
@@ -17,7 +16,7 @@ export default function BedrockStationView({ inventory, grid, output, brewingSta
   const craftRef = useRef(craft);
   craftRef.current = craft;
   const stopCraft = () => { clearTimeout(repeat.current?.delay); clearInterval(repeat.current?.timer); repeat.current = null; };
-  const changeTab = next => { if (next !== tab) stopCraft(); setTab(next); setPage(next); onTabChange(next); };
+  const changeTab = next => { if (next !== tab) stopCraft(); setTab(next); onTabChange(next); };
   useEffect(() => {
     window.addEventListener('blur', stopCraft);
     return () => { stopCraft(); window.removeEventListener('blur', stopCraft); };
@@ -29,9 +28,8 @@ export default function BedrockStationView({ inventory, grid, output, brewingSta
     // This dedicated viewport has no variable-height status content.
     // Only viewport or slot-size changes can resize the brewing stand.
     const resize = () => {
-      // Portrait slots stay at least 48px across; keep the native 36px hit areas aligned.
-      const minimum = window.matchMedia('(orientation: portrait)').matches ? 48 / 36 : 0.65;
-      setStageScale(Math.max(minimum, Math.min((box.clientWidth - 12) / 206, (box.clientHeight - 8) / 132, 2 * settings.size)));
+      if (!box.clientWidth || !box.clientHeight) return;
+      setStageScale(Math.max(0.65, Math.min((box.clientWidth - 12) / 206, (box.clientHeight - 8) / 132, 2 * settings.size)));
     };
     const observer = new ResizeObserver(resize);
     observer.observe(box); resize();
@@ -63,7 +61,7 @@ export default function BedrockStationView({ inventory, grid, output, brewingSta
   const statusText = tab === 'brewing' && brewing
     ? `Варіння: ${Math.ceil(20 * (1 - progress / 100))} с · Паливо: ${fuelCharges} / 20`
     : message || (tab === 'crafting' ? 'Дотик по результату — створити. Утримання — кілька.' : 'Дотик — вибрати й перенести. Утримання — розділити стопку.');
-  return <div className="mc-pocket-workspace" data-page={page} style={{ '--pocket-size': settings.size }} onContextMenu={e => e.preventDefault()}>
+  return <div className="mc-pocket-workspace" style={{ '--pocket-size': settings.size }} onContextMenu={e => e.preventDefault()}>
     <div className="mc-pocket-panels">
       <section className="mc-pocket-inventory">
         <nav className="mc-pocket-tabs" aria-label="Інвентар та рецепти">
@@ -83,12 +81,14 @@ export default function BedrockStationView({ inventory, grid, output, brewingSta
           </>}
       </section>
       <div className="mc-pocket-stations">
-        <section className="mc-pocket-station mc-pocket-brewing-panel" aria-label="Варіння" onPointerDownCapture={() => changeTab('brewing')} onFocusCapture={() => changeTab('brewing')}>
-          <nav className="mc-pocket-tabs"><button type="button" aria-pressed={tab === 'brewing'} onClick={() => changeTab('brewing')}>Варіння</button></nav>
+        <nav className="mc-pocket-tabs" aria-label="Варіння та крафт">
+          <button type="button" aria-pressed={tab === 'brewing'} onClick={() => changeTab('brewing')}>Варіння</button>
+          <button type="button" aria-pressed={tab === 'crafting'} onClick={() => changeTab('crafting')}>Крафт</button>
+        </nav>
+        <section className="mc-pocket-station mc-pocket-brewing-panel" aria-label="Варіння" hidden={tab !== 'brewing'}>
           <div ref={stageBox} className="mc-pocket-stage-box"><div className="mc-pocket-stage" style={{ width: 206 * stageScale, height: 132 * stageScale }}><div style={{ transform: `scale(${stageScale})` }}>{brewingStage}</div></div></div>
         </section>
-        <section className="mc-pocket-station mc-pocket-crafting-panel" aria-label="Крафт" onPointerDownCapture={() => changeTab('crafting')} onFocusCapture={() => changeTab('crafting')}>
-          <nav className="mc-pocket-tabs"><button type="button" aria-pressed={tab === 'crafting'} onClick={() => changeTab('crafting')}>Крафт</button></nav>
+        <section className="mc-pocket-station mc-pocket-crafting-panel" aria-label="Крафт" hidden={tab !== 'crafting'}>
           <div className="mc-pocket-crafting">
             {preview && <div className="mc-pocket-missing" role="status">Для {MINECRAFT_ITEMS[preview.id].name}: {Object.entries(preview.grid.reduce((counts, id) => { if (id) counts[id] = (counts[id] || 0) + 1; return counts; }, {})).map(([id, count]) => `${MINECRAFT_ITEMS[id].name} × ${count}`).join(', ')}<button type="button" onClick={() => setPreview(null)} aria-label="Закрити підказку рецепта">✕</button></div>}
             <div className="mc-pocket-crafting-row"><div className="mc-pocket-crafting-grid">{grid.map((item, index) => slot('crafting', index, item))}</div>
@@ -96,19 +96,14 @@ export default function BedrockStationView({ inventory, grid, output, brewingSta
               <div className="mc-pocket-output-column"><button type="button" className="mc-pocket-slot mc-pocket-output" aria-label={output ? `Створити: ${output.name}` : 'Результат крафту'}
                 onPointerDown={startCraft} onPointerUp={finishCraft} onPointerCancel={finishCraft} onLostPointerCapture={finishCraft}
                 onClick={e => { if (!e.detail && output) craftRef.current(); }}><Item item={output} /></button>
-                <button type="button" className="mc-pocket-clear" onClick={clearGrid} disabled={!grid.some(Boolean)}>Очистити сітку</button>
               </div>
             </div>
+            <button type="button" className="mc-pocket-clear" onClick={clearGrid} disabled={!grid.some(Boolean)}>Очистити сітку</button>
           </div>
         </section>
       </div>
     </div>
     <footer className="mc-pocket-selection" role="status">{selected ? <><img src={selected.sprite} alt="" /><span>{selected.name} × {controls.splitCount}<small>Торкніться місця переносу. У сітку — по одному.</small></span><button type="button" onClick={controls.clear} aria-label="Скасувати вибір">✕</button></> : <span>{statusText}</span>}{containers > 0 && <button type="button" onClick={collectContainers}>Забрати пляшечки: {containers}</button>}</footer>
-    <nav className="mc-pocket-page-nav" aria-label="Розділи верстака">
-      <button type="button" aria-pressed={page === 'inventory'} onClick={() => { stopCraft(); setPage('inventory'); }}>Інвентар</button>
-      <button type="button" aria-pressed={page === 'brewing'} onClick={() => changeTab('brewing')}>Варіння</button>
-      <button type="button" aria-pressed={page === 'crafting'} onClick={() => changeTab('crafting')}>Крафт</button>
-    </nav>
     {controls.split && selected && <div className="mc-pocket-overlay"><section role="dialog" aria-modal="true" aria-label="Розділити стопку" className="mc-pocket-split">
       <h3>{selected.name}</h3><div className="mc-pocket-split-value"><img src={selected.sprite} alt="" />{controls.splitCount} / {selected.count}</div>
       <input type="range" min="1" max={selected.count} value={controls.splitCount} onChange={e => controls.setCount(Number(e.target.value))} aria-label="Кількість для переносу" />

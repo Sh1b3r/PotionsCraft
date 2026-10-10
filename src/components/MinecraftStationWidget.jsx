@@ -776,6 +776,11 @@ export default function MinecraftStationWidget() {
               </div>
 
               {brewingStage}
+              <section className="mc-workstation-info" aria-label="Стан варильної стійки">
+                <div className="mc-workstation-info-title">{isBrewing ? `Варіння · ${Math.ceil(20 * (1 - brewingProgress / 100))} с` : 'Готова до варіння'}</div>
+                <dl><div><dt>Паливо</dt><dd>{fuelCharges} / 20</dd></div><div><dt>Пляшечки</dt><dd>{brewingBottles.filter(Boolean).length} / 3</dd></div></dl>
+                <p>{brewingIngredient ? brewingIngredient.name : 'Покладіть інгредієнт у верхній слот.'}</p>
+              </section>
             </div>
 
             {/* 2. RIGHT: Crafting Table 3x3 ("Майстрування" matching reference mockup) */}
@@ -809,7 +814,7 @@ export default function MinecraftStationWidget() {
                   ))}
                 </div>
 
-                {/* Downward arrow connects the grid to the result below. */}
+                {/* Minecraft crafting: grid, right-pointing arrow, output. */}
                 <div className="mc-crafting-arrow-box">
                   <img
                     src="/mc_crafting_arrow.png"
@@ -818,7 +823,7 @@ export default function MinecraftStationWidget() {
                   />
                 </div>
 
-                {/* Large Output Slot (52x52px, centered under the grid) */}
+                {/* Large Output Slot (52x52px, beside the grid) */}
                 <div className="mc-output-slot-wrapper">
                   <div
                     className={`mc-slot mc-slot-output ${craftingOutput ? 'has-result' : ''}`}
@@ -843,6 +848,11 @@ export default function MinecraftStationWidget() {
                   </div>
                 </div>
               </div>
+              <section className="mc-workstation-info" aria-label="Стан крафту">
+                <div className="mc-workstation-info-title">{craftingOutput ? `${craftingOutput.name} × ${craftingOutput.count}` : 'Майстрування 3 × 3'}</div>
+                <p>ПКМ — один предмет. Shift + клік — швидкий перенос.</p>
+                <button type="button" className="mc-brewing-ref-btn" disabled={!craftingGrid.some(Boolean)} onClick={() => { returnHeld(); clearPocketGrid(); }}>Очистити сітку</button>
+              </section>
             </div>
           </div>
 
@@ -850,7 +860,7 @@ export default function MinecraftStationWidget() {
           <div className="mc-inventory-area">
             <div className="mc-inventory-header-label">Інвентар</div>
 
-            {/* 6x9 Main Storage Grid (Slots 0..53) */}
+            {/* 3x18 Main Storage Grid (Slots 0..53) */}
             <div className="mc-inventory-grid">
               {inventory.slice(0, 54).map((slotItem, idx) => (
                 <div
@@ -879,7 +889,7 @@ export default function MinecraftStationWidget() {
             {/* Authentic Minecraft Horizontal Separator Gap */}
             <div className="mc-hotbar-separator-gap" />
 
-            {/* 2x9 Quick Hotbar Grid (Slots 54..71) */}
+            {/* 1x18 Quick Hotbar Grid (Slots 54..71) */}
             <div className="mc-hotbar-grid">
               {inventory.slice(54, 72).map((slotItem, idx) => {
                 const actualIdx = 54 + idx;

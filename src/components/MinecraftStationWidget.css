@@ -1,5 +1,5 @@
 /* ==================== MINECRAFT BREWING & CRAFTING STATION ==================== */
-/* Compact Minecraft GUI on the shared native pixel grid. */
+/* Desktop Minecraft GUI on the shared native pixel grid. */
 
 .mc-workbench-viewport-scaler {
   width: 100%;
@@ -11,8 +11,8 @@
 
 .mc-brewing-workbench {
   --mc-gui-scale: 1;
-  --mc-inventory-width: 324px;
-  width: 348px;
+  --mc-inventory-width: 648px;
+  width: 684px;
   flex: none;
   transform: scale(var(--mc-gui-scale));
   transform-origin: top center;
@@ -24,7 +24,7 @@
   box-shadow:
     0 10px 30px rgba(0, 0, 0, 0.5),
     0 0 0 2px #100010;
-  padding: 8px;
+  padding: 14px;
   font-family: 'Minecraft', 'Press Start 2P', monospace, sans-serif;
   color: #3f3f3f;
   user-select: none;
@@ -37,20 +37,20 @@
 
 /* ==================== UPPER SECTION: WORKSTATIONS ==================== */
 .mc-top-workstation-row {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  align-items: start;
   width: var(--mc-inventory-width);
-  margin-bottom: 8px;
+  margin-bottom: 14px;
 }
 
 /* ---------------- 1. BREWING STAND AREA (LEFT) ---------------- */
 .mc-brewing-stand-area {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  width: 206px;
-  flex: none;
+  align-items: center;
+  min-width: 0;
 }
 
 .mc-brewing-header-row {
@@ -307,12 +307,12 @@
 .mc-crafting-area {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  width: 108px;
-  flex: none;
+  align-items: center;
+  min-width: 0;
 }
 
 .mc-crafting-header-label {
+  width: 100%;
   font-family: 'Minecraft', monospace;
   font-size: 15px;
   color: #303030;
@@ -323,10 +323,11 @@
 
 .mc-crafting-flex-panel {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  gap: 14px;
   width: 100%;
+  min-height: 132px;
 }
 
 /* 3x3 Grid with Contiguous Touching Slots */
@@ -343,14 +344,14 @@
   align-items: center;
   justify-content: center;
   padding: 0;
-  width: 30px;
-  height: 44px;
+  width: 44px;
+  height: 30px;
+  flex: none;
 }
 
 .mc-pixel-crafting-arrow {
   width: 44px;
   height: 30px;
-  transform: rotate(90deg);
   flex: none;
   image-rendering: pixelated;
   image-rendering: -moz-crisp-edges;
@@ -395,11 +396,11 @@
   text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.4);
 }
 
-/* Six rows of nine slots; retain all 54 storage slots. */
+/* Three rows of eighteen slots; retain all 54 storage slots. */
 .mc-inventory-grid {
   display: grid;
-  grid-template-columns: repeat(9, 36px);
-  grid-template-rows: repeat(6, 36px);
+  grid-template-columns: repeat(18, 36px);
+  grid-template-rows: repeat(3, 36px);
   gap: 0;
 }
 
@@ -410,11 +411,11 @@
   background: transparent;
 }
 
-/* Two rows of nine slots; retain hotbar indices 54..71. */
+/* One row of eighteen slots; retain hotbar indices 54..71. */
 .mc-hotbar-grid {
   display: grid;
-  grid-template-columns: repeat(9, 36px);
-  grid-template-rows: repeat(2, 36px);
+  grid-template-columns: repeat(18, 36px);
+  grid-template-rows: 36px;
   gap: 0;
 }
 
@@ -723,23 +724,24 @@
 .is-mobile button:focus-visible { outline: 3px solid #327c24; outline-offset: -3px; }
 .is-mobile button[aria-pressed='true'] { background: #588e3a; color: #fff; border-color: #77b354; }
 .mc-station-viewport { width: 100%; }
-.is-mobile .mc-station-viewport { position: absolute; left: 0; top: 0; display: flex; flex-direction: column; padding: 0 max(6px, env(safe-area-inset-right)) 0 max(6px, env(safe-area-inset-left)); box-sizing: border-box; }
+.is-mobile .mc-station-viewport { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; padding: 0 max(6px, env(safe-area-inset-right)) 0 max(6px, env(safe-area-inset-left)); box-sizing: border-box; }
 .mc-mobile-heading { flex: 0 0 46px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid #666; padding: 0 4px; }
 .mc-mobile-heading > div { display: flex; gap: 6px; }
 .mc-mobile-heading button { min-width: 44px; height: 40px; }
 .mc-pocket-back { display: flex; align-items: center; justify-content: center; gap: 4px; white-space: nowrap; }
-.mc-pocket-page-nav { display: none; }
+.is-mobile .mc-station-viewport.is-rotated { transform: translate(-50%, -50%) rotate(90deg); padding-inline: max(6px, env(safe-area-inset-top)) max(6px, env(safe-area-inset-bottom)); }
 .is-mobile .mc-station-content { flex: 1; min-height: 0; width: 100%; }
 .mc-pocket-workspace { height: 100%; display: flex; flex-direction: column; }
-.mc-pocket-panels { display: grid; grid-template-columns: minmax(140px, .75fr) minmax(0, 2fr); flex: 1; min-height: 0; gap: 8px; padding-top: 6px; }
-.mc-pocket-stations { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); min-width: 0; min-height: 0; gap: 8px; }
+.mc-pocket-panels { display: grid; grid-template-columns: minmax(180px, 1fr) minmax(0, 1.35fr); flex: 1; min-height: 0; gap: 8px; padding-top: 6px; }
+.mc-pocket-stations { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
 .mc-pocket-inventory, .mc-pocket-station { display: flex; flex-direction: column; min-height: 0; min-width: 0; border: 2px inset #eee; background: #b7b7b7; container-type: inline-size; }
-.mc-pocket-station { container-type: size; }
+.mc-pocket-station { flex: 1; container-type: size; }
+.mc-pocket-station[hidden] { display: none; }
 .mc-pocket-tabs { display: flex; flex: 0 0 42px; gap: 2px; background: #9a9a9a; }
 .mc-pocket-tabs button { flex: 1; min-width: 0; }
 .is-mobile .mc-pocket-inventory .mc-pocket-tabs button { font-size: clamp(12px, 6.5cqi, 15px); padding-inline: 4px; }
 .mc-pocket-scroll { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; padding: 5px; touch-action: pan-y; }
-.mc-pocket-inventory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(max(40px, calc(44px * var(--pocket-size))), 1fr)); gap: 2px; }
+.mc-pocket-inventory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(max(40px, calc(48px * var(--pocket-size))), 1fr)); gap: 2px; }
 .is-mobile .mc-pocket-slot { width: 100%; min-width: 0; height: auto; min-height: 40px; aspect-ratio: 1; border: 2px inset #eee; background: #8b8b8b; position: relative; padding: 3px; display: flex; align-items: center; justify-content: center; touch-action: pan-y; }
 .mc-pocket-slot img { width: 85%; height: 85%; object-fit: contain; image-rendering: pixelated; pointer-events: none; }
 .is-mobile .mc-pocket-slot[data-selected='true'], .mc-pocket-stage .mc-slot[data-selected='true'] { outline: 3px solid #4cbd35; outline-offset: -3px; background-color: #add184; }
@@ -763,14 +765,13 @@
 .is-mobile .mc-pocket-recipe.is-available { background: #d8d8d8; }
 .mc-pocket-recipe img { width: 36px; height: 36px; flex: none; image-rendering: pixelated; }
 .mc-pocket-recipe small { display: block; margin-top: 3px; color: #454545; font-size: 11px; }
-.mc-pocket-crafting { --pocket-craft-size: min(calc(64px * var(--pocket-size)), max(40px, calc((100cqi - 8px) / 3)), max(40px, calc((100cqb - 88px) / 4))); flex: 1; min-height: 0; overflow: auto; display: flex; flex-direction: column; align-items: center; justify-content: safe center; padding: 4px; gap: 12px; }
-.mc-pocket-crafting-row { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; flex: none; }
+.mc-pocket-crafting { --pocket-craft-size: min(calc(64px * var(--pocket-size)), max(40px, calc((100cqi - 68px) / 4)), max(40px, calc((100cqb - 60px) / 3))); flex: 1; min-height: 0; overflow: auto; display: flex; flex-direction: column; align-items: center; justify-content: safe center; padding: 4px; gap: 12px; }
+.mc-pocket-crafting-row { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; flex: none; }
 .mc-pocket-crafting-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: calc(3 * var(--pocket-craft-size)); gap: 0; flex: none; }
-.mc-pocket-output-column { width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) var(--pocket-craft-size) minmax(0, 1fr); align-items: center; gap: 6px; flex: none; }
-.mc-pocket-output-column .mc-pocket-output { grid-column: 2; }
-.is-mobile .mc-pocket-clear { grid-column: 3; font-size: 12px; padding: 6px; width: auto; justify-self: center; max-width: 100%; }
-.mc-pocket-craft-arrow-box { display: grid; place-items: center; width: 22px; height: 28px; flex: none; }
-.mc-pocket-craft-arrow { width: 28px; height: 22px; transform: rotate(90deg); image-rendering: pixelated; }
+.mc-pocket-output-column { display: flex; align-items: center; flex: none; }
+.is-mobile .mc-pocket-clear { font-size: 12px; padding: 6px 12px; flex: none; }
+.mc-pocket-craft-arrow-box { display: grid; place-items: center; width: 44px; height: 30px; flex: none; }
+.mc-pocket-craft-arrow { width: 44px; height: 30px; image-rendering: pixelated; }
 .is-mobile .mc-pocket-output { width: var(--pocket-craft-size); height: var(--pocket-craft-size); touch-action: none; }
 .mc-pocket-crafting p { text-align: center; font-size: 12px; margin: 0; line-height: 1.5; }
 .mc-pocket-overlay { position: absolute; inset: 0; z-index: 10; background: #0009; display: flex; align-items: center; justify-content: center; padding: 8px; }
@@ -803,31 +804,14 @@
 .dark-theme .is-mobile .mc-pocket-slot[data-selected='true'] { background: #587b43; }
 .dark-theme .mc-pocket-missing { background: #69552e; }
 
-/* Portrait uses one full-width panel. Item selection survives switching pages. */
-.is-portrait .mc-mobile-heading { display: grid; grid-template-columns: 76px minmax(0, 1fr) 44px; gap: 4px; flex-basis: 52px; padding: max(4px, env(safe-area-inset-top)) 0 4px; }
-.is-portrait .mc-mobile-heading > span { text-align: center; font-size: 13px; }
-.is-portrait .mc-mobile-heading button { min-height: 44px; height: 44px; padding: 6px; }
-.is-portrait .mc-mobile-heading .mc-pocket-back { font-size: 12px; }
-.is-portrait .mc-pocket-panels { display: flex; }
-.is-portrait .mc-pocket-inventory,
-.is-portrait .mc-pocket-stations,
-.is-portrait .mc-pocket-station { width: 100%; flex: 1; }
-.is-portrait .mc-pocket-stations { display: flex; }
-.is-portrait .mc-pocket-workspace[data-page='inventory'] .mc-pocket-stations,
-.is-portrait .mc-pocket-workspace:not([data-page='inventory']) .mc-pocket-inventory,
-.is-portrait .mc-pocket-workspace[data-page='crafting'] .mc-pocket-brewing-panel,
-.is-portrait .mc-pocket-workspace[data-page='brewing'] .mc-pocket-crafting-panel { display: none; }
-.is-portrait .mc-pocket-station > .mc-pocket-tabs { display: none; }
-.is-portrait .mc-pocket-inventory-grid { grid-template-columns: repeat(auto-fill, minmax(max(48px, calc(48px * var(--pocket-size))), 1fr)); }
-.is-portrait .mc-pocket-slot { min-height: 48px; }
-.is-portrait .mc-pocket-tabs { flex-basis: 48px; }
-.is-portrait .mc-pocket-tabs button { min-height: 48px; }
-.is-portrait .mc-pocket-stage-box { overflow: auto; }
-.is-portrait .mc-pocket-crafting { --pocket-craft-size: min(max(48px, calc(64px * var(--pocket-size))), calc((100cqi - 12px) / 3), max(48px, calc((100cqb - 140px) / 4))); }
-.is-portrait .mc-pocket-crafting-row { gap: 12px; }
-.is-portrait .mc-pocket-output-column { row-gap: 12px; }
-.is-portrait .mc-pocket-clear { grid-column: 1 / -1; grid-row: 2; min-height: 48px; }
-.is-portrait .mc-pocket-selection { flex: none; min-height: 56px; padding: 6px 4px; }
-.is-portrait .mc-pocket-selection button { min-width: 48px; min-height: 48px; }
-.is-portrait .mc-pocket-page-nav { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; flex: none; padding: 4px 0 max(6px, env(safe-area-inset-bottom)); }
-.is-portrait .mc-pocket-page-nav button { min-height: 48px; padding: 6px 4px; }
+/* Useful status panels fill the wide desktop workstation areas. */
+.mc-workstation-info { width: 100%; min-height: 114px; margin-top: 10px; padding: 10px; box-sizing: border-box; border: 2px inset #eee; background: #b7b7b7; font-size: 13px; line-height: 1.35; }
+.mc-workstation-info-title { min-height: 18px; font-size: 14px; }
+.mc-workstation-info dl { display: flex; gap: 18px; margin: 6px 0; }
+.mc-workstation-info dl > div { display: flex; gap: 6px; }
+.mc-workstation-info dd { margin: 0; }
+.mc-workstation-info p { margin: 6px 0; }
+.mc-workstation-info button { min-height: 26px; }
+.mc-workstation-info button:disabled { opacity: .5; cursor: default; }
+.dark-theme .mc-workstation-info { background: var(--sculk-void); border-color: var(--sculk-edge); color: var(--sculk-muted); }
+.dark-theme .mc-workstation-info-title { color: var(--sculk-echo); }
