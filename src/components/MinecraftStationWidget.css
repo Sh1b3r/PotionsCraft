@@ -20,14 +20,8 @@
   font-family: 'Minecraft', monospace;
 }
 
-.mc-brewing-workbench {
-  align-self: start;
-  --mc-gui-scale: 1;
-  --mc-inventory-width: 648px;
-  width: 684px;
-  flex: none;
-  transform: scale(var(--mc-gui-scale));
-  transform-origin: top center;
+.mc-brewing-workbench,
+.mc-workstation-info {
   background-color: #c6c6c6;
   border-top: 4px solid #ffffff;
   border-left: 4px solid #ffffff;
@@ -45,6 +39,16 @@
   image-rendering: pixelated;
   image-rendering: -moz-crisp-edges;
   image-rendering: crisp-edges;
+}
+
+.mc-brewing-workbench {
+  align-self: start;
+  --mc-gui-scale: 1;
+  --mc-inventory-width: 648px;
+  width: 684px;
+  flex: none;
+  transform: scale(var(--mc-gui-scale));
+  transform-origin: top center;
 }
 
 /* ==================== UPPER SECTION: WORKSTATIONS ==================== */
@@ -555,7 +559,8 @@
 
 /* ==================== WORKBENCH THEMING ==================== */
 /* 1. Dark Theme (Turquoise / Teal Accents) */
-.dark-theme .mc-brewing-workbench {
+.dark-theme .mc-brewing-workbench,
+.dark-theme .mc-workstation-info {
   background-color: #061822;
   border-top-color: #144966;
   border-left-color: #144966;
@@ -824,11 +829,21 @@
 .dark-theme .mc-pocket-missing { background: #69552e; }
 
 /* Fill the space outside the GUI with useful side panels. */
-.mc-workstation-info { min-width: 0; padding: 14px; box-sizing: border-box; border: 4px outset #eee; background: #c6c6c6; color: #3f3f3f; font-size: 13px; line-height: 1.45; overflow-wrap: anywhere; }
+.mc-workstation-info { min-width: 0; display: flex; flex-direction: column; font-size: 13px; line-height: 1.45; overflow-wrap: anywhere; }
 .mc-workstation-info-title { min-height: 18px; font-size: 14px; }
-#body21 .mc-workstation-info h3 { margin: 0 0 12px; font-size: 16px; }
+#body21 .mc-workstation-info h3 { margin: 0 0 12px; font-size: 15px; font-weight: normal; letter-spacing: .5px; color: #303030; text-shadow: 1px 1px 0 #ffffff66; }
 .mc-workstation-info h4 { margin: 18px 0 8px; font-size: 14px; }
-.mc-workstation-info dl { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+.mc-workstation-info dl { display: flex; flex-direction: column; gap: 6px; margin: 12px 0; }
+.mc-workstation-info-title,
+.mc-workstation-info dl > div {
+  padding: 6px 8px;
+  background: var(--slot-surface, #8b8b8b);
+  border: 2px solid;
+  border-top-color: var(--slot-shadow, #373737);
+  border-left-color: var(--slot-shadow, #373737);
+  border-bottom-color: var(--slot-bevel-light, #ffffff);
+  border-right-color: var(--slot-bevel-light, #ffffff);
+}
 .mc-workstation-info dl > div { display: flex; justify-content: space-between; gap: 8px; }
 .mc-workstation-info dd { margin: 0; }
 .mc-workstation-info p { margin: 12px 0; }
@@ -836,9 +851,8 @@
 .mc-workstation-info li + li { margin-top: 8px; }
 .mc-workstation-info .mc-station-shortcuts > div { flex-direction: column; gap: 2px; }
 .mc-station-shortcuts dt { font-weight: bold; }
-.mc-workstation-info button { min-height: 32px; margin-top: 8px; max-width: 100%; }
+.mc-workstation-info button { min-height: 32px; margin-top: auto; max-width: 100%; }
 .mc-workstation-info button:disabled { opacity: .5; cursor: default; }
-.dark-theme .mc-workstation-info { background: var(--sculk-panel); border-color: var(--sculk-edge); color: var(--sculk-muted); }
 .dark-theme .mc-workstation-info-title, .dark-theme .mc-workstation-info h3, .dark-theme .mc-workstation-info h4 { color: var(--sculk-echo); }
 
 @container (max-width: 1124px) {

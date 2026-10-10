@@ -44,7 +44,7 @@ body.dark-theme .gradient-layer { opacity: .12 !important; }
 #header2.dark-theme, #body21.dark-theme,
 .dark-theme :is(.wiki-section-container, .search-system-container,
   .card.dark-theme, .potion-modal-content, .modal-stats-card,
-  .mc-brewing-workbench, .mc-station-shell.is-mobile,
+  .mc-brewing-workbench, .mc-workstation-info, .mc-station-shell.is-mobile,
   .mc-pocket-inventory, .mc-pocket-station, .mc-pocket-settings, .mc-pocket-split) {
   background-color: var(--sculk-panel) !important;
   border-color: var(--sculk-edge) !important;
@@ -55,6 +55,7 @@ body.dark-theme .gradient-layer { opacity: .12 !important; }
 #headertext1.dark-theme,
 .dark-theme :is(.wiki-section-title, .category-section-title.positive-title,
   .mc-brewing-header-label, .mc-crafting-header-label, .mc-inventory-header-label,
+  .mc-workstation-info h3,
   .modal-title, .mobile-header-potion-title, .card h3) {
   color: var(--sculk-echo) !important;
   text-shadow: 2px 2px var(--sculk-shadow), 0 0 12px #54dfcd30 !important;
