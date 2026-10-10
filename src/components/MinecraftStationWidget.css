@@ -188,24 +188,6 @@
   pointer-events: none;
 }
 
-/* Idle: static hollow bubbles directly from card Frame 0 */
-.mc-brewing-bubbles-column .mcui-bubbling.is-idle {
-  background-image: url("/mc_bubbles_empty.png");
-}
-
-.dark-theme .mc-brewing-bubbles-column .mcui-bubbling.is-idle {
-  background-image: url("/mc_bubbles_empty_dark.png");
-}
-
-/* Active Brewing: boiling rising steam bubbles from card animated GIF */
-.mc-brewing-bubbles-column .mcui-bubbling.is-brewing {
-  background-image: url("/Grid_layout_Brewing_Bubbles.gif");
-}
-
-.dark-theme .mc-brewing-bubbles-column .mcui-bubbling.is-brewing {
-  background-image: url("/Grid_layout_Brewing_Bubbles_dark.gif");
-}
-
 /* Reagent Slot */
 .mc-slot-reagent {
   position: absolute !important;

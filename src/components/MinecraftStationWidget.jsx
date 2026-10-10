@@ -15,6 +15,7 @@ import {
 import { useTooltip } from './MinecraftTooltip';
 import BrewingStandFrame from './BrewingStandFrame';
 import BrewingArrow from './BrewingArrow';
+import BrewingBubbles from './BrewingBubbles';
 import { BrewingFuelGauge } from './BrewingFuelCircuit';
 import { createPortal } from 'react-dom';
 import BedrockStationView from './BedrockStationView';
@@ -677,9 +678,7 @@ export default function MinecraftStationWidget() {
 
                 {/* 2. Brewing Steam / Bubbles Column */}
                 <div className="mc-brewing-bubbles-column">
-                  <span className={`mcui-bubbling ${isBrewing ? 'is-brewing' : 'is-idle'}`}>
-                    <br />
-                  </span>
+                  <BrewingBubbles isBrewing={isBrewing} />
                 </div>
 
                 {/* 3. Top Reagent Slot */}

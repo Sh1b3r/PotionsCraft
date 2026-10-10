@@ -2,6 +2,7 @@ import React from 'react';
 import { TooltipTrigger } from './MinecraftTooltip';
 import BrewingStandFrame from './BrewingStandFrame';
 import BrewingArrow from './BrewingArrow';
+import BrewingBubbles from './BrewingBubbles';
 import { BREWING_STAND_DATA } from '../data/brewingStandData';
 import { WIKI_REAGENTS } from '../data/wikiTooltipsData';
 
@@ -78,7 +79,7 @@ export default function BrewingStandWidget({ potion, inModal = false }) {
             <BrewingStandFrame emptyBottles={[!output1, !output2, !output3]} />
             {/* Top Input Row: Bubbling + Reagent Slot + Downward Arrow */}
             <span className="mcui-input">
-              <span className="mcui-bubbling"><br /></span>
+              <BrewingBubbles isBrewing height={57} />
 
               <TooltipTrigger
                 title={reagentMeta.title}
