@@ -148,3 +148,20 @@ body.dark-theme .gradient-layer { opacity: .12 !important; }
 .dark-theme .mc-mobile-launch-hint { color: var(--sculk-echo); }
 .dark-theme .mc-mobile-launch:focus-visible { outline-color: var(--sculk-echo); }
 .dark-theme .minecraft-tooltip-box { background-color: #031116f5; border-color: var(--sculk-glow); box-shadow: 0 0 0 2px var(--sculk-edge), 0 4px 16px #020c1188; }
+
+/* The crafting face retains the reference's classic gray palette in both themes. */
+.dark-theme .mc-crafting-area,
+.dark-theme .is-mobile .mc-pocket-crafting-panel {
+  background-color: #c6c6c6 !important;
+  border-color: #fff #373737 #373737 #fff !important;
+  box-shadow: none !important;
+}
+.dark-theme .mc-crafting-area .mc-crafting-header-label { color: #303030 !important; text-shadow: none !important; }
+.dark-theme .mc-crafting-area .mc-slot,
+.dark-theme .is-mobile .mc-pocket-crafting-panel .mc-pocket-slot {
+  background-color: #8b8b8b !important;
+  border-color: #373737 #fff #fff #373737 !important;
+}
+.dark-theme .mc-crafting-area .mc-slot:hover,
+.dark-theme .is-mobile .mc-pocket-crafting-panel .mc-pocket-slot:hover { background-color: #a0a0a0 !important; }
+.dark-theme .is-mobile .mc-pocket-crafting-panel .mc-pocket-clear { background: #c6c6c6 !important; color: #303030 !important; border-color: #fff #373737 #373737 #fff !important; }
