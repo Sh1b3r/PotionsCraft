@@ -36,7 +36,6 @@ body.dark-theme .gradient-container { background-color: var(--sculk-void); }
 .dark-theme .mc-fuel-gauge-sculk { display: block; }
 .dark-theme .mc-bubbles-texture { filter: var(--sculk-bubbles-filter); }
 body.dark-theme .gradient-layer { opacity: .12 !important; }
-.dark-theme #logoday { image-rendering: pixelated !important; }
 .dark-theme .mcui-grid, .dark-theme .mc-brewing-stand-stage {
   --slot-bevel-light: var(--sculk-edge);
   --brewing-pipe-shadow: var(--sculk-shadow);

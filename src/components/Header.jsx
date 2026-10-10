@@ -9,7 +9,7 @@ export default function Header({
 }) {
   const isDarkActive = theme ? theme === 'dark' || theme === 'sculk' : Boolean(isDark);
   const logoDaySrc = '/Glass_Bottle_JE2_BE2.webp';
-  const logoDarkSrc = '/items/echo_shard.png';
+  const logoDarkSrc = '/Potion_of_Swiftness_JE3.png';
   const currentLogo = isDarkActive ? logoDarkSrc : logoDaySrc;
 
   return (
