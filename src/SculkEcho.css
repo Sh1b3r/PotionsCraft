@@ -18,6 +18,13 @@ html[data-theme='dark'], body.dark-theme {
   --brewing-pipe-body: #285761;
   --brewing-pipe-light: #7bd6cb;
   --brewing-arrow-fill: #d0fff4;
+  --brewing-arrow-shadow: #28616b;
+  --brewing-arrow-body: #58a8ad;
+  --brewing-arrow-light: #b0fff0;
+  --brewing-fuel-shadow: #28616b;
+  --brewing-fuel-detail: var(--sculk-shadow);
+  --brewing-fuel-body: #387b83;
+  --brewing-fuel-light: var(--sculk-echo);
   background-color: var(--sculk-void);
   color: var(--sculk-text);
   color-scheme: dark;
@@ -25,6 +32,8 @@ html[data-theme='dark'], body.dark-theme {
 }
 
 body.dark-theme .gradient-container { background-color: var(--sculk-void); }
+.dark-theme .mc-fuel-gauge-fill { background-image: none; }
+.dark-theme .mc-fuel-gauge-sculk { display: block; }
 body.dark-theme .gradient-layer { opacity: .12 !important; }
 .dark-theme #logoday { image-rendering: pixelated !important; }
 .dark-theme .mcui-grid, .dark-theme .mc-brewing-stand-stage {

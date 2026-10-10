@@ -1,4 +1,5 @@
 import React from 'react';
+import { BrewingSpring, BrewingFuelTrough } from './BrewingFuelCircuit';
 
 function SlotFrame({ x, y, emptyBottle = false }) {
   return (
@@ -27,14 +28,8 @@ export default function BrewingStandFrame({ withFuel = false, pipeExtension = 0,
           {/* Original fuel circuit, relative to the station frame at (46, 5). */}
           <path d="M36 27h14v2H36z M66 61h22v2H66z" fill="var(--brewing-pipe-light, #fff)" />
           <path d="M36 29h14v2H36z M66 63h22v2H66z" fill="var(--brewing-pipe-shadow)" />
-          <g className="mcui-fuel-light">
-            <image href="/mc_brewing_spring_exact.png" x="50" y="27" width="26" height="40" />
-            <image href="/mc_brewing_fuel_trough.png" x="88" y="57" width="38" height="12" />
-          </g>
-          <g className="mcui-fuel-dark">
-            <image href="/mc_brewing_spring_exact_dark.png" x="50" y="27" width="26" height="40" />
-            <image href="/mc_brewing_fuel_trough_dark.png" x="88" y="57" width="38" height="12" />
-          </g>
+          <BrewingSpring />
+          <BrewingFuelTrough />
           <SlotFrame x={0} y={3} />
         </g>
       )}

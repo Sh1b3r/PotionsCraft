@@ -15,6 +15,7 @@ import {
 import { useTooltip } from './MinecraftTooltip';
 import BrewingStandFrame from './BrewingStandFrame';
 import BrewingArrow from './BrewingArrow';
+import { BrewingFuelGauge } from './BrewingFuelCircuit';
 import { createPortal } from 'react-dom';
 import BedrockStationView from './BedrockStationView';
 import usePocketInventory from './usePocketInventory';
@@ -646,7 +647,9 @@ export default function MinecraftStationWidget() {
                     style={{
                       width: `${Math.round((fuelCharges / 20) * 36)}px`
                     }}
-                  />
+                  >
+                    <BrewingFuelGauge />
+                  </div>
                 </div>
 
                 {/* 1. Top-Left Fuel Slot */}

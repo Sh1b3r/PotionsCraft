@@ -116,15 +116,6 @@
   bottom: auto;
 }
 
-.mcui-fuel-dark,
-.dark-theme .mcui-fuel-light {
-  display: none;
-}
-
-.dark-theme .mcui-fuel-dark {
-  display: inline;
-}
-
 .mc-brewing-workbench .mc-brewing-stand-stage .mc-slot {
   border: 0;
   padding: 2px;
@@ -303,7 +294,10 @@
   image-rendering: crisp-edges;
   image-rendering: -webkit-optimize-contrast;
   transition: width 0.25s steps(20, end);
+  overflow: hidden;
 }
+
+.mc-fuel-gauge-sculk { display: none; }
 
 /* Empty bottle watermark (exact silhouette from be.html) */
 .mc-empty-bottle-watermark {
