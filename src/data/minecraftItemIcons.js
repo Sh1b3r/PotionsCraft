@@ -92,7 +92,7 @@ export const MINECRAFT_ITEMS = {
   },
   nether_wart: {
     id: 'nether_wart',
-    name: 'Пекельний наріст',
+    name: 'Незерський наріст',
     sprite: '/items/nether_wart.png',
     maxStack: 64,
   },
@@ -515,6 +515,12 @@ export const MINECRAFT_ITEMS = {
     id: 'bamboo_block',
     name: 'Блок бамбука',
     sprite: '/items/bamboo_block.png',
+    maxStack: 64,
+  },
+  nether_wart_block: {
+    id: 'nether_wart_block',
+    name: 'Блок незерського наросту',
+    sprite: '/items/nether_wart_block.png',
     maxStack: 64,
   }
 };

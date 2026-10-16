@@ -33,6 +33,8 @@ export const STATION_CRAFTING_RECIPES = [
   { id: 'slime_block', grid: Array(9).fill('slime_ball') },
   { id: 'slime_ball', grid: pattern({ 0: 'slime_block' }) },
   { id: 'stick', grid: pattern({ 0: 'bamboo', 3: 'bamboo' }) },
+  { id: 'nether_wart_block', grid: Array(9).fill('nether_wart') },
+  { id: 'nether_wart', grid: pattern({ 0: 'nether_wart_block' }) },
 ];
 
 export function canFillStationRecipe(recipe, items) {

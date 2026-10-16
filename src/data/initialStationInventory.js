@@ -7,7 +7,7 @@ import { MINECRAFT_ITEMS } from './minecraftItemIcons';
 const STARTING_SUPPLIES = [
   ['water_bottle', 6, 12], ['awkward_potion', 3, 6],
   ['splash_water_bottle', 1, 2], ['lingering_water_bottle', 1, 2],
-  ['nether_wart', 8, 48], ['blaze_powder', 2, 12], ['blaze_rod', 4, 24],
+  ['nether_wart', 8, 48], ['nether_wart_block', 1, 2], ['blaze_powder', 2, 12], ['blaze_rod', 4, 24],
   ['sugar', 2, 16], ['sugar_cane', 4, 32],
   ['redstone', 4, 32], ['redstone_block', 1, 2], ['redstone_torch', 1, 4],
   ['glowstone', 4, 32], ['glowstone_block', 1, 2], ['gunpowder', 4, 32],

@@ -33,6 +33,7 @@ export function checkCraftingRecipe(grid) {
       glowstone_block: ['glowstone', 4],
       cobweb: ['string', 1],
       bamboo_block: ['bamboo', 9],
+      nether_wart_block: ['nether_wart', 9],
     };
     const recipe = singleItemRecipes[items[idx]];
     if (recipe) {
@@ -179,6 +180,9 @@ export function checkCraftingRecipe(grid) {
     }
     if (allSame('bamboo')) {
       return { ...MINECRAFT_ITEMS.bamboo_block, itemId: 'bamboo_block', count: 1 };
+    }
+    if (allSame('nether_wart')) {
+      return { ...MINECRAFT_ITEMS.nether_wart_block, itemId: 'nether_wart_block', count: 1 };
     }
 
     const center = items[4];
