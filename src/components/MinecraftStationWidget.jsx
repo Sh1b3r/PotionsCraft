@@ -326,7 +326,7 @@ export default function MinecraftStationWidget() {
   const handleCraftOutputClick = event => {
     event?.preventDefault?.();
     event?.stopPropagation?.();
-    if (event.button !== 0) return; // Only LMB crafts in Minecraft
+    if (event.button !== 0 && event.button !== 2) return; // Support both LMB and RMB for crafting
 
     const output = checkCraftingRecipe(craftingGridRef.current);
     if (!output) return;
@@ -438,7 +438,7 @@ export default function MinecraftStationWidget() {
   };
 
   const updateDragPreview = useCallback((drag) => {
-    if (!drag || drag.mode !== 'left' || drag.slots.length < 2) {
+    if (!drag || !drag.startHeld || drag.slots.length < 1) {
       setDragPreview(null);
       return;
     }
@@ -453,26 +453,45 @@ export default function MinecraftStationWidget() {
       return;
     }
     const total = drag.startHeldCount;
-    const countPerSlot = Math.floor(total / validSlots.length);
     const previews = {};
     let totalDistributed = 0;
-    if (countPerSlot > 0) {
+
+    if (drag.mode === 'left') {
+      if (drag.slots.length < 2) {
+        setDragPreview(null);
+        return;
+      }
+      const countPerSlot = Math.floor(total / validSlots.length);
+      if (countPerSlot > 0) {
+        for (const s of validSlots) {
+          const curr = getSlotValue(s.type, s.index);
+          const room = limit(s.type, drag.startHeld) - (curr?.count || 0);
+          const addCount = Math.min(countPerSlot, room);
+          previews[`${s.type}-${s.index}`] = (curr?.count || 0) + addCount;
+          totalDistributed += addCount;
+        }
+      } else {
+        for (let i = 0; i < validSlots.length; i++) {
+          const s = validSlots[i];
+          const curr = getSlotValue(s.type, s.index);
+          const addCount = i < total ? 1 : 0;
+          previews[`${s.type}-${s.index}`] = (curr?.count || 0) + addCount;
+          totalDistributed += addCount;
+        }
+      }
+    } else if (drag.mode === 'right') {
+      // Right-click drag: distribute 1 item per valid slot
       for (const s of validSlots) {
+        if (totalDistributed >= total) break;
         const curr = getSlotValue(s.type, s.index);
         const room = limit(s.type, drag.startHeld) - (curr?.count || 0);
-        const addCount = Math.min(countPerSlot, room);
-        previews[`${s.type}-${s.index}`] = (curr?.count || 0) + addCount;
-        totalDistributed += addCount;
-      }
-    } else {
-      for (let i = 0; i < validSlots.length; i++) {
-        const s = validSlots[i];
-        const curr = getSlotValue(s.type, s.index);
-        const addCount = i < total ? 1 : 0;
-        previews[`${s.type}-${s.index}`] = (curr?.count || 0) + addCount;
-        totalDistributed += addCount;
+        if (room > 0) {
+          previews[`${s.type}-${s.index}`] = (curr?.count || 0) + 1;
+          totalDistributed += 1;
+        }
       }
     }
+
     setDragPreview({
       previews,
       item: drag.startHeld,
@@ -486,27 +505,16 @@ export default function MinecraftStationWidget() {
     const key = `${type}-${index}`;
     if (drag.visitedKeys.has(key)) return;
 
-    if (drag.mode === 'right') {
-      const held = heldItemRef.current;
-      if (!held || !accepts(type, held)) return;
-      const target = getSlotValue(type, index);
-      if (target && (!sameStack(target, held) || target.count >= limit(type, held))) return;
-      drag.visitedKeys.add(key);
-      if (deposit(type, index, 1) > 0) {
-        playItemClickSound();
-      }
-    } else if (drag.mode === 'left') {
-      const startHeld = drag.startHeld;
-      if (!startHeld || !accepts(type, startHeld)) return;
-      const target = getSlotValue(type, index);
-      if (target && (!sameStack(target, startHeld) || target.count >= limit(type, startHeld))) return;
-      drag.visitedKeys.add(key);
-      drag.slots.push({ type, index });
-      setDragTargetKeys(new Set(drag.visitedKeys));
-      if (drag.slots.length >= 2) {
-        updateDragPreview(drag);
-      }
-    }
+    const startHeld = drag.startHeld;
+    if (!startHeld || !accepts(type, startHeld)) return;
+    const target = getSlotValue(type, index);
+    if (target && (!sameStack(target, startHeld) || target.count >= limit(type, startHeld))) return;
+
+    drag.visitedKeys.add(key);
+    drag.slots.push({ type, index });
+    setDragTargetKeys(new Set(drag.visitedKeys));
+    updateDragPreview(drag);
+    playItemClickSound();
   };
 
   const finishGesture = () => {
@@ -516,10 +524,11 @@ export default function MinecraftStationWidget() {
     setDragTargetKeys(new Set());
     setDragPreview(null);
 
+    const held = heldItemRef.current;
+    if (!held) return;
+    const slots = drag.slots;
+
     if (drag.mode === 'left') {
-      const held = heldItemRef.current;
-      if (!held) return;
-      const slots = drag.slots;
       if (slots.length === 1) {
         // Single click LMB
         slotClick(slots[0].type, slots[0].index, false);
@@ -562,6 +571,34 @@ export default function MinecraftStationWidget() {
           hold(remainder > 0 ? { ...drag.startHeld, count: remainder } : null);
           playItemClickSound();
         }
+      }
+    } else if (drag.mode === 'right') {
+      if (slots.length === 1) {
+        // Single click RMB on this slot: deposit 1 item
+        slotClick(slots[0].type, slots[0].index, true);
+      } else if (slots.length > 1) {
+        // Right click drag: deposit exactly 1 item in each valid visited slot
+        const validSlots = slots.filter(s => {
+          if (!accepts(s.type, drag.startHeld)) return false;
+          const curr = getSlotValue(s.type, s.index);
+          if (curr && !sameStack(curr, drag.startHeld)) return false;
+          return true;
+        });
+
+        let placed = 0;
+        const total = drag.startHeldCount;
+        for (const s of validSlots) {
+          if (placed >= total) break;
+          const curr = getSlotValue(s.type, s.index);
+          const room = limit(s.type, drag.startHeld) - (curr?.count || 0);
+          if (room > 0) {
+            setSlotValue(s.type, s.index, { ...drag.startHeld, count: (curr?.count || 0) + 1 });
+            placed += 1;
+          }
+        }
+        const remainder = total - placed;
+        hold(remainder > 0 ? { ...drag.startHeld, count: remainder } : null);
+        playItemClickSound();
       }
     }
   };
@@ -743,17 +780,35 @@ export default function MinecraftStationWidget() {
       if (isRight) {
         // RMB:
         if (!held) {
-          slotClick(type, index, true);
-        } else if (!slotItem || sameStack(slotItem, held)) {
-          if (deposit(type, index, 1) > 0) {
+          const count = Math.ceil(slotItem ? slotItem.count / 2 : 0);
+          if (count > 0) {
+            const pickedUp = { ...slotItem, count };
+            hold(pickedUp);
+            setSlotValue(type, index, slotItem.count > count ? { ...slotItem, count: slotItem.count - count } : null);
             playItemClickSound();
+            // Start drag gesture in case user continues dragging to other slots
+            dragRef.current = {
+              mode: 'right',
+              startHeld: { ...pickedUp },
+              startHeldCount: count,
+              slots: [],
+              visitedKeys: new Set([key]),
+              buttonMask: 2,
+              pointerId: event.pointerId
+            };
           }
+        } else if (!slotItem || sameStack(slotItem, held)) {
           dragRef.current = {
             mode: 'right',
+            startHeld: { ...held },
+            startHeldCount: held.count,
+            slots: [{ type, index }],
             visitedKeys: new Set([key]),
             buttonMask: 2,
             pointerId: event.pointerId
           };
+          setDragTargetKeys(new Set([key]));
+          updateDragPreview(dragRef.current);
         }
       } else {
         // LMB:
@@ -1080,27 +1135,42 @@ export default function MinecraftStationWidget() {
                 </div>
 
                 {/* 1. Top-Left Fuel Slot */}
-                <div
-                  className={`mc-slot mc-slot-fuel ${fuelSlot ? 'has-item' : ''} ${dragTargetKeys.has('fuel-0') ? 'is-drag-target' : ''}`}
-                  data-slot-type="fuel"
-                  data-slot-index={0}
-                  {...slotEvents('fuel', 0, getSlotValue('fuel', 0))}
-                >
-                  {fuelSlot ? (
-                    <>
-                      <img src={fuelSlot.sprite} alt={fuelSlot.name} className="mc-item-icon" draggable="false" />
-                      {fuelSlot.count > 1 && (
-                        <span className="mc-item-count">{fuelSlot.count}</span>
+                {(() => {
+                  const key = 'fuel-0';
+                  const isDragTarget = dragTargetKeys.has(key);
+                  const previewCount = dragPreview?.previews?.[key];
+                  const isPreview = previewCount != null;
+                  const itemToRender = isPreview ? { ...dragPreview.item, count: previewCount } : fuelSlot;
+
+                  return (
+                    <div
+                      className={`mc-slot mc-slot-fuel ${itemToRender ? 'has-item' : ''} ${isDragTarget ? 'is-drag-target' : ''}`}
+                      data-slot-type="fuel"
+                      data-slot-index={0}
+                      {...slotEvents('fuel', 0, getSlotValue('fuel', 0))}
+                    >
+                      {itemToRender ? (
+                        <>
+                          <img
+                            src={itemToRender.sprite}
+                            alt={itemToRender.name}
+                            className={`mc-item-icon ${isPreview && !fuelSlot ? 'is-preview' : ''}`}
+                            draggable="false"
+                          />
+                          {itemToRender.count > 1 && (
+                            <span className={`mc-item-count ${isPreview ? 'is-preview' : ''}`}>{itemToRender.count}</span>
+                          )}
+                        </>
+                      ) : (
+                        <img
+                          src="/mc_blaze_watermark.png"
+                          alt="Вогняний порошок"
+                          className="mc-fuel-blaze-watermark"
+                        />
                       )}
-                    </>
-                  ) : (
-                    <img
-                      src="/mc_blaze_watermark.png"
-                      alt="Вогняний порошок"
-                      className="mc-fuel-blaze-watermark"
-                    />
-                  )}
-                </div>
+                    </div>
+                  );
+                })()}
 
                 {/* 2. Brewing Steam / Bubbles Column */}
                 <div className="mc-brewing-bubbles-column">
@@ -1108,26 +1178,36 @@ export default function MinecraftStationWidget() {
                 </div>
 
                 {/* 3. Top Reagent Slot */}
-                <div
-                  className={`mc-slot mc-slot-reagent ${brewingIngredient ? 'has-item' : ''} ${dragTargetKeys.has('ingredient-0') ? 'is-drag-target' : ''}`}
-                  data-slot-type="ingredient"
-                  data-slot-index={0}
-                  {...slotEvents('ingredient', 0, getSlotValue('ingredient', 0))}
-                >
-                  {brewingIngredient && (
-                    <>
-                      <img
-                        src={brewingIngredient.sprite}
-                        alt={brewingIngredient.name}
-                        className="mc-item-icon"
-                        draggable="false"
-                      />
-                      {brewingIngredient.count > 1 && (
-                        <span className="mc-item-count">{brewingIngredient.count}</span>
+                {(() => {
+                  const key = 'ingredient-0';
+                  const isDragTarget = dragTargetKeys.has(key);
+                  const previewCount = dragPreview?.previews?.[key];
+                  const isPreview = previewCount != null;
+                  const itemToRender = isPreview ? { ...dragPreview.item, count: previewCount } : brewingIngredient;
+
+                  return (
+                    <div
+                      className={`mc-slot mc-slot-reagent ${itemToRender ? 'has-item' : ''} ${isDragTarget ? 'is-drag-target' : ''}`}
+                      data-slot-type="ingredient"
+                      data-slot-index={0}
+                      {...slotEvents('ingredient', 0, getSlotValue('ingredient', 0))}
+                    >
+                      {itemToRender && (
+                        <>
+                          <img
+                            src={itemToRender.sprite}
+                            alt={itemToRender.name}
+                            className={`mc-item-icon ${isPreview && !brewingIngredient ? 'is-preview' : ''}`}
+                            draggable="false"
+                          />
+                          {itemToRender.count > 1 && (
+                            <span className={`mc-item-count ${isPreview ? 'is-preview' : ''}`}>{itemToRender.count}</span>
+                          )}
+                        </>
                       )}
-                    </>
-                  )}
-                </div>
+                    </div>
+                  );
+                })()}
 
                 {/* Downward Brewing Progress Arrow (copied completely from cards) */}
                 <div
@@ -1147,24 +1227,30 @@ export default function MinecraftStationWidget() {
                 {[0, 1, 2].map((idx) => {
                   const bottle = brewingBottles[idx];
                   const slotClassNames = ['slot-bottle-left', 'slot-bottle-center', 'slot-bottle-right'];
+                  const key = `bottle-${idx}`;
+                  const isDragTarget = dragTargetKeys.has(key);
+                  const previewCount = dragPreview?.previews?.[key];
+                  const isPreview = previewCount != null;
+                  const itemToRender = isPreview ? { ...dragPreview.item, count: previewCount } : bottle;
+
                   return (
                     <div
                       key={`bottle-${idx}`}
-                      className={`mc-slot mc-slot-bottle ${slotClassNames[idx]} ${bottle ? 'has-item' : ''} ${dragTargetKeys.has(`bottle-${idx}`) ? 'is-drag-target' : ''}`}
+                      className={`mc-slot mc-slot-bottle ${slotClassNames[idx]} ${itemToRender ? 'has-item' : ''} ${isDragTarget ? 'is-drag-target' : ''}`}
                       data-slot-type="bottle"
                       data-slot-index={idx}
                       {...slotEvents('bottle', idx, getSlotValue('bottle', idx))}
                     >
-                      {bottle && (
+                      {itemToRender && (
                         <>
                           <img
-                            src={bottle.sprite}
-                            alt={bottle.name}
-                            className="mc-item-icon"
+                            src={itemToRender.sprite}
+                            alt={itemToRender.name}
+                            className={`mc-item-icon ${isPreview && !bottle ? 'is-preview' : ''}`}
                             draggable="false"
                           />
-                          {bottle.count > 1 && (
-                            <span className="mc-item-count">{bottle.count}</span>
+                          {itemToRender.count > 1 && (
+                            <span className={`mc-item-count ${isPreview ? 'is-preview' : ''}`}>{itemToRender.count}</span>
                           )}
                         </>
                       )}
