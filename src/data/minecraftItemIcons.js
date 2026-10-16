@@ -429,19 +429,19 @@ export const MINECRAFT_ITEMS = {
   },
   melon_block: {
     id: 'melon_block',
-    name: 'Блок кавуна',
+    name: 'Кавун',
     sprite: '/items/melon_block.png',
     maxStack: 64,
   },
   glass_pane: {
     id: 'glass_pane',
-    name: 'Скляна панель',
+    name: 'Шиба',
     sprite: '/items/glass_pane.png',
     maxStack: 64,
   },
   gold_block: {
     id: 'gold_block',
-    name: 'Золотий блок',
+    name: 'Блок золота',
     sprite: '/items/gold_block.png',
     maxStack: 64,
   },
@@ -495,7 +495,7 @@ export const MINECRAFT_ITEMS = {
   },
   stone_bricks: {
     id: 'stone_bricks',
-    name: 'Кам’яна цегла',
+    name: "Кам'яна цегла",
     sprite: '/items/stone_bricks.png',
     maxStack: 64,
   },
