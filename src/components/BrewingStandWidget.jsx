@@ -125,6 +125,17 @@ export default function BrewingStandWidget({ potion, inModal = false }) {
           </span>
         </span>
       </div>
+      <button
+        type="button"
+        className="mc-load-recipe-btn"
+        onClick={(e) => {
+          e.stopPropagation();
+          window.dispatchEvent(new CustomEvent('load_potion_recipe', { detail: { potionId: potion.id } }));
+        }}
+        title="Завантажити цей рецепт у варильну стійку"
+      >
+        <span className="mc-load-recipe-icon">⚗️</span> Встановити у стійку
+      </button>
     </div>
   );
 }

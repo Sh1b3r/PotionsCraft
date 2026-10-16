@@ -22,6 +22,8 @@ import BedrockStationView from './BedrockStationView';
 import usePocketInventory from './usePocketInventory';
 import MobileStationShell, { useMobileStation, usePocketSettings } from './MobileStationShell';
 import { WIKI_REAGENTS, WIKI_POTIONS } from '../data/wikiTooltipsData';
+import { BREWING_STAND_DATA } from '../data/brewingStandData';
+import { POTIONS_DATA } from '../data/potionsData';
 import './MinecraftStationWidget.css';
 
 // All valid Minecraft brewing reagents that can be placed in the reagent slot
@@ -65,8 +67,24 @@ export default function MinecraftStationWidget() {
   const activeIngredientRef = useRef(null);
   const hoveredSlotRef = useRef(null);
   const [containerReturns, setContainerReturns] = useState(0);
-  // 1. Player Inventory: 72 slots (54 storage + 18 hotbar)
-  const [inventory, setInventory] = useState(buildInitialInventory);
+  // 1. Player Inventory: 72 slots (54 storage + 18 hotbar) with LocalStorage persistence
+  const [inventory, setInventory] = useState(() => {
+    try {
+      const saved = localStorage.getItem('potionscraft_station_inventory');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length === 72) return parsed;
+      }
+    } catch {}
+    return buildInitialInventory();
+  });
+
+  // Save inventory changes to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('potionscraft_station_inventory', JSON.stringify(inventory));
+    } catch {}
+  }, [inventory]);
 
   // 2. Crafting Table 3x3 (9 slots)
   const [craftingGrid, setCraftingGrid] = useState(() => new Array(9).fill(null));
@@ -803,6 +821,107 @@ export default function MinecraftStationWidget() {
     }
   };
 
+  // Keyboard navigation: Hotbar keys 1-9 swap hovered slot with hotbar slot
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      const tag = document.activeElement?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+
+      if (e.key >= '1' && e.key <= '9') {
+        const slot = hoveredSlotRef.current;
+        if (!slot) return;
+        const num = parseInt(e.key, 10);
+        const hotbarIdx = 54 + (num - 1);
+        if (slot.type === 'inventory' && slot.index === hotbarIdx) return;
+
+        e.preventDefault();
+        const currentHoveredItem = getSlotValue(slot.type, slot.index);
+        const currentHotbarItem = getSlotValue('inventory', hotbarIdx);
+
+        if (slot.type === 'output') {
+          if (craftingOutput) {
+            handleCraftOutputClick({ shiftKey: false, button: 0 });
+            playItemClickSound();
+          }
+          return;
+        }
+
+        setSlotValue(slot.type, slot.index, currentHotbarItem);
+        setSlotValue('inventory', hotbarIdx, currentHoveredItem);
+        playItemClickSound();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [getSlotValue, setSlotValue, craftingOutput, handleCraftOutputClick]);
+
+  // Load recipe from catalog directly into brewing stand
+  useEffect(() => {
+    const handleLoadRecipe = (e) => {
+      const potionId = e.detail?.potionId;
+      if (!potionId) return;
+
+      const wikiData = BREWING_STAND_DATA[potionId];
+      const potionDef = POTIONS_DATA.find((p) => p.id === potionId);
+      if (!potionDef && !wikiData) return;
+
+      // Ingredient resolution
+      const spritePath = wikiData?.reagent?.localSrc || potionDef?.ingredientSprite || '';
+      let reagentKey = spritePath.replace(/^\/items\//, '').replace(/\.png$/, '');
+      if (reagentKey === 'glistering_melon') reagentKey = 'glistering_melon_slice';
+      if (!MINECRAFT_ITEMS[reagentKey]) {
+        if (reagentKey.includes('nether_wart')) reagentKey = 'nether_wart';
+        else if (reagentKey.includes('carrot')) reagentKey = 'golden_carrot';
+        else if (reagentKey.includes('magma')) reagentKey = 'magma_cream';
+        else if (reagentKey.includes('sugar')) reagentKey = 'sugar';
+        else if (reagentKey.includes('redstone')) reagentKey = 'redstone';
+        else if (reagentKey.includes('glowstone')) reagentKey = 'glowstone_dust';
+      }
+
+      const reagentItem = MINECRAFT_ITEMS[reagentKey] || MINECRAFT_ITEMS.nether_wart;
+
+      // Base bottle resolution
+      const baseName = (wikiData?.output2?.title || potionDef?.base || '').toLowerCase();
+      const baseKey =
+        baseName.includes('водян') || baseName.includes('звичайне') || baseName.includes('water')
+          ? 'water_bottle'
+          : 'awkward_potion';
+      const baseItem = MINECRAFT_ITEMS[baseKey] || MINECRAFT_ITEMS.awkward_potion;
+
+      // Place in brewing stand
+      setBrewingIngredient({ ...reagentItem, itemId: reagentKey, count: 1 });
+      setBrewingBottles([
+        { ...baseItem, itemId: baseKey, count: 1 },
+        { ...baseItem, itemId: baseKey, count: 1 },
+        { ...baseItem, itemId: baseKey, count: 1 }
+      ]);
+
+      // Ensure fuel is ready
+      if (fuelChargesRef.current <= 0) {
+        setFuelCharges(20);
+        fuelChargesRef.current = 20;
+      }
+
+      playItemClickSound();
+
+      // Smooth scroll to workbench
+      const el = document.getElementById('mc-workbench') || document.querySelector('.mc-brewing-workbench');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
+      setBrewedToast({
+        name: potionDef?.name || 'Рецепт завантажено',
+        catalogId: potionId,
+        customTitle: 'Рецепт завантажено в стійку!'
+      });
+    };
+
+    window.addEventListener('load_potion_recipe', handleLoadRecipe);
+    return () => window.removeEventListener('load_potion_recipe', handleLoadRecipe);
+  }, []);
+
   // Authentic Minecraft Card-Parity Tooltip System
   const getSlotTooltipData = useCallback(
     (slotType, index, item) => {
@@ -1204,6 +1323,23 @@ export default function MinecraftStationWidget() {
 
 
           {/* ==================== BREWED NOTIFICATION TOAST ==================== */}
+          {brewedToast && (
+            <div
+              className="mc-station-toast"
+              onClick={() => handleViewInCatalog(brewedToast.catalogId)}
+              role="status"
+              title="Клацніть, щоб переглянути в каталозі"
+            >
+              <div className="mc-station-toast-icon">✨</div>
+              <div className="mc-station-toast-body">
+                <div className="mc-station-toast-title">
+                  {brewedToast.customTitle || 'Зілля зварено!'}
+                </div>
+                <div className="mc-station-toast-desc">{brewedToast.name}</div>
+                <div className="mc-station-toast-hint">Клацніть, щоб оглянути в каталозі</div>
+              </div>
+            </div>
+          )}
         </div>
           <aside className="mc-workstation-info mc-station-sidebar mc-station-crafting-info" aria-label="Стан крафту">
             <h3>Крафт</h3>
@@ -1216,7 +1352,36 @@ export default function MinecraftStationWidget() {
               <div><dt>Клавіші 1–9</dt><dd>Швидкий обмін зі слотом хотбара.</dd></div>
               <div><dt>Q / Ctrl+Q</dt><dd>Скинути 1 предмет / усю стопку в інвентар.</dd></div>
             </dl>
-            <button type="button" className="mc-brewing-ref-btn" disabled={!craftingGrid.some(Boolean)} onClick={() => { returnHeld(); clearPocketGrid(); }}>Очистити сітку</button>
+            <div className="mc-station-sidebar-btns">
+              <button
+                type="button"
+                className="mc-brewing-ref-btn"
+                disabled={!craftingGrid.some(Boolean)}
+                onClick={() => { returnHeld(); clearPocketGrid(); }}
+              >
+                Очистити сітку
+              </button>
+              <button
+                type="button"
+                className="mc-brewing-ref-btn mc-reset-inv-btn"
+                onClick={() => {
+                  returnHeld();
+                  clearPocketGrid();
+                  try {
+                    localStorage.removeItem('potionscraft_station_inventory');
+                  } catch {}
+                  setInventory(buildInitialInventory());
+                  playCraftSuccessSound();
+                  setBrewedToast({
+                    name: 'Початковий набір предметів відновлено',
+                    customTitle: 'Інвентар скинуто!'
+                  });
+                }}
+                title="Скинути стан інвентарю до початкового"
+              >
+                Скинути інвентар
+              </button>
+            </div>
           </aside>
         </div>
       </div>
