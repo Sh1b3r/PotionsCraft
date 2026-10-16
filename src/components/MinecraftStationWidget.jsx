@@ -66,6 +66,7 @@ export default function MinecraftStationWidget() {
   const clickRef = useRef(null);
   const activeIngredientRef = useRef(null);
   const hoveredSlotRef = useRef(null);
+  const recipeLoadedFromCardRef = useRef(false);
   const [containerReturns, setContainerReturns] = useState(0);
   // 1. Player Inventory: 72 slots (54 storage + 18 hotbar) with LocalStorage persistence
   const [inventory, setInventory] = useState(() => {
@@ -171,10 +172,12 @@ export default function MinecraftStationWidget() {
         craftingGridRef.current = next;
         setCraftingGrid(next);
       } else if (slotType === 'ingredient') {
+        recipeLoadedFromCardRef.current = false;
         const next = typeof value === 'function' ? value(brewingIngredientRef.current) : value;
         brewingIngredientRef.current = next;
         setBrewingIngredient(next);
       } else if (slotType === 'bottle') {
+        recipeLoadedFromCardRef.current = false;
         const next = [...brewingBottlesRef.current];
         next[index] = typeof value === 'function' ? value(next[index]) : value;
         brewingBottlesRef.current = next;
@@ -858,7 +861,9 @@ export default function MinecraftStationWidget() {
       }
       setIsBrewing(false); setBrewingStep(0); setBrewingProgress(0); setBrewingBubbleFrame(null);
       playPotionBrewedSound();
-      if (brewed) setBrewedToast({ name: brewed.name, catalogId: brewed.catalogId, timestamp: Date.now() });
+      const fromCard = recipeLoadedFromCardRef.current;
+      recipeLoadedFromCardRef.current = false;
+      if (brewed) setBrewedToast({ name: brewed.name, catalogId: brewed.catalogId, fromCard, timestamp: Date.now() });
     }, 20);
     return () => clearInterval(timer);
   }, [isBrewing]);
@@ -947,10 +952,12 @@ export default function MinecraftStationWidget() {
         el.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
 
+      recipeLoadedFromCardRef.current = true;
       setBrewedToast({
         name: potionDef?.name || 'Рецепт завантажено',
         catalogId: potionId,
-        customTitle: 'Рецепт завантажено в стійку!'
+        customTitle: 'Рецепт завантажено в стійку!',
+        fromCard: true
       });
     };
 
@@ -1391,10 +1398,14 @@ export default function MinecraftStationWidget() {
           {/* ==================== BREWED NOTIFICATION TOAST ==================== */}
           {brewedToast && (
             <div
-              className="mc-station-toast"
-              onClick={() => handleViewInCatalog(brewedToast.catalogId)}
+              className={`mc-station-toast ${!brewedToast.fromCard && brewedToast.catalogId ? 'is-clickable' : ''}`}
+              onClick={() => {
+                if (!brewedToast.fromCard && brewedToast.catalogId) {
+                  handleViewInCatalog(brewedToast.catalogId);
+                }
+              }}
               role="status"
-              title="Клацніть, щоб переглянути в каталозі"
+              title={!brewedToast.fromCard && brewedToast.catalogId ? 'Клацніть, щоб переглянути в каталозі' : ''}
             >
               <div className="mc-station-toast-icon">✨</div>
               <div className="mc-station-toast-body">
@@ -1402,7 +1413,9 @@ export default function MinecraftStationWidget() {
                   {brewedToast.customTitle || 'Зілля зварено!'}
                 </div>
                 <div className="mc-station-toast-desc">{brewedToast.name}</div>
-                <div className="mc-station-toast-hint">Клацніть, щоб оглянути в каталозі</div>
+                {!brewedToast.fromCard && brewedToast.catalogId && (
+                  <div className="mc-station-toast-hint">(Клацніть для огляду)</div>
+                )}
               </div>
               <button
                 type="button"
