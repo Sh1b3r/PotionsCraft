@@ -795,7 +795,7 @@ export default function MinecraftStationWidget() {
   }, [isBrewing]);
   useEffect(() => {
     if (!brewedToast) return;
-    const timer = setTimeout(() => setBrewedToast(null), 8000);
+    const timer = setTimeout(() => setBrewedToast(null), 4500);
     return () => clearTimeout(timer);
   }, [brewedToast]);
 
@@ -1338,6 +1338,18 @@ export default function MinecraftStationWidget() {
                 <div className="mc-station-toast-desc">{brewedToast.name}</div>
                 <div className="mc-station-toast-hint">Клацніть, щоб оглянути в каталозі</div>
               </div>
+              <button
+                type="button"
+                className="mc-station-toast-close"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setBrewedToast(null);
+                }}
+                title="Закрити підказку"
+                aria-label="Закрити"
+              >
+                ✕
+              </button>
             </div>
           )}
         </div>
