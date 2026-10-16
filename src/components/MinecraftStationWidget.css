@@ -484,6 +484,16 @@
   box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.65) !important;
 }
 
+.mc-slot .mc-item-icon.is-preview {
+  opacity: 0.65;
+  filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.4));
+}
+
+.mc-slot .mc-item-count.is-preview {
+  color: #ffff55;
+  text-shadow: 2px 2px 0 #3f3f15, 1px 1px 0 #3f3f15;
+}
+
 /* Item Icons inside slots */
 .mc-item-icon {
   width: 32px;
