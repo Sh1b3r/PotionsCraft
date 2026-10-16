@@ -17,20 +17,22 @@ export function checkCraftingRecipe(grid) {
 
   if (filledIndices.length === 0) return null;
 
-  // 1. 1 Blaze Rod -> 2 Blaze Powder
+  // 1. Single-slot shapeless recipes (exactly 1 item anywhere in grid)
   if (filledIndices.length === 1) {
     const idx = filledIndices[0];
-    if (items[idx] === 'blaze_rod') {
-      return {
-        itemId: 'blaze_powder',
-        count: 2,
-        ...MINECRAFT_ITEMS.blaze_powder
-      };
-    }
     const singleItemRecipes = {
+      blaze_rod: ['blaze_powder', 2],
+      breeze_rod: ['wind_charge', 4],
       sugar_cane: ['sugar', 1],
       gold_ingot: ['gold_nugget', 9],
+      gold_block: ['gold_ingot', 9],
       slime_block: ['slime_ball', 9],
+      melon_block: ['melon_slice', 9],
+      melon_slice: ['melon_seeds', 1],
+      redstone_block: ['redstone', 9],
+      glowstone_block: ['glowstone', 4],
+      cobweb: ['string', 1],
+      bamboo_block: ['bamboo', 9],
     };
     const recipe = singleItemRecipes[items[idx]];
     if (recipe) {
@@ -39,55 +41,104 @@ export function checkCraftingRecipe(grid) {
     }
   }
 
-  // 2. 3 Glass in "V" shape -> 3 Glass Bottles
-  // Standard V: row 1 col 0 (3), row 2 col 1 (7), row 1 col 2 (5)
-  // Higher V: row 0 col 0 (0), row 1 col 1 (4), row 0 col 2 (2)
-  if (filledIndices.length === 3) {
-    const isStandardV =
-      items[3] === 'glass' && items[7] === 'glass' && items[5] === 'glass';
-    const isHighV =
-      items[0] === 'glass' && items[4] === 'glass' && items[2] === 'glass';
-
-    if (isStandardV || isHighV) {
-      return {
-        itemId: 'glass_bottle',
-        count: 3,
-        ...MINECRAFT_ITEMS.glass_bottle
-      };
-    }
-
-    // 3. Fermented Spider Eye: Spider Eye + Brown Mushroom + Sugar (shapeless 3 items)
-    const hasSpiderEye = filledIndices.some((i) => items[i] === 'spider_eye');
-    const hasMushroom = filledIndices.some((i) => items[i] === 'brown_mushroom');
-    const hasSugar = filledIndices.some((i) => items[i] === 'sugar');
-
-    if (hasSpiderEye && hasMushroom && hasSugar) {
-      return {
-        itemId: 'fermented_spider_eye',
-        count: 1,
-        ...MINECRAFT_ITEMS.fermented_spider_eye
-      };
-    }
-  }
-
-  // Magma Cream (Blaze Powder + Slime Ball), shapeless.
+  // 2. 2-slot patterns
   if (filledIndices.length === 2) {
+    // Magma Cream (Blaze Powder + Slime Ball), shapeless
     const hasBlaze = filledIndices.some((i) => items[i] === 'blaze_powder');
     const hasSlime = filledIndices.some((i) => items[i] === 'slime_ball');
     if (hasBlaze && hasSlime) {
       return {
+        ...MINECRAFT_ITEMS.magma_cream,
         itemId: 'magma_cream',
-        count: 1,
-        ...MINECRAFT_ITEMS.magma_cream
+        count: 1
       };
     }
+    // 2-slot vertical patterns (top over bottom in same column)
     const [top, bottom] = filledIndices;
-    if (items[top] === 'bamboo' && items[bottom] === 'bamboo' && bottom === top + 3) {
-      return { ...MINECRAFT_ITEMS.stick, itemId: 'stick', count: 1 };
+    if (bottom === top + 3) {
+      if (items[top] === 'bamboo' && items[bottom] === 'bamboo') {
+        return { ...MINECRAFT_ITEMS.stick, itemId: 'stick', count: 1 };
+      }
+      if (items[top] === 'stick' && items[bottom] === 'stone') {
+        return { ...MINECRAFT_ITEMS.lever, itemId: 'lever', count: 1 };
+      }
+      if (items[top] === 'redstone' && items[bottom] === 'stick') {
+        return { ...MINECRAFT_ITEMS.redstone_torch, itemId: 'redstone_torch', count: 1 };
+      }
     }
   }
 
-  // Turtle shell: three scutes across the top, one below each outer scute.
+  // 3. 3-slot patterns
+  if (filledIndices.length === 3) {
+    // Glass Bottles (3 Glass in V-shape)
+    // Standard V: 3, 7, 5; High V: 0, 4, 2
+    const isStandardV = items[3] === 'glass' && items[7] === 'glass' && items[5] === 'glass';
+    const isHighV = items[0] === 'glass' && items[4] === 'glass' && items[2] === 'glass';
+    if (isStandardV || isHighV) {
+      return {
+        ...MINECRAFT_ITEMS.glass_bottle,
+        itemId: 'glass_bottle',
+        count: 3
+      };
+    }
+
+    // Fermented Spider Eye: Spider Eye + Brown Mushroom + Sugar (shapeless)
+    const hasSpiderEye = filledIndices.some((i) => items[i] === 'spider_eye');
+    const hasMushroom = filledIndices.some((i) => items[i] === 'brown_mushroom');
+    const hasSugar = filledIndices.some((i) => items[i] === 'sugar');
+    if (hasSpiderEye && hasMushroom && hasSugar) {
+      return {
+        ...MINECRAFT_ITEMS.fermented_spider_eye,
+        itemId: 'fermented_spider_eye',
+        count: 1
+      };
+    }
+
+    // Paper: 3 Sugar Cane horizontal row ([0,1,2], [3,4,5], [6,7,8])
+    const paperRows = [[0, 1, 2], [3, 4, 5], [6, 7, 8]];
+    const isPaper = paperRows.some(row => row.every(idx => items[idx] === 'sugar_cane'));
+    if (isPaper) {
+      return {
+        ...MINECRAFT_ITEMS.paper,
+        itemId: 'paper',
+        count: 3
+      };
+    }
+  }
+
+  // 4. 4-slot patterns
+  if (filledIndices.length === 4) {
+    // 2x2 square in any of the 4 quadrants:
+    // [0, 1, 3, 4], [1, 2, 4, 5], [3, 4, 6, 7], [4, 5, 7, 8]
+    const quadrants = [
+      [0, 1, 3, 4],
+      [1, 2, 4, 5],
+      [3, 4, 6, 7],
+      [4, 5, 7, 8]
+    ];
+    for (const quad of quadrants) {
+      if (quad.every(idx => items[idx] === 'glowstone')) {
+        return { ...MINECRAFT_ITEMS.glowstone_block, itemId: 'glowstone_block', count: 1 };
+      }
+      if (quad.every(idx => items[idx] === 'string')) {
+        return { ...MINECRAFT_ITEMS.white_wool, itemId: 'white_wool', count: 1 };
+      }
+      if (quad.every(idx => items[idx] === 'stone')) {
+        return { ...MINECRAFT_ITEMS.stone_bricks, itemId: 'stone_bricks', count: 4 };
+      }
+    }
+
+    // Brewing Stand: Blaze Rod centered above 3 Stone in a row
+    // High stand: Blaze rod at 1, Stone at [3, 4, 5]
+    // Low stand: Blaze rod at 4, Stone at [6, 7, 8]
+    const isHighBrewingStand = items[1] === 'blaze_rod' && [3, 4, 5].every(idx => items[idx] === 'stone');
+    const isLowBrewingStand = items[4] === 'blaze_rod' && [6, 7, 8].every(idx => items[idx] === 'stone');
+    if (isHighBrewingStand || isLowBrewingStand) {
+      return { ...MINECRAFT_ITEMS.brewing_stand, itemId: 'brewing_stand', count: 1 };
+    }
+  }
+
+  // 5. 5-slot patterns: Turtle shell (three scutes across top, one below each outer scute)
   if (filledIndices.length === 5) {
     const matchesHelmet = [0, 3].some(offset =>
       [0, 1, 2, 3, 5].every(index => items[index + offset] === 'turtle_scute')
@@ -97,15 +148,39 @@ export function checkCraftingRecipe(grid) {
     }
   }
 
-  // 4. Golden Carrot (8 Gold Nuggets surrounding 1 Carrot)
-  // 5. Glistering Melon (8 Gold Nuggets surrounding 1 Melon Slice)
+  // 6. 6-slot patterns: Glass Pane (6 glass in two horizontal rows)
+  // Top two rows: [0, 1, 2, 3, 4, 5]
+  // Bottom two rows: [3, 4, 5, 6, 7, 8]
+  if (filledIndices.length === 6) {
+    const isTopGlassPane = [0, 1, 2, 3, 4, 5].every(idx => items[idx] === 'glass');
+    const isBottomGlassPane = [3, 4, 5, 6, 7, 8].every(idx => items[idx] === 'glass');
+    if (isTopGlassPane || isBottomGlassPane) {
+      return { ...MINECRAFT_ITEMS.glass_pane, itemId: 'glass_pane', count: 16 };
+    }
+  }
+
+  // 7. 9-slot patterns
   if (filledIndices.length === 9) {
-    if (items.every(item => item === 'slime_ball')) {
+    const allSame = id => items.every(item => item === id);
+    if (allSame('slime_ball')) {
       return { ...MINECRAFT_ITEMS.slime_block, itemId: 'slime_block', count: 1 };
     }
-    if (items.every(item => item === 'gold_nugget')) {
+    if (allSame('gold_nugget')) {
       return { ...MINECRAFT_ITEMS.gold_ingot, itemId: 'gold_ingot', count: 1 };
     }
+    if (allSame('gold_ingot')) {
+      return { ...MINECRAFT_ITEMS.gold_block, itemId: 'gold_block', count: 1 };
+    }
+    if (allSame('melon_slice')) {
+      return { ...MINECRAFT_ITEMS.melon_block, itemId: 'melon_block', count: 1 };
+    }
+    if (allSame('redstone')) {
+      return { ...MINECRAFT_ITEMS.redstone_block, itemId: 'redstone_block', count: 1 };
+    }
+    if (allSame('bamboo')) {
+      return { ...MINECRAFT_ITEMS.bamboo_block, itemId: 'bamboo_block', count: 1 };
+    }
+
     const center = items[4];
     const outerAllNuggets = [0, 1, 2, 3, 5, 6, 7, 8].every(
       (idx) => items[idx] === 'gold_nugget'
@@ -114,16 +189,16 @@ export function checkCraftingRecipe(grid) {
     if (outerAllNuggets) {
       if (center === 'carrot') {
         return {
+          ...MINECRAFT_ITEMS.golden_carrot,
           itemId: 'golden_carrot',
-          count: 1,
-          ...MINECRAFT_ITEMS.golden_carrot
+          count: 1
         };
       }
       if (center === 'melon_slice') {
         return {
+          ...MINECRAFT_ITEMS.glistering_melon,
           itemId: 'glistering_melon',
-          count: 1,
-          ...MINECRAFT_ITEMS.glistering_melon
+          count: 1
         };
       }
     }

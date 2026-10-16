@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { MINECRAFT_ITEMS } from '../data/minecraftItemIcons';
 import { buildInitialInventory } from '../data/initialStationInventory';
 import {
@@ -92,6 +92,7 @@ export default function MinecraftStationWidget() {
   // Hand / Cursor held item for pick-and-place
   const [heldItem, setHeldItem] = useState(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [dragTargetKeys, setDragTargetKeys] = useState(() => new Set());
 
   // Tooltip integration using MinecraftTooltip system
   const { showTooltip, hideTooltip } = useTooltip();
@@ -121,8 +122,8 @@ export default function MinecraftStationWidget() {
   const heldItemRef = useRef(heldItem);
   heldItemRef.current = heldItem;
 
-  // Active Crafting Output
-  const craftingOutput = checkCraftingRecipe(craftingGrid);
+  // Active Crafting Output (memoized so it does not flicker on re-renders)
+  const craftingOutput = useMemo(() => checkCraftingRecipe(craftingGrid), [craftingGrid]);
 
   // Helper to get slot item synchronously
   const getSlotValue = useCallback(
@@ -303,40 +304,93 @@ export default function MinecraftStationWidget() {
   const handleCraftOutputClick = event => {
     event?.preventDefault?.();
     event?.stopPropagation?.();
-    let output = checkCraftingRecipe(craftingGridRef.current);
-    let crafted = false;
-    while (output) {
-      if (event?.shiftKey) {
-        if (insertInventory(output, undefined, false)) break;
-        insertInventory(output);
-      } else {
-        const held = heldItemRef.current;
-        if (held && (!sameStack(held, output) || held.count + output.count > (held.maxStack || 64))) break;
-        hold({ ...output, count: (held?.count || 0) + output.count });
+    if (event.button !== 0) return; // Only LMB crafts in Minecraft
+
+    const output = checkCraftingRecipe(craftingGridRef.current);
+    if (!output) return;
+
+    if (event.shiftKey) {
+      // Shift-click: craft as many as possible directly into inventory
+      let craftedAny = false;
+      let currentOutput = output;
+      while (currentOutput) {
+        // Can inventory accept currentOutput?
+        const remainder = insertInventory(currentOutput, undefined, false);
+        if (remainder && remainder.count === currentOutput.count) {
+          // No room in inventory
+          break;
+        }
+        insertInventory(currentOutput, undefined, true);
+        craftedAny = true;
+
+        const nextGrid = craftingGridRef.current.map(slot =>
+          slot && slot.count > 1 ? { ...slot, count: slot.count - 1 } : null
+        );
+        craftingGridRef.current = nextGrid;
+        setCraftingGrid(nextGrid);
+        currentOutput = checkCraftingRecipe(nextGrid);
       }
-      const next = craftingGridRef.current.map(item => item && item.count > 1 ? { ...item, count: item.count - 1 } : null);
-      craftingGridRef.current = next;
-      setCraftingGrid(next);
-      crafted = true;
-      if (!event?.shiftKey) break;
-      output = checkCraftingRecipe(next);
+      if (craftedAny) {
+        playCraftSuccessSound();
+        hideTooltip();
+      }
+    } else {
+      // Normal LMB click: take crafted item into cursor (held)
+      const held = heldItemRef.current;
+      if (held) {
+        if (!sameStack(held, output)) return;
+        if (held.count + output.count > (held.maxStack || 64)) return;
+        hold({ ...held, count: held.count + output.count });
+      } else {
+        hold({ ...output });
+      }
+
+      const nextGrid = craftingGridRef.current.map(slot =>
+        slot && slot.count > 1 ? { ...slot, count: slot.count - 1 } : null
+      );
+      craftingGridRef.current = nextGrid;
+      setCraftingGrid(nextGrid);
+      playCraftSuccessSound();
+
+      const nextOutput = checkCraftingRecipe(nextGrid);
+      if (nextOutput) {
+        handleSlotHover('output', 0, nextOutput);
+      } else {
+        hideTooltip();
+      }
     }
-    if (crafted) playCraftSuccessSound();
   };
+
   const collect = () => {
     const held = heldItemRef.current;
     if (!held || (held.maxStack || 64) <= 1) return;
-    for (const [type, length] of [['inventory', 72], ['crafting', 9], ['fuel', 1], ['ingredient', 1]]) {
+    const max = held.maxStack || 64;
+    let currentHeld = { ...held };
+    for (const [type, length] of [['inventory', 72], ['crafting', 9]]) {
       for (let index = 0; index < length; index++) {
+        if (currentHeld.count >= max) break;
         const item = getSlotValue(type, index);
-        if (!sameStack(item, held)) continue;
-        const amount = Math.min(item.count, (held.maxStack || 64) - heldItemRef.current.count);
-        if (!amount) return;
+        if (!sameStack(item, currentHeld)) continue;
+        const amount = Math.min(item.count, max - currentHeld.count);
+        if (amount <= 0) continue;
         setSlotValue(type, index, item.count > amount ? { ...item, count: item.count - amount } : null);
-        hold({ ...heldItemRef.current, count: heldItemRef.current.count + amount });
+        currentHeld = { ...currentHeld, count: currentHeld.count + amount };
+      }
+      if (currentHeld.count >= max) break;
+    }
+    hold(currentHeld);
+  };
+
+  const shiftCollectAll = targetItem => {
+    if (!targetItem) return;
+    for (let i = 0; i < 72; i++) {
+      const it = inventoryRef.current[i];
+      if (sameStack(it, targetItem)) {
+        handleShiftClick('inventory', i);
       }
     }
   };
+
   const slotClick = (type, index, right = false) => {
     const item = getSlotValue(type, index);
     const held = heldItemRef.current;
@@ -345,161 +399,309 @@ export default function MinecraftStationWidget() {
       const count = right ? Math.ceil(item.count / 2) : item.count;
       hold({ ...item, count });
       setSlotValue(type, index, item.count > count ? { ...item, count: item.count - count } : null);
+      playItemClickSound();
     } else if (!item || sameStack(item, held)) {
-      deposit(type, index, right ? 1 : held.count);
+      if (deposit(type, index, right ? 1 : held.count) > 0) {
+        playItemClickSound();
+      }
     } else if (!right && accepts(type, held) && held.count <= limit(type, held)) {
       setSlotValue(type, index, held);
       hold(item);
+      playItemClickSound();
     }
-    playItemClickSound();
   };
+
   const cancelGesture = () => {
-    clearTimeout(dragRef.current?.holdTimer);
     dragRef.current = null;
+    setDragTargetKeys(new Set());
   };
-  const beginGather = drag => {
-    if (dragRef.current !== drag || drag.collecting) return;
-    clearTimeout(drag.holdTimer);
-    drag.collecting = true;
-    clickRef.current = null;
-    // Include the starting slot when the gesture began with a held stack.
-    if (drag.pendingClick) visitSlot(drag.type, drag.index);
-  };
+
   const visitSlot = (type, index) => {
     const drag = dragRef.current;
-    if (!drag) return;
-    const key = type + '-' + index;
-    if (drag.slots.has(key)) return;
-    const item = getSlotValue(type, index);
-    if (type === 'output') return;
-    let held = heldItemRef.current;
-    if (!drag.one && !drag.collecting) {
-      if (type === drag.type && index === drag.index) return;
-      // Moving to another slot starts gathering instead of placing the held
-      // stack at pointerdown. A quick pickup-and-drop still works with no match.
-      if (drag.pendingClick || !held || sameStack(item, held)) beginGather(drag);
-      else return;
-      held = heldItemRef.current;
+    if (!drag || type === 'output') return;
+    const key = `${type}-${index}`;
+    if (drag.visitedKeys.has(key)) return;
+
+    if (drag.mode === 'right') {
+      const held = heldItemRef.current;
+      if (!held || !accepts(type, held)) return;
+      const target = getSlotValue(type, index);
+      if (target && (!sameStack(target, held) || target.count >= limit(type, held))) return;
+      drag.visitedKeys.add(key);
+      if (deposit(type, index, 1) > 0) {
+        playItemClickSound();
+      }
+    } else if (drag.mode === 'left') {
+      const startHeld = drag.startHeld;
+      if (!startHeld || !accepts(type, startHeld)) return;
+      const target = getSlotValue(type, index);
+      if (target && (!sameStack(target, startHeld) || target.count >= limit(type, startHeld))) return;
+      drag.visitedKeys.add(key);
+      drag.slots.push({ type, index });
+      setDragTargetKeys(new Set(drag.visitedKeys));
     }
-    if (!held) {
-      if (drag.one || !item) return;
-      slotClick(type, index);
-      drag.slots.add(key);
-      drag.gathered = true;
-      return;
-    }
-    if (drag.one) {
-      if (!accepts(type, held) || (item && !sameStack(item, held))) return;
-      // One item per slot and gesture, even if pointermove and pointerenter
-      // both run, or the pointer returns to an earlier slot. No repeat timer.
-      if (!deposit(type, index, 1)) return;
-    } else {
-      // Restore the earlier left-drag gathering behavior. Read live stacks;
-      // never rewrite previously visited slots from a distribution snapshot.
-      if (!sameStack(item, held)) return;
-      const amount = Math.min(item.count, (held.maxStack || 64) - held.count);
-      if (amount <= 0) return;
-      setSlotValue(type, index, item.count > amount ? { ...item, count: item.count - amount } : null);
-      hold({ ...held, count: held.count + amount });
-      drag.gathered = true;
-    }
-    drag.slots.add(key);
-    playItemClickSound();
   };
-  const finishGesture = event => {
+
+  const finishGesture = () => {
     const drag = dragRef.current;
-    if (drag && event.pointerId !== drag.pointerId) return;
     if (!drag) return;
-    if (event.type === 'pointerup' && event.button !== (drag.one ? 2 : 0)) return;
-    if (event.type === 'pointerup') {
-      const target = document.elementFromPoint(event.clientX, event.clientY)?.closest('[data-slot-index]');
-      if (target) {
-        const type = target.dataset.slotType;
-        const index = Number(target.dataset.slotIndex);
-        visitSlot(type, index);
-        // A direct left drag can drop or swap on release. After gathering,
-        // keep the combined stack in hand instead of dropping it back.
-        if (!drag.one && drag.pendingClick && !drag.collecting &&
-          type === drag.type && index === drag.index) slotClick(type, index);
-        if (!drag.one && drag.picked && !drag.collecting && !drag.gathered && heldItemRef.current &&
-          (type !== drag.type || index !== drag.index)) slotClick(type, index);
+    dragRef.current = null;
+    setDragTargetKeys(new Set());
+
+    if (drag.mode === 'left') {
+      const held = heldItemRef.current;
+      if (!held) return;
+      const slots = drag.slots;
+      if (slots.length === 1) {
+        // Single click LMB
+        slotClick(slots[0].type, slots[0].index, false);
+      } else if (slots.length > 1) {
+        // Left click drag: split stack evenly across all valid visited slots
+        const total = drag.startHeldCount;
+        const validSlots = slots.filter(s => {
+          if (!accepts(s.type, drag.startHeld)) return false;
+          const curr = getSlotValue(s.type, s.index);
+          if (curr && !sameStack(curr, drag.startHeld)) return false;
+          return true;
+        });
+
+        if (validSlots.length > 0) {
+          const countPerSlot = Math.floor(total / validSlots.length);
+          if (countPerSlot > 0) {
+            let placed = 0;
+            for (const s of validSlots) {
+              const curr = getSlotValue(s.type, s.index);
+              const room = limit(s.type, drag.startHeld) - (curr?.count || 0);
+              const addCount = Math.min(countPerSlot, room);
+              if (addCount > 0) {
+                setSlotValue(s.type, s.index, { ...drag.startHeld, count: (curr?.count || 0) + addCount });
+                placed += addCount;
+              }
+            }
+            const remainder = total - placed;
+            hold(remainder > 0 ? { ...drag.startHeld, count: remainder } : null);
+            playItemClickSound();
+          }
+        }
       }
     }
-    cancelGesture();
   };
+
   const hotbarSwap = key => {
     const slot = hoveredSlotRef.current;
-    if (!slot || dragRef.current || heldItemRef.current || slot.type === 'output') return;
+    if (!slot || heldItemRef.current) return;
     const hotbarIndex = 54 + Number(key) - 1;
+
+    if (slot.type === 'output') {
+      if (!craftingOutput) return;
+      const hotbar = getSlotValue('inventory', hotbarIndex);
+      if (!hotbar) {
+        setSlotValue('inventory', hotbarIndex, { ...craftingOutput });
+        const nextGrid = craftingGridRef.current.map(s => s && s.count > 1 ? { ...s, count: s.count - 1 } : null);
+        craftingGridRef.current = nextGrid;
+        setCraftingGrid(nextGrid);
+        playCraftSuccessSound();
+      }
+      return;
+    }
+
     if (slot.type === 'inventory' && slot.index === hotbarIndex) return;
     const source = getSlotValue(slot.type, slot.index);
     const hotbar = getSlotValue('inventory', hotbarIndex);
+    if (!source && !hotbar) return;
     if (hotbar && (!accepts(slot.type, hotbar) || hotbar.count > limit(slot.type, hotbar))) return;
     setSlotValue(slot.type, slot.index, hotbar);
     setSlotValue('inventory', hotbarIndex, source);
+    playItemClickSound();
+    hideTooltip();
   };
-  const gesturesRef = useRef({ finishGesture, visitSlot, returnHeld, hotbarSwap, beginGather, cancelGesture });
-  gesturesRef.current = { finishGesture, visitSlot, returnHeld, hotbarSwap, beginGather, cancelGesture };
+
+  const dropItem = (dropAll = false) => {
+    if (heldItemRef.current) {
+      const held = heldItemRef.current;
+      const countToDrop = dropAll ? held.count : 1;
+      const remainder = insertInventory({ ...held, count: countToDrop });
+      const actuallyReturned = countToDrop - (remainder ? remainder.count : 0);
+      if (actuallyReturned > 0) {
+        const nextHeldCount = held.count - actuallyReturned;
+        hold(nextHeldCount > 0 ? { ...held, count: nextHeldCount } : null);
+        playItemClickSound();
+      }
+      return;
+    }
+    const slot = hoveredSlotRef.current;
+    if (!slot || slot.type === 'output') return;
+    const item = getSlotValue(slot.type, slot.index);
+    if (!item) return;
+    const countToMove = dropAll ? item.count : 1;
+    if (slot.type !== 'inventory') {
+      const remainder = insertInventory({ ...item, count: countToMove });
+      const actuallyMoved = countToMove - (remainder ? remainder.count : 0);
+      if (actuallyMoved > 0) {
+        setSlotValue(slot.type, slot.index, item.count > actuallyMoved ? { ...item, count: item.count - actuallyMoved } : null);
+        playItemClickSound();
+      }
+    } else {
+      const remainder = insertInventory({ ...item, count: countToMove }, Array.from({ length: 18 }, (_, i) => 54 + i));
+      if (!remainder || remainder.count < countToMove) {
+        const moved = countToMove - (remainder ? remainder.count : 0);
+        setSlotValue(slot.type, slot.index, item.count > moved ? { ...item, count: item.count - moved } : null);
+        playItemClickSound();
+      }
+    }
+  };
+
+  const gesturesRef = useRef({ finishGesture, visitSlot, returnHeld, hotbarSwap, dropItem, cancelGesture });
+  gesturesRef.current = { finishGesture, visitSlot, returnHeld, hotbarSwap, dropItem, cancelGesture };
+
   useEffect(() => {
     const move = event => {
-      setMousePos({ x: event.clientX, y: event.clientY });
-      if (dragRef.current && event.pointerId !== dragRef.current.pointerId) return;
-      if (dragRef.current && !(event.buttons & dragRef.current.buttonMask)) { gesturesRef.current.cancelGesture(); return; }
-      const target = document.elementFromPoint(event.clientX, event.clientY)?.closest('[data-slot-index]');
-      if (target) gesturesRef.current.visitSlot(target.dataset.slotType, +target.dataset.slotIndex);
+      if (heldItemRef.current) {
+        setMousePos({ x: event.clientX, y: event.clientY });
+      }
+      if (dragRef.current && (event.buttons & dragRef.current.buttonMask)) {
+        const target = document.elementFromPoint(event.clientX, event.clientY)?.closest('[data-slot-index]');
+        if (target) {
+          gesturesRef.current.visitSlot(target.dataset.slotType, +target.dataset.slotIndex);
+        }
+      } else if (dragRef.current && !event.buttons) {
+        gesturesRef.current.cancelGesture();
+      }
     };
-    const end = event => gesturesRef.current.finishGesture(event);
-    const escape = event => {
+    const end = () => gesturesRef.current.finishGesture();
+    const handleKeyDown = event => {
       if (event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
-      if (event.key === 'Escape') { gesturesRef.current.cancelGesture(); gesturesRef.current.returnHeld(); }
-      if (/^[1-9]$/.test(event.key)) gesturesRef.current.hotbarSwap(event.key);
+      if (event.key === 'Escape') {
+        gesturesRef.current.cancelGesture();
+        gesturesRef.current.returnHeld();
+        hideTooltip();
+      }
+      if (/^[1-9]$/.test(event.key)) {
+        gesturesRef.current.hotbarSwap(event.key);
+      }
+      if (event.key === 'q' || event.key === 'Q' || event.key === 'й' || event.key === 'Й') {
+        gesturesRef.current.dropItem(event.ctrlKey);
+      }
     };
     const blur = () => gesturesRef.current.cancelGesture();
     window.addEventListener('pointermove', move);
     window.addEventListener('pointerup', end);
     window.addEventListener('pointercancel', end);
-    window.addEventListener('keydown', escape);
+    window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('blur', blur);
     return () => {
       gesturesRef.current.cancelGesture();
       window.removeEventListener('pointermove', move);
       window.removeEventListener('pointerup', end);
       window.removeEventListener('pointercancel', end);
-      window.removeEventListener('keydown', escape);
+      window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('blur', blur);
     };
   }, []);
+
   const slotEvents = (type, index, item) => pocketOpen ? { ...pocket.events(type, index), role: 'button', tabIndex: 0, 'aria-label': item?.name || 'Порожній слот' } : ({
     onPointerDown: event => {
+      // Middle Click (Button 1): Clone full stack in sandbox / creative
+      if (event.button === 1) {
+        event.preventDefault();
+        event.stopPropagation();
+        hideTooltip();
+        const currentItem = getSlotValue(type, index);
+        if (currentItem) {
+          const max = currentItem.maxStack || 64;
+          hold({ ...currentItem, count: max });
+          playItemClickSound();
+        }
+        return;
+      }
+
       if (event.button !== 0 && event.button !== 2) return;
-      if (dragRef.current) return;
       event.preventDefault();
       event.stopPropagation();
       hideTooltip();
       setMousePos({ x: event.clientX, y: event.clientY });
-      if (event.shiftKey && !heldItemRef.current) { handleShiftClick(type, index); return; }
+
+      const isRight = event.button === 2;
+
+      // Shift + Click handling
+      if (event.shiftKey && !heldItemRef.current) {
+        handleShiftClick(type, index);
+        playItemClickSound();
+        return;
+      }
+
       const now = Date.now();
       const previous = clickRef.current;
-      const key = type + '-' + index;
-      if (!mobile && event.button === 0 && heldItemRef.current && previous?.button === 0 && previous.key === key && now - previous.time < 250) {
-        collect(); clickRef.current = null; return;
+      const key = `${type}-${index}`;
+
+      // Double-click handling (LMB within 350ms)
+      if (!mobile && event.button === 0 && heldItemRef.current && previous?.button === 0 && now - previous.time < 350) {
+        if (event.shiftKey) {
+          shiftCollectAll(heldItemRef.current);
+        } else {
+          collect();
+        }
+        clickRef.current = null;
+        playItemClickSound();
+        return;
       }
       clickRef.current = { key, time: now, button: event.button };
-      const picked = !heldItemRef.current;
-      const one = event.button === 2;
-      const pendingClick = !one && !picked;
-      const drag = { type, index, picked, one, pendingClick, collecting: false, gathered: false,
-        slots: new Set(pendingClick ? [] : [key]), pointerId: event.pointerId, buttonMask: one ? 2 : 1 };
-      dragRef.current = drag;
-      // Pickup and RMB placement stay immediate. LMB placement waits for
-      // release so holding the button can collect the starting stack instead.
-      if (!pendingClick) slotClick(type, index, one);
-      if (!one) drag.holdTimer = setTimeout(() => gesturesRef.current.beginGather(drag), 220);
-      // Touch browsers capture pointers implicitly; release so neighboring slots receive hover.
-      if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+
+      const held = heldItemRef.current;
+      const slotItem = getSlotValue(type, index);
+
+      if (isRight) {
+        // RMB:
+        if (!held) {
+          slotClick(type, index, true);
+        } else if (!slotItem || sameStack(slotItem, held)) {
+          if (deposit(type, index, 1) > 0) {
+            playItemClickSound();
+          }
+          dragRef.current = {
+            mode: 'right',
+            visitedKeys: new Set([key]),
+            buttonMask: 2,
+            pointerId: event.pointerId
+          };
+        }
+      } else {
+        // LMB:
+        if (!held) {
+          slotClick(type, index, false);
+        } else if (slotItem && !sameStack(slotItem, held)) {
+          slotClick(type, index, false);
+        } else {
+          dragRef.current = {
+            mode: 'left',
+            startHeld: { ...held },
+            startHeldCount: held.count,
+            slots: [{ type, index }],
+            visitedKeys: new Set([key]),
+            buttonMask: 1,
+            pointerId: event.pointerId
+          };
+          setDragTargetKeys(new Set([key]));
+        }
+      }
+
+      if (event.currentTarget.hasPointerCapture?.(event.pointerId)) {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      }
     },
-    onPointerEnter: event => { hoveredSlotRef.current = { type, index }; if (dragRef.current && (event.buttons & dragRef.current.buttonMask)) visitSlot(type, index); else handleSlotHover(type, index, item); },
-    onPointerLeave: () => { hoveredSlotRef.current = null; hideTooltip(); },
+    onPointerEnter: event => {
+      hoveredSlotRef.current = { type, index };
+      const drag = dragRef.current;
+      if (drag && (event.buttons & drag.buttonMask)) {
+        gesturesRef.current.visitSlot(type, index);
+      } else {
+        handleSlotHover(type, index, item);
+      }
+    },
+    onPointerLeave: () => {
+      hoveredSlotRef.current = null;
+      hideTooltip();
+    },
   });
 
   // Vanilla uses 400 ticks (20 seconds), consumes a fuel charge at the start,
@@ -656,7 +858,7 @@ export default function MinecraftStationWidget() {
           (item.description ? `§7${item.description}` : item.englishName ? `§8${item.englishName}` : null)
       };
     },
-    [isBrewing, brewingProgress, TOTAL_BREW_TIME]
+    []
   );
 
   const handleSlotHover = useCallback(
@@ -676,7 +878,25 @@ export default function MinecraftStationWidget() {
   );
 
   const handleBackgroundClick = event => {
-    if (!event.target.closest('.mc-slot, button')) returnHeld();
+    if (!event.target.closest('.mc-slot, button')) {
+      if (heldItemRef.current) {
+        if (event.button === 2) {
+          // Right-click outside: drop 1 item
+          const held = heldItemRef.current;
+          const remainder = insertInventory({ ...held, count: 1 });
+          const dropped = 1 - (remainder ? remainder.count : 0);
+          if (dropped > 0) {
+            const nextCount = held.count - dropped;
+            hold(nextCount > 0 ? { ...held, count: nextCount } : null);
+            playItemClickSound();
+          }
+        } else {
+          // Left-click outside: drop/return full held stack
+          returnHeld();
+          playItemClickSound();
+        }
+      }
+    }
   };
 
   const brewingStage = (<div className="mc-brewing-stand-stage">
@@ -699,14 +919,14 @@ export default function MinecraftStationWidget() {
 
                 {/* 1. Top-Left Fuel Slot */}
                 <div
-                  className={`mc-slot mc-slot-fuel ${fuelSlot ? 'has-item' : ''}`}
+                  className={`mc-slot mc-slot-fuel ${fuelSlot ? 'has-item' : ''} ${dragTargetKeys.has('fuel-0') ? 'is-drag-target' : ''}`}
                   data-slot-type="fuel"
                   data-slot-index={0}
                   {...slotEvents('fuel', 0, getSlotValue('fuel', 0))}
                 >
                   {fuelSlot ? (
                     <>
-                      <img src={fuelSlot.sprite} alt={fuelSlot.name} className="mc-item-icon" />
+                      <img src={fuelSlot.sprite} alt={fuelSlot.name} className="mc-item-icon" draggable="false" />
                       {fuelSlot.count > 1 && (
                         <span className="mc-item-count">{fuelSlot.count}</span>
                       )}
@@ -727,7 +947,7 @@ export default function MinecraftStationWidget() {
 
                 {/* 3. Top Reagent Slot */}
                 <div
-                  className={`mc-slot mc-slot-reagent ${brewingIngredient ? 'has-item' : ''}`}
+                  className={`mc-slot mc-slot-reagent ${brewingIngredient ? 'has-item' : ''} ${dragTargetKeys.has('ingredient-0') ? 'is-drag-target' : ''}`}
                   data-slot-type="ingredient"
                   data-slot-index={0}
                   {...slotEvents('ingredient', 0, getSlotValue('ingredient', 0))}
@@ -738,6 +958,7 @@ export default function MinecraftStationWidget() {
                         src={brewingIngredient.sprite}
                         alt={brewingIngredient.name}
                         className="mc-item-icon"
+                        draggable="false"
                       />
                       {brewingIngredient.count > 1 && (
                         <span className="mc-item-count">{brewingIngredient.count}</span>
@@ -767,7 +988,7 @@ export default function MinecraftStationWidget() {
                   return (
                     <div
                       key={`bottle-${idx}`}
-                      className={`mc-slot mc-slot-bottle ${slotClassNames[idx]} ${bottle ? 'has-item' : ''}`}
+                      className={`mc-slot mc-slot-bottle ${slotClassNames[idx]} ${bottle ? 'has-item' : ''} ${dragTargetKeys.has(`bottle-${idx}`) ? 'is-drag-target' : ''}`}
                       data-slot-type="bottle"
                       data-slot-index={idx}
                       {...slotEvents('bottle', idx, getSlotValue('bottle', idx))}
@@ -778,6 +999,7 @@ export default function MinecraftStationWidget() {
                             src={bottle.sprite}
                             alt={bottle.name}
                             className="mc-item-icon"
+                            draggable="false"
                           />
                           {bottle.count > 1 && (
                             <span className="mc-item-count">{bottle.count}</span>
@@ -841,7 +1063,7 @@ export default function MinecraftStationWidget() {
                   {craftingGrid.map((slotItem, idx) => (
                     <div
                       key={`craft-${idx}`}
-                      className={`mc-slot ${slotItem ? 'has-item' : ''}`}
+                      className={`mc-slot ${slotItem ? 'has-item' : ''} ${dragTargetKeys.has(`crafting-${idx}`) ? 'is-drag-target' : ''}`}
                       data-slot-type="crafting"
                       data-slot-index={idx}
                       {...slotEvents('crafting', idx, getSlotValue('crafting', idx))}
@@ -852,6 +1074,7 @@ export default function MinecraftStationWidget() {
                             src={slotItem.sprite}
                             alt={slotItem.name}
                             className="mc-item-icon"
+                            draggable="false"
                           />
                           {slotItem.count > 1 && (
                             <span className="mc-item-count">{slotItem.count}</span>
@@ -878,15 +1101,17 @@ export default function MinecraftStationWidget() {
                     data-slot-type="output"
                     onPointerDown={handleCraftOutputClick}
                     onContextMenu={e => e.preventDefault()}
-                    onMouseEnter={() => handleSlotHover('output', 0, craftingOutput)}
-                    onMouseLeave={hideTooltip}
+                    onPointerEnter={() => handleSlotHover('output', 0, craftingOutput)}
+                    onPointerLeave={() => { hoveredSlotRef.current = null; hideTooltip(); }}
                   >
                     {craftingOutput && (
                       <>
                         <img
+                          key={`out-${craftingOutput.itemId}`}
                           src={craftingOutput.sprite}
                           alt={craftingOutput.name}
                           className="mc-item-icon"
+                          draggable="false"
                         />
                         {craftingOutput.count > 1 && (
                           <span className="mc-item-count">{craftingOutput.count}</span>
@@ -908,7 +1133,7 @@ export default function MinecraftStationWidget() {
               {inventory.slice(0, 54).map((slotItem, idx) => (
                 <div
                   key={`inv-${idx}`}
-                  className={`mc-slot ${slotItem ? 'has-item' : ''}`}
+                  className={`mc-slot ${slotItem ? 'has-item' : ''} ${dragTargetKeys.has(`inventory-${idx}`) ? 'is-drag-target' : ''}`}
                   data-slot-type="inventory"
                   data-slot-index={idx}
                   {...slotEvents('inventory', idx, getSlotValue('inventory', idx))}
@@ -919,6 +1144,7 @@ export default function MinecraftStationWidget() {
                         src={slotItem.sprite}
                         alt={slotItem.name}
                         className="mc-item-icon"
+                        draggable="false"
                       />
                       {slotItem.count > 1 && (
                         <span className="mc-item-count">{slotItem.count}</span>
@@ -939,7 +1165,7 @@ export default function MinecraftStationWidget() {
                 return (
                   <div
                     key={`hotbar-${actualIdx}`}
-                    className={`mc-slot ${slotItem ? 'has-item' : ''}`}
+                    className={`mc-slot ${slotItem ? 'has-item' : ''} ${dragTargetKeys.has(`inventory-${actualIdx}`) ? 'is-drag-target' : ''}`}
                     data-slot-type="inventory"
                     data-slot-index={actualIdx}
                     {...slotEvents('inventory', actualIdx, getSlotValue('inventory', actualIdx))}
@@ -950,6 +1176,7 @@ export default function MinecraftStationWidget() {
                           src={slotItem.sprite}
                           alt={slotItem.name}
                           className="mc-item-icon"
+                          draggable="false"
                         />
                         {slotItem.count > 1 && (
                           <span className="mc-item-count">{slotItem.count}</span>
@@ -981,8 +1208,14 @@ export default function MinecraftStationWidget() {
           <aside className="mc-workstation-info mc-station-sidebar mc-station-crafting-info" aria-label="Стан крафту">
             <h3>Крафт</h3>
             <div className="mc-workstation-info-title">{craftingOutput ? `${craftingOutput.name} × ${craftingOutput.count}` : 'Сітка 3 × 3'}</div>
-            <h4>Керування</h4>
-            <dl className="mc-station-shortcuts"><div><dt>ЛКМ</dt><dd>Клік — взяти / покласти. Утримання й протяжка — зібрати однакові.</dd></div><div><dt>ПКМ</dt><dd>Взяти половину / покласти один. Протяжка — по одному в слот.</dd></div><div><dt>Подвійний ЛКМ</dt><dd>Зібрати однакові предмети до повної стопки.</dd></div><div><dt>Shift + клік</dt><dd>Перенести; на результаті — крафт усіх.</dd></div></dl>
+            <dl className="mc-station-shortcuts">
+              <div><dt>ЛКМ</dt><dd>Взяти / покласти стопку; обмін предметами.</dd></div>
+              <div><dt>ПКМ</dt><dd>Взяти половину / покласти 1. Протяжка — по 1 у слот.</dd></div>
+              <div><dt>Подвійний ЛКМ</dt><dd>Зібрати однакові предмети до повної стопки.</dd></div>
+              <div><dt>Shift + клік</dt><dd>Швидке перенесення; на результаті — крафт усіх.</dd></div>
+              <div><dt>Клавіші 1–9</dt><dd>Швидкий обмін зі слотом хотбара.</dd></div>
+              <div><dt>Q / Ctrl+Q</dt><dd>Скинути 1 предмет / усю стопку в інвентар.</dd></div>
+            </dl>
             <button type="button" className="mc-brewing-ref-btn" disabled={!craftingGrid.some(Boolean)} onClick={() => { returnHeld(); clearPocketGrid(); }}>Очистити сітку</button>
           </aside>
         </div>

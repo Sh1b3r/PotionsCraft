@@ -426,6 +426,96 @@ export const MINECRAFT_ITEMS = {
     name: 'Скалковий каталізатор',
     sprite: '/items/sculk_catalyst.png',
     maxStack: 64,
+  },
+  melon_block: {
+    id: 'melon_block',
+    name: 'Блок кавуна',
+    sprite: '/items/melon_block.png',
+    maxStack: 64,
+  },
+  glass_pane: {
+    id: 'glass_pane',
+    name: 'Скляна панель',
+    sprite: '/items/glass_pane.png',
+    maxStack: 64,
+  },
+  gold_block: {
+    id: 'gold_block',
+    name: 'Золотий блок',
+    sprite: '/items/gold_block.png',
+    maxStack: 64,
+  },
+  redstone_block: {
+    id: 'redstone_block',
+    name: 'Блок редстоуну',
+    sprite: '/items/redstone_block.png',
+    maxStack: 64,
+  },
+  glowstone_block: {
+    id: 'glowstone_block',
+    name: 'Світлокамінь',
+    sprite: '/items/glowstone_block.png',
+    maxStack: 64,
+  },
+  brewing_stand: {
+    id: 'brewing_stand',
+    name: 'Варильна стійка',
+    sprite: '/items/brewing_stand.png',
+    maxStack: 64,
+  },
+  paper: {
+    id: 'paper',
+    name: 'Папір',
+    sprite: '/items/paper.png',
+    maxStack: 64,
+  },
+  string: {
+    id: 'string',
+    name: 'Нитка',
+    sprite: '/items/string.png',
+    maxStack: 64,
+  },
+  melon_seeds: {
+    id: 'melon_seeds',
+    name: 'Насіння кавуна',
+    sprite: '/items/melon_seeds.png',
+    maxStack: 64,
+  },
+  wind_charge: {
+    id: 'wind_charge',
+    name: 'Заряд вітру',
+    sprite: '/items/wind_charge.png',
+    maxStack: 64,
+  },
+  white_wool: {
+    id: 'white_wool',
+    name: 'Біла вовна',
+    sprite: '/items/white_wool.png',
+    maxStack: 64,
+  },
+  stone_bricks: {
+    id: 'stone_bricks',
+    name: 'Кам’яна цегла',
+    sprite: '/items/stone_bricks.png',
+    maxStack: 64,
+  },
+  lever: {
+    id: 'lever',
+    name: 'Важіль',
+    sprite: '/items/lever.png',
+    maxStack: 64,
+  },
+  redstone_torch: {
+    id: 'redstone_torch',
+    name: 'Редстоуновий смолоскип',
+    sprite: '/items/redstone_torch.png',
+    maxStack: 64,
+  },
+  bamboo_block: {
+    id: 'bamboo_block',
+    name: 'Блок бамбука',
+    sprite: '/items/bamboo_block.png',
+    maxStack: 64,
   }
 };
 

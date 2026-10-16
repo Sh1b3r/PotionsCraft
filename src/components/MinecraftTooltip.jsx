@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef, useCallback, useMemo, useLayoutEffect } from 'react';
 
 const TooltipContext = createContext(null);
 
@@ -156,16 +156,51 @@ function renderFormattedLines(rawText, defaultColor = '#ffffff') {
 
 export function TooltipProvider({ children }) {
   const [tooltip, setTooltip] = useState(null);
-  const [pos, setPos] = useState({ x: 0, y: 0 });
   const tooltipRef = useRef(null);
+  const posRef = useRef({ x: 0, y: 0 });
+
+  const updatePosition = (clientX, clientY) => {
+    posRef.current = { x: clientX, y: clientY };
+    const el = tooltipRef.current;
+    if (!el) return;
+
+    const width = el.offsetWidth || 180;
+    const height = el.offsetHeight || 30;
+
+    let x = clientX + 12;
+    let y = clientY - 12;
+
+    if (x + width > window.innerWidth - 8) {
+      x = clientX - width - 12;
+    }
+    if (x < 8) x = 8;
+    if (x + width > window.innerWidth - 8) {
+      x = Math.max(8, window.innerWidth - width - 8);
+    }
+
+    if (y < 8) {
+      y = clientY + 20;
+    } else if (y + height > window.innerHeight - 8) {
+      y = Math.max(8, window.innerHeight - height - 8);
+    }
+
+    el.style.left = `${x}px`;
+    el.style.top = `${y}px`;
+  };
 
   useEffect(() => {
     const handleMouseMove = (e) => {
-      setPos({ x: e.clientX, y: e.clientY });
+      updatePosition(e.clientX, e.clientY);
     };
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
+
+  useLayoutEffect(() => {
+    if (tooltip && tooltipRef.current) {
+      updatePosition(posRef.current.x, posRef.current.y);
+    }
+  }, [tooltip]);
 
   // Event delegation to catch any element with data-minetip attributes as in be.html
   useEffect(() => {
@@ -174,8 +209,8 @@ export function TooltipProvider({ children }) {
         '[data-minetip-title], [data-minetip-text], [data-minetip], .invslot-item'
       );
       if (target) {
-        // Skip if managed by explicit TooltipTrigger component
-        if (target.closest('.mc-tooltip-trigger')) return;
+        // Skip if managed by explicit TooltipTrigger component or workstation slots
+        if (target.closest('.mc-tooltip-trigger, .mc-slot, .mc-workbench-layout')) return;
 
         let title = target.getAttribute('data-minetip-title');
         let text = target.getAttribute('data-minetip-text') || target.getAttribute('data-minetip');
@@ -197,7 +232,7 @@ export function TooltipProvider({ children }) {
       const target = e.target.closest(
         '[data-minetip-title], [data-minetip-text], [data-minetip], .invslot-item'
       );
-      if (target && !target.closest('.mc-tooltip-trigger')) {
+      if (target && !target.closest('.mc-tooltip-trigger, .mc-slot, .mc-workbench-layout')) {
         setTooltip(null);
       }
     };
@@ -210,44 +245,18 @@ export function TooltipProvider({ children }) {
     };
   }, []);
 
-  const showTooltip = (data) => {
+  const showTooltip = useCallback((data) => {
     setTooltip(data);
-  };
+  }, []);
 
-  const hideTooltip = () => {
+  const hideTooltip = useCallback(() => {
     setTooltip(null);
-  };
+  }, []);
 
-  // Adjust tooltip position to stay inside window bounds (like minetip.js)
-  const getAdjustedPosition = () => {
-    const width = tooltipRef.current?.offsetWidth || 180;
-    const height = tooltipRef.current?.offsetHeight || 30;
-
-    let x = pos.x + 12;
-    let y = pos.y - 12;
-
-    if (x + width > window.innerWidth - 8) {
-      x = pos.x - width - 12;
-    }
-    if (x < 8) {
-      x = 8;
-    }
-    if (x + width > window.innerWidth - 8) {
-      x = Math.max(8, window.innerWidth - width - 8);
-    }
-
-    if (y < 8) {
-      y = pos.y + 20;
-    } else if (y + height > window.innerHeight - 8) {
-      y = Math.max(8, window.innerHeight - height - 8);
-    }
-    return { x, y };
-  };
-
-  const adjustedPos = getAdjustedPosition();
+  const contextValue = useMemo(() => ({ showTooltip, hideTooltip }), [showTooltip, hideTooltip]);
 
   return (
-    <TooltipContext.Provider value={{ showTooltip, hideTooltip }}>
+    <TooltipContext.Provider value={contextValue}>
       {children}
       {tooltip && (
         <div
@@ -255,8 +264,6 @@ export function TooltipProvider({ children }) {
           ref={tooltipRef}
           className="minetip-tooltip"
           style={{
-            left: `${adjustedPos.x}px`,
-            top: `${adjustedPos.y}px`,
             display: 'block',
           }}
         >
