@@ -261,6 +261,19 @@ export default function PotionCard({
               </TooltipTrigger>
             )}
           </div>
+
+          {/* Action button to load recipe into the brewing stand */}
+          <button
+            type="button"
+            className="card-load-stand-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              window.dispatchEvent(new CustomEvent('load_potion_recipe', { detail: { potionId: potion.id } }));
+            }}
+            title="Завантажити цей рецепт у варильну стійку"
+          >
+            <span className="card-load-stand-icon">⚗️</span> Встановити у стійку
+          </button>
         </div>
       </div>
 
@@ -409,6 +422,19 @@ export default function PotionCard({
                 </TooltipTrigger>
               )}
             </div>
+
+            {/* Mobile action button to load recipe into the brewing stand */}
+            <button
+              type="button"
+              className="card-load-stand-btn mobile-load-stand-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                window.dispatchEvent(new CustomEvent('load_potion_recipe', { detail: { potionId: potion.id } }));
+              }}
+              title="Завантажити цей рецепт у варильну стійку"
+            >
+              <span className="card-load-stand-icon">⚗️</span> Встановити у стійку
+            </button>
           </div>
         </div>
 

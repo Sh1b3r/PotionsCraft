@@ -2003,6 +2003,72 @@ body.dark-theme .invslot.mcui-output3 {
   border-color: #eab308;
 }
 
+/* Card recipe action button (under duration and upgrades) */
+.card-load-stand-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 5px 12px;
+  width: fit-content;
+  background: #c6c6c6;
+  border: 2px outset #ffffff;
+  border-right-color: #555555;
+  border-bottom-color: #555555;
+  color: #1f2937;
+  font-family: 'Minecraft', 'Minecraftia', monospace, sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: pointer;
+  text-shadow: 1px 1px #ffffff;
+  transition: all 0.12s ease;
+  user-select: none;
+  border-radius: 2px;
+}
+
+.dark-theme .card-load-stand-btn {
+  background: #232b32;
+  border-color: #3b4752;
+  border-right-color: #12181d;
+  border-bottom-color: #12181d;
+  color: #00ffcc;
+  text-shadow: 1px 1px #050a0e;
+}
+
+.card-load-stand-btn:hover {
+  background: #dcdcdc;
+  border-color: #ffffff;
+  border-right-color: #333333;
+  border-bottom-color: #333333;
+  color: #000000;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.dark-theme .card-load-stand-btn:hover {
+  background: #2e3842;
+  border-color: #526372;
+  color: #55ffff;
+  box-shadow: 0 0 8px rgba(0, 255, 204, 0.25);
+}
+
+.card-load-stand-btn:active {
+  border-style: inset;
+  transform: translateY(1px);
+}
+
+.card-load-stand-icon {
+  font-size: 13px;
+  line-height: 1;
+}
+
+.mobile-load-stand-btn {
+  margin-top: 6px;
+  padding: 3px 8px;
+  font-size: 10px;
+}
+
 .hearts,
 .mc-hearts {
   display: inline-flex;
