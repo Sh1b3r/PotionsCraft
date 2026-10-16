@@ -13,7 +13,7 @@ import './App.css';
 import './SculkEcho.css';
 
 const THEME_IMAGES = [
-  '/Glass_Bottle_JE2_BE2.webp', '/Potion_of_Swiftness_JE3.png',
+  '/logo_light.svg', '/logo_dark.svg',
   '/Grid_layout_Brewing_Bubbles.gif', '/Grid_layout_Brewing_Bubbles_dark.gif',
   '/mc_bubbles_empty.png', '/mc_bubbles_empty_dark.png',
 ];
@@ -41,8 +41,8 @@ export default function App() {
   const [activeModalPotion, setActiveModalPotion] = useState(null);
   const [activeEasterEgg, setActiveEasterEgg] = useState(null);
 
-  const logoDaySrc = '/Glass_Bottle_JE2_BE2.webp';
-  const logoSculkSrc = '/Potion_of_Swiftness_JE3.png';
+  const logoDaySrc = '/logo_light.svg';
+  const logoSculkSrc = '/logo_dark.svg';
 
   const handleToggleTheme = () => {
     // Count clicks against the latest request, even before a snapshot commits.

@@ -8,8 +8,8 @@ export default function Header({
   onOpenEasterEgg,
 }) {
   const isDarkActive = theme ? theme === 'dark' || theme === 'sculk' : Boolean(isDark);
-  const logoDaySrc = '/Glass_Bottle_JE2_BE2.webp';
-  const logoDarkSrc = '/Potion_of_Swiftness_JE3.png';
+  const logoDaySrc = '/logo_light.svg';
+  const logoDarkSrc = '/logo_dark.svg';
   const currentLogo = isDarkActive ? logoDarkSrc : logoDaySrc;
 
   return (

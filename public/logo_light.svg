@@ -1,0 +1,157 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 220" width="180" height="220" shape-rendering="crispEdges">
+  <defs>
+    <!-- М'яке кришталеве сяйво порожньої скляної колби -->
+    <radialGradient id="bottleGlow" cx="50%" cy="58%" r="48%" shape-rendering="auto">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.32" />
+      <stop offset="55%" stop-color="#7dd3fc" stop-opacity="0.1" />
+      <stop offset="100%" stop-color="#38bdf8" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Магічний перелив світла на склі колби -->
+    <linearGradient id="glassGlint" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0" />
+      <stop offset="40%" stop-color="#bae6fd" stop-opacity="0" />
+      <stop offset="50%" stop-color="#ffffff" stop-opacity="0.55" />
+      <stop offset="60%" stop-color="#7dd3fc" stop-opacity="0" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+    </linearGradient>
+
+    <!-- Маска точно за внутрішньою формою колби 9x13 (масштаб 12px на 1 піксель) -->
+    <clipPath id="glassInteriorMask">
+      <path d="
+        M 24,72 h72 v12 h-72 z
+        M 12,84 h84 v48 h-84 z
+        M 24,132 h60 v12 h-60 z
+      " />
+    </clipPath>
+
+    <!-- Піксельний завиток ефекту (Minecraft Swirl) -->
+    <g id="swirlParticle">
+      <rect x="4" y="0" width="8" height="4" />
+      <rect x="12" y="4" width="4" height="8" />
+      <rect x="4" y="12" width="8" height="4" />
+      <rect x="0" y="4" width="4" height="8" />
+      <rect x="4" y="4" width="4" height="4" opacity="0.5" />
+    </g>
+  </defs>
+
+  <style>
+    .flask-levitate {
+      animation: floatFlask 3s ease-in-out infinite;
+    }
+    .empty-glass {
+      animation: pulseGlass 1.8s steps(2, start) infinite;
+    }
+    .glint-sweep {
+      animation: moveGlint 2.6s linear infinite;
+    }
+    .swirl-1 { animation: riseSwirl 2.2s linear infinite 0s; }
+    .swirl-2 { animation: riseSwirl 2.7s linear infinite 0.8s; }
+    .swirl-3 { animation: riseSwirl 2.4s linear infinite 1.5s; }
+
+    @keyframes floatFlask {
+      0%, 100% { transform: translate(36px, 44px) translateY(0px); }
+      50% { transform: translate(36px, 44px) translateY(-6px); }
+    }
+    @keyframes pulseGlass {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(1.18); }
+    }
+    @keyframes moveGlint {
+      0% { transform: translate(-110px, -110px); }
+      100% { transform: translate(110px, 110px); }
+    }
+    @keyframes riseSwirl {
+      0% { transform: translateY(0px) scale(0.75); opacity: 0; }
+      25% { opacity: 0.95; }
+      80% { opacity: 0.75; }
+      100% { transform: translateY(-38px) scale(1.1); opacity: 0; }
+    }
+  </style>
+
+  <!-- Світіння фону -->
+  <circle cx="90" cy="126" r="82" fill="url(#bottleGlow)" />
+
+  <!-- Частинки світла, що вилітають вгору -->
+  <use href="#swirlParticle" x="42" y="34" fill="#38bdf8" class="swirl-1" />
+  <use href="#swirlParticle" x="118" y="42" fill="#bae6fd" class="swirl-2" />
+  <use href="#swirlParticle" x="82" y="22" fill="#7dd3fc" class="swirl-3" />
+
+  <!-- КОЛБА 9x13 ПІКСЕЛІВ (1 клітинка = 12x12px) -->
+  <g class="flask-levitate" transform="translate(36, 44)">
+    <!-- РЯДОК 0: Верх корка (x=3,4,5) -->
+    <rect x="36" y="0" width="12" height="12" fill="#d86f45" />
+    <rect x="48" y="0" width="12" height="12" fill="#d86f45" />
+    <rect x="60" y="0" width="12" height="12" fill="#9c3914" />
+
+    <!-- РЯДОК 1: Верхній обідок горловини + корок за склом (x=2..6) -->
+    <rect x="24" y="12" width="12" height="12" fill="#dceaf7" />
+    <rect x="36" y="12" width="12" height="12" fill="#d1b3a7" />
+    <rect x="48" y="12" width="12" height="12" fill="#d1b3a7" />
+    <rect x="60" y="12" width="12" height="12" fill="#d1b3a7" />
+    <rect x="72" y="12" width="12" height="12" fill="#b6cfe8" />
+
+    <!-- РЯДОК 2: Нижній обідок горловини + низ корка (x=2..6) -->
+    <rect x="24" y="24" width="12" height="12" fill="#b6cfe8" />
+    <rect x="36" y="24" width="12" height="12" fill="#aa4820" />
+    <rect x="48" y="24" width="12" height="12" fill="#aa4820" />
+    <rect x="60" y="24" width="12" height="12" fill="#9c3914" />
+    <rect x="72" y="24" width="12" height="12" fill="#b6cfe8" />
+
+    <!-- РЯДОК 3 та 4: Вузька шийка (x=3 та x=5, середина прозора) -->
+    <rect x="36" y="36" width="12" height="24" fill="#b6cfe8" />
+    <rect x="60" y="36" width="12" height="24" fill="#6395c7" />
+
+    <!-- РЯДОК 5: Плечики колби (x=2 та x=6) -->
+    <rect x="24" y="60" width="12" height="12" fill="#dceaf7" />
+    <rect x="72" y="60" width="12" height="12" fill="#6395c7" />
+
+    <!-- СКЛЯНІ СТІНКИ КОРПУСУ (Зовнішній контур) -->
+    <!-- Рядок 6 (x=1 та x=7) -->
+    <rect x="12" y="72" width="12" height="12" fill="#dceaf7" />
+    <rect x="84" y="72" width="12" height="12" fill="#6395c7" />
+    <!-- Рядки 7, 8, 9 (x=0 світлий, x=8 синій) -->
+    <rect x="0" y="84" width="12" height="36" fill="#dceaf7" />
+    <rect x="96" y="84" width="12" height="36" fill="#6395c7" />
+    <!-- Рядок 10 (x=0 та x=8 сині) -->
+    <rect x="0" y="120" width="12" height="12" fill="#6395c7" />
+    <rect x="96" y="120" width="12" height="12" fill="#6395c7" />
+    <!-- Рядок 11 (x=1 та x=7) -->
+    <rect x="12" y="132" width="12" height="12" fill="#6395c7" />
+    <rect x="84" y="132" width="12" height="12" fill="#6395c7" />
+    <!-- Рядок 12: Дно колби (x=2..6) -->
+    <rect x="24" y="144" width="60" height="12" fill="#6395c7" />
+
+    <!-- ВНУТРІШНЄ ПРОЗОРЕ СКЛО ТА ВІДБЛИСКИ (Автентична скляна колба Minecraft) -->
+    <g class="empty-glass">
+      <!-- Напівпрозоре наповнення скла -->
+      <rect x="24" y="72" width="60" height="12" fill="#e0f2fe" opacity="0.12" />
+      <rect x="12" y="84" width="84" height="48" fill="#e0f2fe" opacity="0.12" />
+      <rect x="24" y="132" width="60" height="12" fill="#e0f2fe" opacity="0.12" />
+
+      <!-- Характерні піксельні відблиски чистого скла -->
+      <!-- Рядок 5 (плече): x=3 білий -->
+      <rect x="36" y="60" width="12" height="12" fill="#ffffff" opacity="0.9" />
+      <!-- Рядок 6: x=3 світло-блакитний -->
+      <rect x="36" y="72" width="12" height="12" fill="#b6cfe8" opacity="0.85" />
+      <!-- Рядок 7: x=2 білий, x=3 світло-блакитний -->
+      <rect x="24" y="84" width="12" height="12" fill="#ffffff" opacity="0.95" />
+      <rect x="36" y="84" width="12" height="12" fill="#b6cfe8" opacity="0.85" />
+      <!-- Рядок 8: x=2 білий -->
+      <rect x="24" y="96" width="12" height="12" fill="#ffffff" opacity="0.95" />
+      <!-- Рядок 9: x=2 світло-блакитний, x=6 бічний відблиск -->
+      <rect x="24" y="108" width="12" height="12" fill="#b6cfe8" opacity="0.85" />
+      <rect x="72" y="108" width="12" height="12" fill="#b6cfe8" opacity="0.7" />
+      <!-- Рядок 10: x=6 бічний відблиск -->
+      <rect x="72" y="120" width="12" height="12" fill="#b6cfe8" opacity="0.8" />
+      <!-- Рядок 11: x=5 світло-блакитний, x=6 білий відблиск на дні -->
+      <rect x="60" y="132" width="12" height="12" fill="#b6cfe8" opacity="0.85" />
+      <rect x="72" y="132" width="12" height="12" fill="#ffffff" opacity="0.95" />
+    </g>
+
+    <!-- Анімований магічний перелив світла поверх скла -->
+    <g clip-path="url(#glassInteriorMask)">
+      <rect class="glint-sweep" x="-40" y="40" width="180" height="180" fill="url(#glassGlint)" />
+    </g>
+  </g>
+</svg>
