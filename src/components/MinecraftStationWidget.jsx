@@ -111,8 +111,6 @@ export default function MinecraftStationWidget() {
   // Hand / Cursor held item for pick-and-place
   const [heldItem, setHeldItem] = useState(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [dragTargetKeys, setDragTargetKeys] = useState(() => new Set());
-  const [dragPreview, setDragPreview] = useState(null);
 
   // Tooltip integration using MinecraftTooltip system
   const { showTooltip, hideTooltip } = useTooltip();
@@ -433,174 +431,65 @@ export default function MinecraftStationWidget() {
 
   const cancelGesture = () => {
     dragRef.current = null;
-    setDragTargetKeys(new Set());
-    setDragPreview(null);
   };
-
-  const updateDragPreview = useCallback((drag) => {
-    if (!drag || !drag.startHeld || drag.slots.length < 1) {
-      setDragPreview(null);
-      return;
-    }
-    const validSlots = drag.slots.filter(s => {
-      if (!accepts(s.type, drag.startHeld)) return false;
-      const curr = getSlotValue(s.type, s.index);
-      if (curr && !sameStack(curr, drag.startHeld)) return false;
-      return true;
-    });
-    if (validSlots.length === 0) {
-      setDragPreview(null);
-      return;
-    }
-    const total = drag.startHeldCount;
-    const previews = {};
-    let totalDistributed = 0;
-
-    if (drag.mode === 'left') {
-      if (drag.slots.length < 2) {
-        setDragPreview(null);
-        return;
-      }
-      const countPerSlot = Math.floor(total / validSlots.length);
-      if (countPerSlot > 0) {
-        for (const s of validSlots) {
-          const curr = getSlotValue(s.type, s.index);
-          const room = limit(s.type, drag.startHeld) - (curr?.count || 0);
-          const addCount = Math.min(countPerSlot, room);
-          previews[`${s.type}-${s.index}`] = (curr?.count || 0) + addCount;
-          totalDistributed += addCount;
-        }
-      } else {
-        for (let i = 0; i < validSlots.length; i++) {
-          const s = validSlots[i];
-          const curr = getSlotValue(s.type, s.index);
-          const addCount = i < total ? 1 : 0;
-          previews[`${s.type}-${s.index}`] = (curr?.count || 0) + addCount;
-          totalDistributed += addCount;
-        }
-      }
-    } else if (drag.mode === 'right') {
-      // Right-click drag: distribute 1 item per valid slot
-      for (const s of validSlots) {
-        if (totalDistributed >= total) break;
-        const curr = getSlotValue(s.type, s.index);
-        const room = limit(s.type, drag.startHeld) - (curr?.count || 0);
-        if (room > 0) {
-          previews[`${s.type}-${s.index}`] = (curr?.count || 0) + 1;
-          totalDistributed += 1;
-        }
-      }
-    }
-
-    setDragPreview({
-      previews,
-      item: drag.startHeld,
-      heldRemainder: Math.max(0, total - totalDistributed)
-    });
-  }, [getSlotValue]);
 
   const visitSlot = (type, index) => {
     const drag = dragRef.current;
-    if (!drag || type === 'output') return;
-    const key = `${type}-${index}`;
-    if (drag.visitedKeys.has(key)) return;
+    if (!drag || drag.settled || type === 'output') return;
+    const key = type + '-' + index;
+    if (drag.slots.has(key)) return;
+    const held = heldItemRef.current;
+    if (!drag.stack) drag.stack = held;
+    if (!drag.stack || !accepts(type, drag.stack)) return;
 
-    const startHeld = drag.startHeld;
-    if (!startHeld || !accepts(type, startHeld)) return;
-    const target = getSlotValue(type, index);
-    if (target && (!sameStack(target, startHeld) || target.count >= limit(type, startHeld))) return;
+    const item = getSlotValue(type, index);
+    if (item && !sameStack(item, drag.stack)) {
+      if (!drag.slots.size && held) {
+        slotClick(type, index, drag.one);
+        drag.settled = true;
+      }
+      return;
+    }
+    if ((item?.count || 0) >= limit(type, drag.stack)) return;
 
-    drag.visitedKeys.add(key);
-    drag.slots.push({ type, index });
-    setDragTargetKeys(new Set(drag.visitedKeys));
-    updateDragPreview(drag);
+    if (drag.one || (type !== 'inventory' && type !== 'crafting')) {
+      if (!heldItemRef.current) return;
+      drag.slots.set(key, { type, index });
+      deposit(type, index, drag.one ? 1 : heldItemRef.current.count);
+      if (!drag.one) drag.settled = true;
+    } else {
+      if (drag.slots.size >= drag.stack.count) return;
+      drag.slots.set(key, { type, index, original: item });
+      const each = Math.floor(drag.stack.count / drag.slots.size);
+      let placed = 0;
+      for (const slot of drag.slots.values()) {
+        const count = Math.min(each, limit(slot.type, drag.stack) - (slot.original?.count || 0));
+        setSlotValue(slot.type, slot.index, { ...drag.stack, count: (slot.original?.count || 0) + count });
+        placed += count;
+      }
+      hold(placed < drag.stack.count ? { ...drag.stack, count: drag.stack.count - placed } : null);
+    }
     playItemClickSound();
   };
 
-  const finishGesture = () => {
+  const finishGesture = event => {
     const drag = dragRef.current;
+    if (drag && event?.pointerId != null && event.pointerId !== drag.pointerId) return;
     if (!drag) return;
-    dragRef.current = null;
-    setDragTargetKeys(new Set());
-    setDragPreview(null);
-
-    const held = heldItemRef.current;
-    if (!held) return;
-    const slots = drag.slots;
-
-    if (drag.mode === 'left') {
-      if (slots.length === 1) {
-        // Single click LMB
-        slotClick(slots[0].type, slots[0].index, false);
-      } else if (slots.length > 1) {
-        // Left click drag: split stack evenly across all valid visited slots
-        const validSlots = slots.filter(s => {
-          if (!accepts(s.type, drag.startHeld)) return false;
-          const curr = getSlotValue(s.type, s.index);
-          if (curr && !sameStack(curr, drag.startHeld)) return false;
-          return true;
-        });
-
-        if (validSlots.length > 0) {
-          const total = drag.startHeldCount;
-          const countPerSlot = Math.floor(total / validSlots.length);
-          let placed = 0;
-
-          if (countPerSlot > 0) {
-            for (const s of validSlots) {
-              const curr = getSlotValue(s.type, s.index);
-              const room = limit(s.type, drag.startHeld) - (curr?.count || 0);
-              const addCount = Math.min(countPerSlot, room);
-              if (addCount > 0) {
-                setSlotValue(s.type, s.index, { ...drag.startHeld, count: (curr?.count || 0) + addCount });
-                placed += addCount;
-              }
-            }
-          } else {
-            for (let i = 0; i < validSlots.length && placed < total; i++) {
-              const s = validSlots[i];
-              const curr = getSlotValue(s.type, s.index);
-              const room = limit(s.type, drag.startHeld) - (curr?.count || 0);
-              if (room > 0) {
-                setSlotValue(s.type, s.index, { ...drag.startHeld, count: (curr?.count || 0) + 1 });
-                placed += 1;
-              }
-            }
-          }
-          const remainder = total - placed;
-          hold(remainder > 0 ? { ...drag.startHeld, count: remainder } : null);
-          playItemClickSound();
+    if (event?.type === 'pointerup' && event.button !== (drag.one ? 2 : 0)) return;
+    if (event?.type === 'pointerup') {
+      const target = document.elementFromPoint(event.clientX, event.clientY)?.closest('[data-slot-index]');
+      if (target && drag.picked && !drag.one) {
+        const targetType = target.dataset.slotType;
+        const targetIndex = Number(target.dataset.slotIndex);
+        if (heldItemRef.current && (targetType !== drag.type || targetIndex !== drag.index)) {
+          slotClick(targetType, targetIndex, false);
         }
-      }
-    } else if (drag.mode === 'right') {
-      if (slots.length === 1) {
-        // Single click RMB on this slot: deposit 1 item
-        slotClick(slots[0].type, slots[0].index, true);
-      } else if (slots.length > 1) {
-        // Right click drag: deposit exactly 1 item in each valid visited slot
-        const validSlots = slots.filter(s => {
-          if (!accepts(s.type, drag.startHeld)) return false;
-          const curr = getSlotValue(s.type, s.index);
-          if (curr && !sameStack(curr, drag.startHeld)) return false;
-          return true;
-        });
-
-        let placed = 0;
-        const total = drag.startHeldCount;
-        for (const s of validSlots) {
-          if (placed >= total) break;
-          const curr = getSlotValue(s.type, s.index);
-          const room = limit(s.type, drag.startHeld) - (curr?.count || 0);
-          if (room > 0) {
-            setSlotValue(s.type, s.index, { ...drag.startHeld, count: (curr?.count || 0) + 1 });
-            placed += 1;
-          }
-        }
-        const remainder = total - placed;
-        hold(remainder > 0 ? { ...drag.startHeld, count: remainder } : null);
-        playItemClickSound();
+      } else if (target && !drag.picked) {
+        visitSlot(target.dataset.slotType, +target.dataset.slotIndex);
       }
     }
+    dragRef.current = null;
   };
 
   const hotbarSwap = key => {
@@ -679,19 +568,18 @@ export default function MinecraftStationWidget() {
 
   useEffect(() => {
     const move = event => {
-      if (heldItemRef.current) {
-        setMousePos({ x: event.clientX, y: event.clientY });
+      setMousePos({ x: event.clientX, y: event.clientY });
+      if (dragRef.current && event.pointerId !== dragRef.current.pointerId) return;
+      if (dragRef.current && !(event.buttons & dragRef.current.buttonMask)) {
+        gesturesRef.current.cancelGesture();
+        return;
       }
-      if (dragRef.current && (event.buttons & dragRef.current.buttonMask)) {
-        const target = document.elementFromPoint(event.clientX, event.clientY)?.closest('[data-slot-index]');
-        if (target) {
-          gesturesRef.current.visitSlot(target.dataset.slotType, +target.dataset.slotIndex);
-        }
-      } else if (dragRef.current && !event.buttons) {
-        gesturesRef.current.finishGesture();
+      const target = document.elementFromPoint(event.clientX, event.clientY)?.closest('[data-slot-index]');
+      if (target) {
+        gesturesRef.current.visitSlot(target.dataset.slotType, +target.dataset.slotIndex);
       }
     };
-    const end = () => gesturesRef.current.finishGesture();
+    const end = event => gesturesRef.current.finishGesture(event);
     const handleKeyDown = event => {
       if (event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
       if (event.key === 'Escape') {
@@ -743,12 +631,11 @@ export default function MinecraftStationWidget() {
       }
 
       if (event.button !== 0 && event.button !== 2) return;
+      if (dragRef.current) return;
       event.preventDefault();
       event.stopPropagation();
       hideTooltip();
       setMousePos({ x: event.clientX, y: event.clientY });
-
-      const isRight = event.button === 2;
 
       // Shift + Click handling
       if (event.shiftKey && !heldItemRef.current) {
@@ -761,8 +648,8 @@ export default function MinecraftStationWidget() {
       const previous = clickRef.current;
       const key = `${type}-${index}`;
 
-      // Double-click handling: ONLY on the exact same slot, within 300ms, with same button (LMB)
-      if (!mobile && event.button === 0 && heldItemRef.current && previous?.button === 0 && previous?.key === key && now - previous.time < 300) {
+      // Double-click handling: ONLY with LMB, within 300ms
+      if (!mobile && event.button === 0 && heldItemRef.current && previous?.button === 0 && now - previous.time < 300) {
         if (event.shiftKey) {
           shiftCollectAll(heldItemRef.current);
         } else {
@@ -774,60 +661,25 @@ export default function MinecraftStationWidget() {
       }
       clickRef.current = { key, time: now, button: event.button };
 
-      const held = heldItemRef.current;
-      const slotItem = getSlotValue(type, index);
+      const picked = !heldItemRef.current;
+      const one = event.button === 2;
+      const drag = {
+        type,
+        index,
+        picked,
+        one,
+        slots: new Map(picked ? [[key, { type, index }]] : []),
+        pointerId: event.pointerId,
+        buttonMask: one ? 2 : 1
+      };
+      dragRef.current = drag;
 
-      if (isRight) {
-        // RMB:
-        if (!held) {
-          const count = Math.ceil(slotItem ? slotItem.count / 2 : 0);
-          if (count > 0) {
-            const pickedUp = { ...slotItem, count };
-            hold(pickedUp);
-            setSlotValue(type, index, slotItem.count > count ? { ...slotItem, count: slotItem.count - count } : null);
-            playItemClickSound();
-            // Start drag gesture in case user continues dragging to other slots
-            dragRef.current = {
-              mode: 'right',
-              startHeld: { ...pickedUp },
-              startHeldCount: count,
-              slots: [],
-              visitedKeys: new Set([key]),
-              buttonMask: 2,
-              pointerId: event.pointerId
-            };
-          }
-        } else if (!slotItem || sameStack(slotItem, held)) {
-          dragRef.current = {
-            mode: 'right',
-            startHeld: { ...held },
-            startHeldCount: held.count,
-            slots: [{ type, index }],
-            visitedKeys: new Set([key]),
-            buttonMask: 2,
-            pointerId: event.pointerId
-          };
-          setDragTargetKeys(new Set([key]));
-          updateDragPreview(dragRef.current);
-        }
-      } else {
-        // LMB:
-        if (!held) {
-          slotClick(type, index, false);
-        } else if (slotItem && !sameStack(slotItem, held)) {
-          slotClick(type, index, false);
-        } else {
-          dragRef.current = {
-            mode: 'left',
-            startHeld: { ...held },
-            startHeldCount: held.count,
-            slots: [{ type, index }],
-            visitedKeys: new Set([key]),
-            buttonMask: 1,
-            pointerId: event.pointerId
-          };
-          setDragTargetKeys(new Set([key]));
-        }
+      if (picked) {
+        slotClick(type, index, one);
+      }
+      drag.stack = heldItemRef.current;
+      if (!picked) {
+        visitSlot(type, index);
       }
 
       if (event.currentTarget.hasPointerCapture?.(event.pointerId)) {
@@ -1135,42 +987,33 @@ export default function MinecraftStationWidget() {
                 </div>
 
                 {/* 1. Top-Left Fuel Slot */}
-                {(() => {
-                  const key = 'fuel-0';
-                  const isDragTarget = dragTargetKeys.has(key);
-                  const previewCount = dragPreview?.previews?.[key];
-                  const isPreview = previewCount != null;
-                  const itemToRender = isPreview ? { ...dragPreview.item, count: previewCount } : fuelSlot;
-
-                  return (
-                    <div
-                      className={`mc-slot mc-slot-fuel ${itemToRender ? 'has-item' : ''} ${isDragTarget ? 'is-drag-target' : ''}`}
-                      data-slot-type="fuel"
-                      data-slot-index={0}
-                      {...slotEvents('fuel', 0, getSlotValue('fuel', 0))}
-                    >
-                      {itemToRender ? (
-                        <>
-                          <img
-                            src={itemToRender.sprite}
-                            alt={itemToRender.name}
-                            className={`mc-item-icon ${isPreview && !fuelSlot ? 'is-preview' : ''}`}
-                            draggable="false"
-                          />
-                          {itemToRender.count > 1 && (
-                            <span className={`mc-item-count ${isPreview ? 'is-preview' : ''}`}>{itemToRender.count}</span>
-                          )}
-                        </>
-                      ) : (
-                        <img
-                          src="/mc_blaze_watermark.png"
-                          alt="Вогняний порошок"
-                          className="mc-fuel-blaze-watermark"
-                        />
+                {/* 1. Top-Left Fuel Slot */}
+                <div
+                  className={`mc-slot mc-slot-fuel ${fuelSlot ? 'has-item' : ''}`}
+                  data-slot-type="fuel"
+                  data-slot-index={0}
+                  {...slotEvents('fuel', 0, getSlotValue('fuel', 0))}
+                >
+                  {fuelSlot ? (
+                    <>
+                      <img
+                        src={fuelSlot.sprite}
+                        alt={fuelSlot.name}
+                        className="mc-item-icon"
+                        draggable="false"
+                      />
+                      {fuelSlot.count > 1 && (
+                        <span className="mc-item-count">{fuelSlot.count}</span>
                       )}
-                    </div>
-                  );
-                })()}
+                    </>
+                  ) : (
+                    <img
+                      src="/mc_blaze_watermark.png"
+                      alt="Вогняний порошок"
+                      className="mc-fuel-blaze-watermark"
+                    />
+                  )}
+                </div>
 
                 {/* 2. Brewing Steam / Bubbles Column */}
                 <div className="mc-brewing-bubbles-column">
@@ -1178,36 +1021,26 @@ export default function MinecraftStationWidget() {
                 </div>
 
                 {/* 3. Top Reagent Slot */}
-                {(() => {
-                  const key = 'ingredient-0';
-                  const isDragTarget = dragTargetKeys.has(key);
-                  const previewCount = dragPreview?.previews?.[key];
-                  const isPreview = previewCount != null;
-                  const itemToRender = isPreview ? { ...dragPreview.item, count: previewCount } : brewingIngredient;
-
-                  return (
-                    <div
-                      className={`mc-slot mc-slot-reagent ${itemToRender ? 'has-item' : ''} ${isDragTarget ? 'is-drag-target' : ''}`}
-                      data-slot-type="ingredient"
-                      data-slot-index={0}
-                      {...slotEvents('ingredient', 0, getSlotValue('ingredient', 0))}
-                    >
-                      {itemToRender && (
-                        <>
-                          <img
-                            src={itemToRender.sprite}
-                            alt={itemToRender.name}
-                            className={`mc-item-icon ${isPreview && !brewingIngredient ? 'is-preview' : ''}`}
-                            draggable="false"
-                          />
-                          {itemToRender.count > 1 && (
-                            <span className={`mc-item-count ${isPreview ? 'is-preview' : ''}`}>{itemToRender.count}</span>
-                          )}
-                        </>
+                <div
+                  className={`mc-slot mc-slot-reagent ${brewingIngredient ? 'has-item' : ''}`}
+                  data-slot-type="ingredient"
+                  data-slot-index={0}
+                  {...slotEvents('ingredient', 0, getSlotValue('ingredient', 0))}
+                >
+                  {brewingIngredient && (
+                    <>
+                      <img
+                        src={brewingIngredient.sprite}
+                        alt={brewingIngredient.name}
+                        className="mc-item-icon"
+                        draggable="false"
+                      />
+                      {brewingIngredient.count > 1 && (
+                        <span className="mc-item-count">{brewingIngredient.count}</span>
                       )}
-                    </div>
-                  );
-                })()}
+                    </>
+                  )}
+                </div>
 
                 {/* Downward Brewing Progress Arrow (copied completely from cards) */}
                 <div
@@ -1227,30 +1060,25 @@ export default function MinecraftStationWidget() {
                 {[0, 1, 2].map((idx) => {
                   const bottle = brewingBottles[idx];
                   const slotClassNames = ['slot-bottle-left', 'slot-bottle-center', 'slot-bottle-right'];
-                  const key = `bottle-${idx}`;
-                  const isDragTarget = dragTargetKeys.has(key);
-                  const previewCount = dragPreview?.previews?.[key];
-                  const isPreview = previewCount != null;
-                  const itemToRender = isPreview ? { ...dragPreview.item, count: previewCount } : bottle;
 
                   return (
                     <div
                       key={`bottle-${idx}`}
-                      className={`mc-slot mc-slot-bottle ${slotClassNames[idx]} ${itemToRender ? 'has-item' : ''} ${isDragTarget ? 'is-drag-target' : ''}`}
+                      className={`mc-slot mc-slot-bottle ${slotClassNames[idx]} ${bottle ? 'has-item' : ''}`}
                       data-slot-type="bottle"
                       data-slot-index={idx}
                       {...slotEvents('bottle', idx, getSlotValue('bottle', idx))}
                     >
-                      {itemToRender && (
+                      {bottle && (
                         <>
                           <img
-                            src={itemToRender.sprite}
-                            alt={itemToRender.name}
-                            className={`mc-item-icon ${isPreview && !bottle ? 'is-preview' : ''}`}
+                            src={bottle.sprite}
+                            alt={bottle.name}
+                            className="mc-item-icon"
                             draggable="false"
                           />
-                          {itemToRender.count > 1 && (
-                            <span className={`mc-item-count ${isPreview ? 'is-preview' : ''}`}>{itemToRender.count}</span>
+                          {bottle.count > 1 && (
+                            <span className="mc-item-count">{bottle.count}</span>
                           )}
                         </>
                       )}
@@ -1308,39 +1136,31 @@ export default function MinecraftStationWidget() {
               <div className="mc-crafting-flex-panel">
                 {/* 3x3 Grid (Contiguous touching slots) */}
                 <div className="mc-grid-3x3">
-                  {craftingGrid.map((slotItem, idx) => {
-                    const key = `crafting-${idx}`;
-                    const isDragTarget = dragTargetKeys.has(key);
-                    const previewCount = dragPreview?.previews?.[key];
-                    const isPreview = previewCount != null;
-                    const itemToRender = isPreview ? { ...dragPreview.item, count: previewCount } : slotItem;
-
-                    return (
-                      <div
-                        key={`craft-${idx}`}
-                        className={`mc-slot ${itemToRender ? 'has-item' : ''} ${isDragTarget ? 'is-drag-target' : ''}`}
-                        data-slot-type="crafting"
-                        data-slot-index={idx}
-                        {...slotEvents('crafting', idx, getSlotValue('crafting', idx))}
-                      >
-                        {itemToRender && (
-                          <>
-                            <img
-                              src={itemToRender.sprite}
-                              alt={itemToRender.name}
-                              className={`mc-item-icon ${isPreview && !slotItem ? 'is-preview' : ''}`}
-                              draggable="false"
-                            />
-                            {itemToRender.count > 1 && (
-                              <span className={`mc-item-count ${isPreview ? 'is-preview' : ''}`}>
-                                {itemToRender.count}
-                              </span>
-                            )}
-                          </>
-                        )}
-                      </div>
-                    );
-                  })}
+                  {craftingGrid.map((slotItem, idx) => (
+                    <div
+                      key={`craft-${idx}`}
+                      className={`mc-slot ${slotItem ? 'has-item' : ''}`}
+                      data-slot-type="crafting"
+                      data-slot-index={idx}
+                      {...slotEvents('crafting', idx, getSlotValue('crafting', idx))}
+                    >
+                      {slotItem && (
+                        <>
+                          <img
+                            src={slotItem.sprite}
+                            alt={slotItem.name}
+                            className="mc-item-icon"
+                            draggable="false"
+                          />
+                          {slotItem.count > 1 && (
+                            <span className="mc-item-count">
+                              {slotItem.count}
+                            </span>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  ))}
                 </div>
 
                 {/* Minecraft crafting: grid, right-pointing arrow, output. */}
@@ -1388,39 +1208,31 @@ export default function MinecraftStationWidget() {
 
             {/* 3x18 Main Storage Grid (Slots 0..53) */}
             <div className="mc-inventory-grid">
-              {inventory.slice(0, 54).map((slotItem, idx) => {
-                const key = `inventory-${idx}`;
-                const isDragTarget = dragTargetKeys.has(key);
-                const previewCount = dragPreview?.previews?.[key];
-                const isPreview = previewCount != null;
-                const itemToRender = isPreview ? { ...dragPreview.item, count: previewCount } : slotItem;
-
-                return (
-                  <div
-                    key={`inv-${idx}`}
-                    className={`mc-slot ${itemToRender ? 'has-item' : ''} ${isDragTarget ? 'is-drag-target' : ''}`}
-                    data-slot-type="inventory"
-                    data-slot-index={idx}
-                    {...slotEvents('inventory', idx, getSlotValue('inventory', idx))}
-                  >
-                    {itemToRender && (
-                      <>
-                        <img
-                          src={itemToRender.sprite}
-                          alt={itemToRender.name}
-                          className={`mc-item-icon ${isPreview && !slotItem ? 'is-preview' : ''}`}
-                          draggable="false"
-                        />
-                        {itemToRender.count > 1 && (
-                          <span className={`mc-item-count ${isPreview ? 'is-preview' : ''}`}>
-                            {itemToRender.count}
-                          </span>
-                        )}
-                      </>
-                    )}
-                  </div>
-                );
-              })}
+              {inventory.slice(0, 54).map((slotItem, idx) => (
+                <div
+                  key={`inv-${idx}`}
+                  className={`mc-slot ${slotItem ? 'has-item' : ''}`}
+                  data-slot-type="inventory"
+                  data-slot-index={idx}
+                  {...slotEvents('inventory', idx, getSlotValue('inventory', idx))}
+                >
+                  {slotItem && (
+                    <>
+                      <img
+                        src={slotItem.sprite}
+                        alt={slotItem.name}
+                        className="mc-item-icon"
+                        draggable="false"
+                      />
+                      {slotItem.count > 1 && (
+                        <span className="mc-item-count">
+                          {slotItem.count}
+                        </span>
+                      )}
+                    </>
+                  )}
+                </div>
+              ))}
             </div>
 
             {/* Authentic Minecraft Horizontal Separator Gap */}
@@ -1430,31 +1242,25 @@ export default function MinecraftStationWidget() {
             <div className="mc-hotbar-grid">
               {inventory.slice(54, 72).map((slotItem, idx) => {
                 const actualIdx = 54 + idx;
-                const key = `inventory-${actualIdx}`;
-                const isDragTarget = dragTargetKeys.has(key);
-                const previewCount = dragPreview?.previews?.[key];
-                const isPreview = previewCount != null;
-                const itemToRender = isPreview ? { ...dragPreview.item, count: previewCount } : slotItem;
-
                 return (
                   <div
                     key={`hotbar-${actualIdx}`}
-                    className={`mc-slot ${itemToRender ? 'has-item' : ''} ${isDragTarget ? 'is-drag-target' : ''}`}
+                    className={`mc-slot ${slotItem ? 'has-item' : ''}`}
                     data-slot-type="inventory"
                     data-slot-index={actualIdx}
                     {...slotEvents('inventory', actualIdx, getSlotValue('inventory', actualIdx))}
                   >
-                    {itemToRender && (
+                    {slotItem && (
                       <>
                         <img
-                          src={itemToRender.sprite}
-                          alt={itemToRender.name}
-                          className={`mc-item-icon ${isPreview && !slotItem ? 'is-preview' : ''}`}
+                          src={slotItem.sprite}
+                          alt={slotItem.name}
+                          className="mc-item-icon"
                           draggable="false"
                         />
-                        {itemToRender.count > 1 && (
-                          <span className={`mc-item-count ${isPreview ? 'is-preview' : ''}`}>
-                            {itemToRender.count}
+                        {slotItem.count > 1 && (
+                          <span className="mc-item-count">
+                            {slotItem.count}
                           </span>
                         )}
                       </>
@@ -1472,9 +1278,9 @@ export default function MinecraftStationWidget() {
               style={{ left: mousePos.x, top: mousePos.y }}
             >
               <img src={heldItem.sprite} alt={heldItem.name} />
-              {(dragPreview != null ? dragPreview.heldRemainder : heldItem.count) > 1 && (
+              {heldItem.count > 1 && (
                 <span className="mc-held-count">
-                  {dragPreview != null ? dragPreview.heldRemainder : heldItem.count}
+                  {heldItem.count}
                 </span>
               )}
             </div>, document.body

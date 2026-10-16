@@ -273,7 +273,6 @@ export default function PotionCard({
             }}
             title="Завантажити цей рецепт у варильну стійку"
           >
-            <img src="/items/brewing_stand.png" alt="" className="card-load-stand-sprite" aria-hidden="true" />
             <span>Встановити у стійку</span>
           </button>
         </div>
