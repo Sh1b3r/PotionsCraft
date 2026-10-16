@@ -87,7 +87,7 @@ body.light-theme {
 
 html[data-theme="dark"],
 body.dark-theme {
-  background-color: #042f2e;
+  background-color: #0f766e;
 }
 
 body {
@@ -124,7 +124,7 @@ body.light-theme {
 
 body.dark-theme .gradient-container,
 [data-theme="dark"] .gradient-container {
-  background-color: #042f2e;
+  background-color: #0f766e;
 }
 
 body.light-theme .gradient-container,
@@ -176,41 +176,41 @@ body.light-theme .gradient-container,
   z-index: 4;
 }
 
-/* ----------------- DARK THEME GRADIENTS (Оттенки #2dd4bf, #5eead4 и палитра сайта) ----------------- */
+/* ----------------- DARK THEME GRADIENTS (Светлые оттенки хедера #2dd4bf, #5eead4, #99f4e5) ----------------- */
 body.dark-theme .layer-1,
 [data-theme="dark"] .layer-1 {
   background-image: linear-gradient(180deg,
-      #5eead4 0%,
-      #2dd4bf 35%,
-      #14b8a6 70%,
-      #0f766e 100%);
+      #99f4e5 0%,
+      #5eead4 30%,
+      #2dd4bf 65%,
+      #14b8a6 100%);
 }
 
 body.dark-theme .layer-2,
 [data-theme="dark"] .layer-2 {
   background-image: linear-gradient(180deg,
-      #2dd4bf 0%,
-      #0d9488 35%,
-      #115e59 70%,
-      #042f2e 100%);
+      #5eead4 0%,
+      #2dd4bf 35%,
+      #20c997 70%,
+      #0d9488 100%);
 }
 
 body.dark-theme .layer-3,
 [data-theme="dark"] .layer-3 {
   background-image: linear-gradient(180deg,
-      #99f6e4 0%,
-      #5eead4 40%,
-      #2dd4bf 75%,
-      #0d9488 100%);
+      #ccfbf1 0%,
+      #99f4e5 35%,
+      #5eead4 70%,
+      #2dd4bf 100%);
 }
 
 body.dark-theme .layer-4,
 [data-theme="dark"] .layer-4 {
   background-image: linear-gradient(180deg,
-      #00f5d4 0%,
+      #2dd4bf 0%,
       #5eead4 30%,
-      #2dd4bf 65%,
-      #042f2e 100%);
+      #99f4e5 65%,
+      #14b8a6 100%);
 }
 
 /* ----------------- LIGHT THEME GRADIENTS (Цвета #667eea, #764ba2 и оттенки) ----------------- */
@@ -2004,70 +2004,113 @@ body.dark-theme .invslot.mcui-output3 {
   border-color: #eab308;
 }
 
-/* Card recipe action button (under duration and upgrades) */
+/* ==================== MINECRAFT RECIPE ACTION BUTTON ("Встановити у стійку") ==================== */
 .card-load-stand-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  margin-top: 8px;
-  padding: 5px 12px;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 6px 14px;
   width: fit-content;
-  background: #c6c6c6;
-  border: 2px outset #ffffff;
-  border-right-color: #555555;
-  border-bottom-color: #555555;
-  color: #1f2937;
-  font-family: 'Minecraft', 'Minecraftia', monospace, sans-serif;
-  font-size: 11px;
-  font-weight: bold;
+  background-color: #c6c6c6;
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-bottom: 2px solid #373737;
+  border-right: 2px solid #373737;
+  box-shadow: 0 0 0 2px #000000, 0 3px 0 rgba(0, 0, 0, 0.28);
+  color: #2a2a2a;
+  font-family: 'Minecraft', monospace;
+  font-size: 12px;
+  font-weight: normal;
+  letter-spacing: 0.5px;
   cursor: pointer;
-  text-shadow: 1px 1px #ffffff;
-  transition: all 0.12s ease;
+  text-shadow: 1px 1px 0 #ffffff;
   user-select: none;
-  border-radius: 2px;
-}
-
-.dark-theme .card-load-stand-btn {
-  background: #232b32;
-  border-color: #3b4752;
-  border-right-color: #12181d;
-  border-bottom-color: #12181d;
-  color: #00ffcc;
-  text-shadow: 1px 1px #050a0e;
+  box-sizing: border-box;
+  image-rendering: pixelated;
+  transition: transform 0.06s ease, background-color 0.12s ease, color 0.12s ease;
 }
 
 .card-load-stand-btn:hover {
-  background: #dcdcdc;
-  border-color: #ffffff;
-  border-right-color: #333333;
-  border-bottom-color: #333333;
+  background-color: #dcdcdc;
+  border-top-color: #ffffff;
+  border-left-color: #ffffff;
+  border-bottom-color: #222222;
+  border-right-color: #222222;
   color: #000000;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-}
-
-.dark-theme .card-load-stand-btn:hover {
-  background: #2e3842;
-  border-color: #526372;
-  color: #55ffff;
-  box-shadow: 0 0 8px rgba(0, 255, 204, 0.25);
+  box-shadow: 0 0 0 2px #000000, 0 3px 6px rgba(0, 0, 0, 0.35);
 }
 
 .card-load-stand-btn:active {
-  border-style: inset;
-  transform: translateY(1px);
+  border-top: 2px solid #373737;
+  border-left: 2px solid #373737;
+  border-bottom: 2px solid #ffffff;
+  border-right: 2px solid #ffffff;
+  background-color: #a8a8a8;
+  transform: translate(1px, 2px);
+  box-shadow: 0 0 0 2px #000000, 0 1px 0 rgba(0, 0, 0, 0.2);
 }
 
-.card-load-stand-icon {
-  font-size: 13px;
-  line-height: 1;
+/* Dark Theme (Sculk / Obsidian GUI style) */
+.dark-theme .card-load-stand-btn,
+body.dark-theme .card-load-stand-btn {
+  background-color: #0d303b;
+  border-top: 2px solid #28616b;
+  border-left: 2px solid #28616b;
+  border-bottom: 2px solid #020c11;
+  border-right: 2px solid #020c11;
+  box-shadow: 0 0 0 2px #041018, 0 3px 0 rgba(0, 0, 0, 0.55);
+  color: #99f4e5;
+  text-shadow: 1px 1px 0 #020c11, 0 0 8px rgba(45, 212, 191, 0.45);
+}
+
+.dark-theme .card-load-stand-btn:hover,
+body.dark-theme .card-load-stand-btn:hover {
+  background-color: #144250;
+  border-top-color: #54dfcd;
+  border-left-color: #54dfcd;
+  border-bottom-color: #020c11;
+  border-right-color: #020c11;
+  color: #ffffff;
+  text-shadow: 1px 1px 0 #020c11, 0 0 12px rgba(84, 223, 205, 0.85);
+  box-shadow: 0 0 0 2px #041018, 0 0 12px rgba(84, 223, 205, 0.35), 0 3px 0 rgba(0, 0, 0, 0.55);
+}
+
+.dark-theme .card-load-stand-btn:active,
+body.dark-theme .card-load-stand-btn:active {
+  border-top: 2px solid #020c11;
+  border-left: 2px solid #020c11;
+  border-bottom: 2px solid #28616b;
+  border-right: 2px solid #28616b;
+  background-color: #071e27;
+  transform: translate(1px, 2px);
+  box-shadow: 0 0 0 2px #041018, 0 1px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* Authentic Pixel Icon */
+.card-load-stand-sprite {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.45));
+  pointer-events: none;
+  flex-shrink: 0;
 }
 
 .mobile-load-stand-btn {
   margin-top: 6px;
-  padding: 3px 8px;
-  font-size: 10px;
+  padding: 4px 10px;
+  font-size: 11px;
+  gap: 6px;
+}
+
+.mobile-load-stand-btn .card-load-stand-sprite {
+  width: 15px;
+  height: 15px;
 }
 
 .hearts,
