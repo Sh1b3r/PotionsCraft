@@ -1551,10 +1551,14 @@ h3 {
   height: 57px;
   margin: 0;
   padding: 0;
-  background-image: url("/Grid_layout_Brewing_Bubbles.gif");
+  background-image: none;
   background-position: 0% 0%;
   background-repeat: no-repeat;
   vertical-align: top;
+}
+
+.mcui-bubbling.is-brewing {
+  background-image: url("/Grid_layout_Brewing_Bubbles.gif");
 }
 
 .mcui-arrow {
@@ -1578,6 +1582,11 @@ h3 {
 
 .dark-theme .mcui-bubbling,
 .card.dark-theme .mcui-bubbling {
+  background-image: none;
+}
+
+.dark-theme .mcui-bubbling.is-brewing,
+.card.dark-theme .mcui-bubbling.is-brewing {
   background-image: url("/Grid_layout_Brewing_Bubbles_dark.gif");
 }
 

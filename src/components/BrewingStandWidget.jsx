@@ -79,7 +79,7 @@ export default function BrewingStandWidget({ potion, inModal = false }) {
             <BrewingStandFrame emptyBottles={[!output1, !output2, !output3]} />
             {/* Top Input Row: Bubbling + Reagent Slot + Downward Arrow */}
             <span className="mcui-input">
-              <BrewingBubbles isBrewing height={57} />
+              <BrewingBubbles isBrewing={false} height={57} />
 
               <TooltipTrigger
                 as="span"

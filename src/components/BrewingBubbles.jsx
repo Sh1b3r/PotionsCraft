@@ -4,16 +4,11 @@ import { BUBBLE_EMPTY_FRAME, BUBBLE_FRAMES_LIGHT } from '../data/brewingBubbleFr
 export default function BrewingBubbles({ isBrewing = false, frameIndex = null, height = 58 }) {
   if (!isBrewing) {
     return (
-      <span className="mcui-bubbling" style={{ height: `${height}px` }}>
-        <img
-          src={BUBBLE_EMPTY_FRAME}
-          alt=""
-          width="24"
-          height={height}
-          className="mc-bubbles-texture"
-          draggable="false"
-        />
-      </span>
+      <span
+        className="mcui-bubbling mcui-bubbling-idle"
+        style={{ height: `${height}px` }}
+        aria-hidden="true"
+      />
     );
   }
 
