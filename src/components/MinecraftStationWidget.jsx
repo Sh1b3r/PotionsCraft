@@ -115,8 +115,20 @@ export default function MinecraftStationWidget() {
   // Tooltip integration using MinecraftTooltip system
   const { showTooltip, hideTooltip } = useTooltip();
 
-  // Toast notification for newly brewed potion
+  // Toast notification for newly brewed potion & achievements (supports queued toasts)
   const [brewedToast, setBrewedToast] = useState(null);
+  const [toastQueue, setToastQueue] = useState([]);
+
+  const addToast = useCallback((toast) => {
+    setToastQueue(prev => [...prev, toast]);
+  }, []);
+
+  useEffect(() => {
+    if (!brewedToast && toastQueue.length > 0) {
+      setBrewedToast(toastQueue[0]);
+      setToastQueue(prev => prev.slice(1));
+    }
+  }, [brewedToast, toastQueue]);
 
   // Refs to always access freshest state inside timer, drag & click handlers
   const inventoryRef = useRef(inventory);
@@ -754,9 +766,14 @@ export default function MinecraftStationWidget() {
         setIsBrewing(false); setBrewingStep(0); setBrewingProgress(0); setBrewingBubbleFrame(null); return;
       }
       let brewed = null;
+      let brewedCount = 0;
       brewingBottlesRef.current.forEach((bottle, index) => {
         const result = getBrewingResult(bottle, ingredientId);
-        if (result) { setSlotValue('bottle', index, result); brewed = result; }
+        if (result) {
+          setSlotValue('bottle', index, result);
+          brewed = result;
+          brewedCount++;
+        }
       });
       const isBreath = ingredientId === 'dragons_breath' || ingredientId === 'dragon_breath';
       const emptyBottle = { ...MINECRAFT_ITEMS.glass_bottle, itemId: 'glass_bottle', count: 1 };
@@ -781,11 +798,20 @@ export default function MinecraftStationWidget() {
           hasLocalBrewery = localStorage.getItem('potionscraft_achievement_local_brewery') === 'true';
         } catch {}
 
+        let hasMasterAlchemist = false;
+        try {
+          hasMasterAlchemist = localStorage.getItem('potionscraft_achievement_master_alchemist') === 'true';
+        } catch {}
+
+        let awardedAchievement = false;
+
+        // 1. «Місцева броварня» — awarded on first potion brewed
         if (!hasLocalBrewery) {
           try {
             localStorage.setItem('potionscraft_achievement_local_brewery', 'true');
           } catch {}
-          setBrewedToast({
+          awardedAchievement = true;
+          addToast({
             name: 'Місцева броварня',
             catalogId: brewed.catalogId,
             fromCard,
@@ -793,8 +819,27 @@ export default function MinecraftStationWidget() {
             sprite,
             customTitle: 'Досягнення отримано!'
           });
-        } else {
-          setBrewedToast({
+        }
+
+        // 2. «Майстер зілля» — awarded when 3 potions are brewed simultaneously
+        if (!hasMasterAlchemist && brewedCount === 3) {
+          try {
+            localStorage.setItem('potionscraft_achievement_master_alchemist', 'true');
+          } catch {}
+          awardedAchievement = true;
+          addToast({
+            name: 'Майстер зілля',
+            catalogId: brewed.catalogId,
+            fromCard,
+            timestamp: Date.now() + 1,
+            sprite,
+            customTitle: 'Досягнення отримано!'
+          });
+        }
+
+        // 3. Regular brew title if no achievements were unlocked during this brew
+        if (!awardedAchievement) {
+          addToast({
             name: brewed.name,
             catalogId: brewed.catalogId,
             fromCard,
@@ -1326,7 +1371,15 @@ export default function MinecraftStationWidget() {
                 }
               }}
               role="status"
-              title={!brewedToast.fromCard && brewedToast.catalogId ? 'Клацніть, щоб переглянути в каталозі' : ''}
+              title={
+                brewedToast.name === 'Майстер зілля'
+                  ? 'Зваріть 3 будь-які зілля одночасно на одній варильній стійці'
+                  : brewedToast.name === 'Місцева броварня'
+                  ? 'Зваріть своє перше зілля'
+                  : !brewedToast.fromCard && brewedToast.catalogId
+                  ? 'Клацніть, щоб переглянути в каталозі'
+                  : ''
+              }
             >
               <img
                 src={brewedToast.sprite || '/items/brewing_stand.png'}
@@ -1387,7 +1440,7 @@ export default function MinecraftStationWidget() {
                   } catch {}
                   setInventory(buildInitialInventory());
                   playCraftSuccessSound();
-                  setBrewedToast({
+                  addToast({
                     name: 'Початковий набір предметів відновлено',
                     customTitle: 'Інвентар скинуто!'
                   });
