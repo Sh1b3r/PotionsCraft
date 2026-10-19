@@ -1714,11 +1714,16 @@ body.dark-theme .invslot.mcui-output3 {
 }
 
 /* Center potion bottle sprites in slots (corrects the 1px right/down bias in Minecraft bottle sprites) */
-.mcui-output .invslot-item,
-.card-potion-slot .invslot-item,
-.mobile-card-potion-group .invslot-item {
+.mcui-output .invslot-item {
   top: -1px;
   left: -1px;
+}
+
+.card-title-group .invslot-item,
+.mobile-header-potion-slot .invslot-item,
+.mobile-header-potion-icon .invslot-item {
+  top: -1px;
+  left: 0;
 }
 
 .invslot-item-image a {
@@ -1767,24 +1772,46 @@ body.dark-theme .invslot.mcui-output3 {
   flex: 1;
 }
 
-.card-title-group .invslot {
+.card-title-group .invslot,
+.mobile-header-potion-slot .invslot,
+.mobile-header-potion-icon .invslot {
   flex-shrink: 0;
   width: 36px;
   height: 36px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.card-title-group .invslot .invslot-item,
+.mobile-header-potion-slot .invslot .invslot-item,
+.mobile-header-potion-icon .invslot .invslot-item {
+  width: 32px;
+  height: 32px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .card-potion-img {
-  width: 36px;
-  height: 36px;
+  width: 32px !important;
+  height: 32px !important;
   image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
   image-rendering: crisp-edges;
+  display: block;
   flex-shrink: 0;
-  transform: translateZ(0);
+  transform: none !important;
   backface-visibility: hidden;
 }
 
-.card-title-group .invslot:hover .card-potion-img {
-  transform: none;
+.card-title-group .invslot:hover .card-potion-img,
+.mobile-header-potion-slot .invslot:hover .card-potion-img,
+.mobile-header-potion-icon .invslot:hover .card-potion-img {
+  transform: none !important;
 }
 
 .card h3.cardh3 {
