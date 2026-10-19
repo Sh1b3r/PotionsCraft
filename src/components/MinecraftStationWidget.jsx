@@ -772,7 +772,16 @@ export default function MinecraftStationWidget() {
       playPotionBrewedSound();
       const fromCard = recipeLoadedFromCardRef.current;
       recipeLoadedFromCardRef.current = false;
-      if (brewed) setBrewedToast({ name: brewed.name, catalogId: brewed.catalogId, fromCard, timestamp: Date.now() });
+      if (brewed) {
+        const potionMatch = brewed.catalogId ? POTIONS_DATA.find(p => p.id === brewed.catalogId) : null;
+        setBrewedToast({
+          name: brewed.name,
+          catalogId: brewed.catalogId,
+          fromCard,
+          timestamp: Date.now(),
+          sprite: brewed.sprite || brewed.image || potionMatch?.icon || '/items/brewing_stand.png'
+        });
+      }
     }, 20);
     return () => clearInterval(timer);
   }, [isBrewing]);
@@ -866,7 +875,8 @@ export default function MinecraftStationWidget() {
         name: potionDef?.name || 'Рецепт завантажено',
         catalogId: potionId,
         customTitle: 'Рецепт завантажено в стійку!',
-        fromCard: true
+        fromCard: true,
+        sprite: potionDef?.icon || '/items/brewing_stand.png'
       });
     };
 
@@ -1289,7 +1299,7 @@ export default function MinecraftStationWidget() {
           )}
 
 
-          {/* ==================== BREWED NOTIFICATION TOAST ==================== */}
+          {/* ==================== BREWED NOTIFICATION TOAST (MINECRAFT ADVANCEMENT STYLE) ==================== */}
           {brewedToast && (
             <div
               className={`mc-station-toast ${!brewedToast.fromCard && brewedToast.catalogId ? 'is-clickable' : ''}`}
@@ -1301,14 +1311,25 @@ export default function MinecraftStationWidget() {
               role="status"
               title={!brewedToast.fromCard && brewedToast.catalogId ? 'Клацніть, щоб переглянути в каталозі' : ''}
             >
-              <div className="mc-station-toast-icon">✨</div>
+              <div className="mc-station-toast-slot">
+                <img
+                  src={brewedToast.sprite || '/items/brewing_stand.png'}
+                  alt=""
+                  className="mc-station-toast-sprite"
+                  draggable="false"
+                />
+              </div>
               <div className="mc-station-toast-body">
                 <div className="mc-station-toast-title">
-                  {brewedToast.customTitle || 'Зілля зварено!'}
+                  <span className="mc-station-toast-star">✦</span>
+                  <span>{brewedToast.customTitle || 'Зілля зварено!'}</span>
                 </div>
                 <div className="mc-station-toast-desc">{brewedToast.name}</div>
                 {!brewedToast.fromCard && brewedToast.catalogId && (
-                  <div className="mc-station-toast-hint">(Клацніть для огляду)</div>
+                  <div className="mc-station-toast-hint">
+                    <span className="mc-station-toast-arrow">►</span>
+                    <span>Клацніть для огляду в каталозі</span>
+                  </div>
                 )}
               </div>
               <button
@@ -1318,7 +1339,7 @@ export default function MinecraftStationWidget() {
                   e.stopPropagation();
                   setBrewedToast(null);
                 }}
-                title="Закрити підказку"
+                title="Закрити сповіщення"
                 aria-label="Закрити"
               >
                 ✕
