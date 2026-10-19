@@ -774,13 +774,35 @@ export default function MinecraftStationWidget() {
       recipeLoadedFromCardRef.current = false;
       if (brewed) {
         const potionMatch = brewed.catalogId ? POTIONS_DATA.find(p => p.id === brewed.catalogId) : null;
-        setBrewedToast({
-          name: brewed.name,
-          catalogId: brewed.catalogId,
-          fromCard,
-          timestamp: Date.now(),
-          sprite: brewed.sprite || brewed.image || potionMatch?.icon || '/items/brewing_stand.png'
-        });
+        const sprite = brewed.sprite || brewed.image || potionMatch?.icon || '/items/brewing_stand.png';
+
+        let hasLocalBrewery = false;
+        try {
+          hasLocalBrewery = localStorage.getItem('potionscraft_achievement_local_brewery') === 'true';
+        } catch {}
+
+        if (!hasLocalBrewery) {
+          try {
+            localStorage.setItem('potionscraft_achievement_local_brewery', 'true');
+          } catch {}
+          setBrewedToast({
+            name: 'Місцева броварня',
+            catalogId: brewed.catalogId,
+            fromCard,
+            timestamp: Date.now(),
+            sprite,
+            customTitle: 'Досягнення отримано!'
+          });
+        } else {
+          setBrewedToast({
+            name: brewed.name,
+            catalogId: brewed.catalogId,
+            fromCard,
+            timestamp: Date.now(),
+            sprite,
+            customTitle: 'Досягнення отримано!'
+          });
+        }
       }
     }, 20);
     return () => clearInterval(timer);
@@ -874,7 +896,7 @@ export default function MinecraftStationWidget() {
       setBrewedToast({
         name: potionDef?.name || 'Рецепт завантажено',
         catalogId: potionId,
-        customTitle: 'Рецепт завантажено в стійку!',
+        customTitle: 'Досягнення отримано!',
         fromCard: true,
         sprite: potionDef?.icon || '/items/brewing_stand.png'
       });
@@ -1299,7 +1321,7 @@ export default function MinecraftStationWidget() {
           )}
 
 
-          {/* ==================== BREWED NOTIFICATION TOAST (MINECRAFT ADVANCEMENT STYLE) ==================== */}
+          {/* ==================== MINECRAFT ACHIEVEMENT POPUP ==================== */}
           {brewedToast && (
             <div
               className={`mc-station-toast ${!brewedToast.fromCard && brewedToast.catalogId ? 'is-clickable' : ''}`}
@@ -1311,26 +1333,17 @@ export default function MinecraftStationWidget() {
               role="status"
               title={!brewedToast.fromCard && brewedToast.catalogId ? 'Клацніть, щоб переглянути в каталозі' : ''}
             >
-              <div className="mc-station-toast-slot">
-                <img
-                  src={brewedToast.sprite || '/items/brewing_stand.png'}
-                  alt=""
-                  className="mc-station-toast-sprite"
-                  draggable="false"
-                />
-              </div>
+              <img
+                src={brewedToast.sprite || '/items/brewing_stand.png'}
+                alt=""
+                className="mc-station-toast-icon"
+                draggable="false"
+              />
               <div className="mc-station-toast-body">
                 <div className="mc-station-toast-title">
-                  <span className="mc-station-toast-star">✦</span>
-                  <span>{brewedToast.customTitle || 'Зілля зварено!'}</span>
+                  {brewedToast.customTitle || 'Досягнення отримано!'}
                 </div>
                 <div className="mc-station-toast-desc">{brewedToast.name}</div>
-                {!brewedToast.fromCard && brewedToast.catalogId && (
-                  <div className="mc-station-toast-hint">
-                    <span className="mc-station-toast-arrow">►</span>
-                    <span>Клацніть для огляду в каталозі</span>
-                  </div>
-                )}
               </div>
               <button
                 type="button"
@@ -1339,7 +1352,7 @@ export default function MinecraftStationWidget() {
                   e.stopPropagation();
                   setBrewedToast(null);
                 }}
-                title="Закрити сповіщення"
+                title="Закрити"
                 aria-label="Закрити"
               >
                 ✕
