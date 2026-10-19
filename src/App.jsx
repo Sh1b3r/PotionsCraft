@@ -103,10 +103,10 @@ export default function App() {
     document.body.className = isDark ? 'dark-theme' : 'light-theme';
     document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
 
-    // Update favicon matching the logo swap
+    // Update favicon to Potion of Swiftness SVG from dark theme
     const favicon = document.getElementById('favicon') || document.querySelector("link[rel*='icon']");
     if (favicon) {
-      favicon.href = isDark ? logoSculkSrc : logoDaySrc;
+      favicon.href = '/logo_dark.svg';
     }
   }, [theme, isDark]);
 
