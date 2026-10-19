@@ -15,7 +15,7 @@ export default function PotionDescriptionContent({ potionId, description, compac
           {!compact && (
             <>
               <br />
-              <b>Посилене:</b> Миттєве зцілення II: Відновлює 8 <MinecraftHearts count={4} label="4 серця" prefix="(" suffix=")." />
+              <b>Посилене II:</b> Відновлює 8{'\u00A0'}<MinecraftHearts count={4} label="4 серця" prefix="(" suffix=")." />
             </>
           )}
         </span>
@@ -24,11 +24,11 @@ export default function PotionDescriptionContent({ potionId, description, compac
     case 'regeneration':
       return (
         <span className="wiki-effect-desc">
-          Відновлює <MinecraftHearts half={1} label="0.5 серця" /> кожні 2.5 секунд.
+          Відновлює 1 <MinecraftHearts half={1} label="0.5 серця" prefix="(" suffix=")" /> кожні 2.5 с.
           {!compact && (
             <>
               <br />
-              <b>Посилене:</b> Регенерація II: Відновлює <MinecraftHearts half={1} label="0.5 серця" /> кожні 1.25 секунд.
+              <b>Посилене II:</b> Відновлює 1 <MinecraftHearts half={1} label="0.5 серця" prefix="(" suffix=")" /> кожні 1.25 с.
             </>
           )}
         </span>
@@ -37,11 +37,11 @@ export default function PotionDescriptionContent({ potionId, description, compac
     case 'strength':
       return (
         <span className="wiki-effect-desc">
-          Збільшує шкоду від атаки гравця в ближньому бою на 3 <MinecraftHearts count={1} half={1} label="1.5 серця" prefix="(" suffix=")." />
+          Збільшує шкоду в ближньому бою на 3 <MinecraftHearts count={1} half={1} label="1.5 серця" prefix="(" suffix=")." />
           {!compact && (
             <>
               <br />
-              <b>Посилене:</b> Сила II: Збільшує шкоду від атаки гравця в ближньому бою на 6 <MinecraftHearts count={3} label="3 серця" prefix="(" suffix=")." />
+              <b>Посилене II:</b> Збільшує шкоду на 6 <MinecraftHearts count={3} label="3 серця" prefix="(" suffix=")." />
             </>
           )}
         </span>
@@ -50,11 +50,11 @@ export default function PotionDescriptionContent({ potionId, description, compac
     case 'poison':
       return (
         <span className="wiki-effect-desc">
-          Зменшує здоров’я на 1 <MinecraftHearts half={1} label="0.5 серця" prefix="(" suffix=")" /> кожні 1.25 секунди.
+          Зменшує здоров’я на 1 <MinecraftHearts type="poison" half={1} label="0.5 серця" prefix="(" suffix=")" /> кожні 1.25 с.
           {!compact && (
             <>
               <br />
-              <b>Посилене:</b> Отруєння II: Зменшує здоров’я на 1 <MinecraftHearts half={1} label="0.5 серця" prefix="(" suffix=")" /> кожні 0.6 секунди.
+              <b>Посилене II:</b> Зменшує здоров’я на 1 <MinecraftHearts type="poison" half={1} label="0.5 серця" prefix="(" suffix=")" /> кожні 0.6 с.
             </>
           )}
         </span>
@@ -63,11 +63,11 @@ export default function PotionDescriptionContent({ potionId, description, compac
     case 'weakness':
       return (
         <span className="wiki-effect-desc">
-          Зменшує шкоду від атаки гравця в ближньому бою на 4 <MinecraftHearts count={2} label="2 серця" prefix="(" suffix=")." />
+          Зменшує шкоду в ближньому бою на 4 <MinecraftHearts count={2} label="2 серця" prefix="(" suffix=")." />
           {!compact && (
             <>
               <br />
-              Можна використовувати в поєднанні з золотим яблуком для лікування зомбоселян.
+              З золотим яблуком лікує зомбоселян.
             </>
           )}
         </span>
@@ -76,12 +76,11 @@ export default function PotionDescriptionContent({ potionId, description, compac
     case 'harming':
       return (
         <span className="wiki-effect-desc">
-          Наносить 6 <MinecraftHearts count={3} label="3 серця" prefix="(" suffix=")" /> шкоди.
+          Завдає 6 шкоди <MinecraftHearts count={3} label="3 серця" prefix="(" suffix=")." />
           {!compact && (
             <>
               <br />
-              <b>Посилене:</b> Миттєва шкода II: Наносить 12{' '}
-              <MinecraftHearts count={1} label="1 серце" prefix="(" suffix=" × 6)" /> шкоди.
+              <b>Посилене II:</b> Завдає 12 шкоди{'\u00A0'}<MinecraftHearts count={6} label="6 сердець" prefix="(" suffix=")." />
             </>
           )}
         </span>
@@ -90,18 +89,18 @@ export default function PotionDescriptionContent({ potionId, description, compac
     case 'fire_resistance':
       return (
         <span className="wiki-effect-desc">
-          Дає імунітет до шкоди від вогню, лави, магматичних блоків, багаття і вогняних куль пломенів.
+          Дає імунітет до вогню, лави, магматичних блоків, багаття та куль пломенів.
         </span>
       );
 
     case 'swiftness':
       return (
         <span className="wiki-effect-desc">
-          Збільшує швидкість пересування, швидкість бігу та довжину стрибків на 20 %.
+          Збільшує швидкість бігу та стрибків на 20%.
           {!compact && (
             <>
               <br />
-              <b>Посилене:</b> Швидкість II: Збільшує швидкість пересування, швидкість бігу та довжину стрибків на 40 %.
+              <b>Посилене II:</b> Швидкість збільшується на 40%.
             </>
           )}
         </span>
@@ -110,14 +109,14 @@ export default function PotionDescriptionContent({ potionId, description, compac
     case 'night_vision':
       return (
         <span className="wiki-effect-desc">
-          Робить так, щоб все виглядало з максимальним рівнем освітлення, включно з підводними ділянками.
+          Максимальний рівень освітлення для всього, включно з водою.
         </span>
       );
 
     case 'invisibility':
       return (
         <span className="wiki-effect-desc">
-          Робить гравця невидимим. Екіпіровані предмети залишаються видимими.
+          Робить гравця невидимим (екіпіровані речі лишаються видимими).
         </span>
       );
 
@@ -131,11 +130,11 @@ export default function PotionDescriptionContent({ potionId, description, compac
     case 'leaping':
       return (
         <span className="wiki-effect-desc">
-          Збільшує висоту стрибка на 50 %.
+          Збільшує висоту стрибка на 50%.
           {!compact && (
             <>
               <br />
-              <b>Посилене:</b> Стрибучість II: Збільшує висоту стрибка удвічі.
+              <b>Посилене II:</b> Збільшує висоту стрибка удвічі.
             </>
           )}
         </span>
@@ -144,18 +143,18 @@ export default function PotionDescriptionContent({ potionId, description, compac
     case 'slow_falling':
       return (
         <span className="wiki-effect-desc">
-          Швидкість і прискорення падіння значно зменшуються, а шкода при падінні повністю скидається.
+          Швидкість падіння сповільнена; шкода від падіння повністю знімається.
         </span>
       );
 
     case 'slowness':
       return (
         <span className="wiki-effect-desc">
-          Зменшує швидкість руху на 15 %.
+          Зменшує швидкість руху на 15%.
           {!compact && (
             <>
               <br />
-              <b>Посилене:</b> Повільність IV: Зменшує швидкість руху на 60 %.
+              <b>Посилене IV:</b> Зменшує швидкість руху на 60%.
             </>
           )}
         </span>
@@ -164,14 +163,14 @@ export default function PotionDescriptionContent({ potionId, description, compac
     case 'oozing':
       return (
         <span className="wiki-effect-desc">
-          У разі смерти спавнить двох слимаків 2-го розміру поруч.
+          У разі смерті спавнить двох слимаків 2-го розміру поруч.
         </span>
       );
 
     case 'weaving':
       return (
         <span className="wiki-effect-desc">
-          Спавнить 2-3 павутиння поруч при смерті; подвоює швидкість руху по павутинні (з 25 % на 50 %).
+          Спавнить 2-3 павутиння при смерті; подвоює швидкість у павутинні.
         </span>
       );
 
@@ -185,18 +184,18 @@ export default function PotionDescriptionContent({ potionId, description, compac
     case 'wind_charging':
       return (
         <span className="wiki-effect-desc">
-          При смерті створює вибух вітру, подібний до заряду вітру.
+          При смерті створює потужний вибух вітру.
         </span>
       );
 
     case 'turtle_master':
       return (
         <span className="wiki-effect-desc">
-          Зменшує швидкість руху на 60 % і зменшує вхідну шкоду на 60 %.
+          Зменшує швидкість на 60% і вхідну шкоду на 60%.
           {!compact && (
             <>
               <br />
-              <b>Посилене:</b> Повільність VI, Стійкість IV: Зменшує швидкість руху на 90 % і зменшує вхідну шкоду на 80 %.
+              <b>Посилене II:</b> Швидкість -90%, вхідна шкода -80%.
             </>
           )}
         </span>

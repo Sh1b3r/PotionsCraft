@@ -4,10 +4,9 @@
 .mc-workbench-viewport-scaler {
   width: 100%;
   display: flex;
-  justify-content: safe center;
+  justify-content: center;
   overflow-x: auto;
-  padding: 38px 12px 28px;
-  box-sizing: border-box;
+  padding: 16px 0 28px;
   container-type: inline-size;
 }
 
@@ -85,35 +84,57 @@
 }
 
 .mc-brewing-ref-btn {
-  background: #c6c6c6;
-  color: #212121;
-  border-top: 2px solid #ffffff;
-  border-left: 2px solid #ffffff;
-  border-bottom: 2px solid #373737;
-  border-right: 2px solid #373737;
-  border-radius: 0;
-  padding: 3px 8px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 32px;
+  padding: 0 10px;
+  box-sizing: border-box;
+  border: 2px solid #000000;
+  border-radius: 0 !important;
+  background-color: #999999;
+  background-image: linear-gradient(180deg, #a0a0a0 0%, #8c8c8c 100%);
+  box-shadow: inset 2px 2px 0px #ffffff, inset -2px -2px 0px #555555;
+  color: #ffffff;
   font-family: 'Minecraft', monospace;
-  font-size: 11px;
+  font-size: 13px;
+  line-height: 1;
+  letter-spacing: 0.5px;
+  text-shadow: 2px 2px 0px #373737;
   cursor: pointer;
-  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.7);
-  box-shadow: inset 0 0 0 1px #8b8b8b;
+  user-select: none;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
-  transition: background-color 0.1s;
+  transition: none;
 }
 
-.mc-brewing-ref-btn:hover {
-  background: #d4d4d4;
-  color: #000000;
+.mc-brewing-ref-btn:hover:not(:disabled) {
+  background-color: #7987a1;
+  background-image: linear-gradient(180deg, #8796b2 0%, #6e7c97 100%);
+  box-shadow: inset 2px 2px 0px #c0caff, inset -2px -2px 0px #3b465c;
+  color: #ffffa0;
+  text-shadow: 2px 2px 0px #3f3f26;
 }
 
-.mc-brewing-ref-btn:active {
-  border-top: 2px solid #373737;
-  border-left: 2px solid #373737;
-  border-bottom: 2px solid #ffffff;
-  border-right: 2px solid #ffffff;
-  background: #b5b5b5;
+.mc-brewing-ref-btn:active:not(:disabled) {
+  background-color: #6d6d6d;
+  background-image: none;
+  box-shadow: inset 2px 2px 0px #373737, inset -2px -2px 0px #ffffff;
+  color: #ffffa0;
+  transform: translateY(1px);
+}
+
+.mc-brewing-ref-btn:disabled {
+  background-color: #585858;
+  background-image: none;
+  border-color: #000000;
+  box-shadow: inset 2px 2px 0px #737373, inset -2px -2px 0px #3a3a3a;
+  color: #a0a0a0;
+  text-shadow: 2px 2px 0px #242424;
+  cursor: not-allowed;
+  opacity: 0.8;
 }
 
 .mc-brewing-stand-stage {
@@ -591,20 +612,39 @@
 }
 
 .dark-theme .mc-brewing-ref-btn {
-  background: #09202e;
-  color: #2dd4bf;
-  border-top-color: #144966;
-  border-left-color: #144966;
-  border-bottom-color: #02090e;
-  border-right-color: #02090e;
-  box-shadow: none;
-  text-shadow: 0 0 4px rgba(45, 212, 191, 0.4);
+  border: 2px solid #000000 !important;
+  border-radius: 0 !important;
+  background-color: #09222c !important;
+  background-image: linear-gradient(180deg, #0e2d3b 0%, #071c25 100%) !important;
+  box-shadow: inset 2px 2px 0px #1e5268, inset -2px -2px 0px #030f16 !important;
+  color: #5eead4 !important;
+  text-shadow: 2px 2px 0px #02090e !important;
 }
 
-.dark-theme .mc-brewing-ref-btn:hover {
-  background: #0e3046;
-  border-color: #2dd4bf;
-  color: #ffffff;
+.dark-theme .mc-brewing-ref-btn:hover:not(:disabled) {
+  background-color: #0f384a !important;
+  background-image: linear-gradient(180deg, #15455a 0%, #0c303f 100%) !important;
+  box-shadow: inset 2px 2px 0px #2dd4bf, inset -2px -2px 0px #02090e !important;
+  color: #ffffa0 !important;
+  text-shadow: 0 0 8px rgba(45, 212, 191, 0.5), 2px 2px 0px #02090e !important;
+}
+
+.dark-theme .mc-brewing-ref-btn:active:not(:disabled) {
+  background-color: #04141d !important;
+  background-image: none !important;
+  box-shadow: inset 2px 2px 0px #02090e, inset -2px -2px 0px #1e5268 !important;
+  color: #ffffa0 !important;
+  transform: translateY(1px);
+}
+
+.dark-theme .mc-brewing-ref-btn:disabled {
+  background-color: #041017 !important;
+  background-image: none !important;
+  box-shadow: inset 2px 2px 0px #0a242f, inset -2px -2px 0px #02080c !important;
+  color: #1a4756 !important;
+  text-shadow: 1px 1px 0px #010406 !important;
+  cursor: not-allowed !important;
+  opacity: 0.65 !important;
 }
 
 .dark-theme .mc-brewing-stand-stage {
@@ -755,63 +795,90 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 14px;
   width: 100%;
-  margin: 20px auto;
-  min-height: 76px;
-  padding: 16px 20px;
+  margin: 16px auto;
+  min-height: 58px;
+  padding: 10px 16px;
   box-sizing: border-box;
   font-family: 'Minecraft', monospace, sans-serif;
   text-align: left;
-  background: #427d2b;
-  color: #fff;
-  border: 3px outset #84be5e;
-  box-shadow: inset 0 -4px #2d5a1d, 0 4px #234716, 0 8px 20px #23471630;
+  background-color: #427d2b;
+  background-image: linear-gradient(180deg, #4b8c31 0%, #3a6f26 100%);
+  color: #ffffff;
+  border: 2px solid #000000 !important;
+  border-radius: 0 !important;
+  box-shadow: inset 2px 2px 0px #6eb94f, inset -2px -2px 0px #234716 !important;
   cursor: pointer;
-  transition: var(--theme-paint-transition);
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  user-select: none;
+  transition: none;
 }
 
 .mc-mobile-launch-copy {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   min-width: 0;
   text-align: left;
   align-items: flex-start;
 }
 
 .mc-mobile-launch-title {
-  font-size: clamp(17px, 4.5vw, 22px);
+  font-size: clamp(16px, 4vw, 20px);
   line-height: 1.2;
   text-align: left;
-  text-shadow: 2px 2px #234716;
+  color: #ffffff;
+  text-shadow: 2px 2px 0px #1d3812;
+  letter-spacing: 0.5px;
 }
 
 .mc-mobile-launch-hint {
-  font-size: 13px;
-  line-height: 1.4;
-  color: #e0f3d2;
+  font-size: 12px;
+  line-height: 1.3;
+  color: #d8f1c8;
   text-align: left;
+  text-shadow: 1px 1px 0px #1d3812;
+  letter-spacing: 0.3px;
 }
 
 .mc-mobile-launch-chevron {
-  font-size: 32px;
+  font-size: 24px;
   line-height: 1;
   text-align: center;
+  color: #ffffff;
+  text-shadow: 2px 2px 0px #1d3812;
+  font-weight: bold;
 }
 
 .mc-mobile-launch:hover {
-  background: #4c9132;
+  background-color: #4c9132;
+  background-image: linear-gradient(180deg, #58a43b 0%, #417e2b 100%);
+  box-shadow: inset 2px 2px 0px #82cf61, inset -2px -2px 0px #234716 !important;
+}
+
+.mc-mobile-launch:hover .mc-mobile-launch-title,
+.mc-mobile-launch:hover .mc-mobile-launch-chevron {
+  color: #ffffa0;
+  text-shadow: 2px 2px 0px #28270b;
+}
+
+.mc-mobile-launch:hover .mc-mobile-launch-hint {
+  color: #ffffd0;
+  text-shadow: 1px 1px 0px #28270b;
 }
 
 .mc-mobile-launch:active {
-  border-style: inset;
-  box-shadow: inset 0 3px #234716, 0 2px #234716;
+  background-color: #386b25;
+  background-image: none;
+  box-shadow: inset 2px 2px 0px #234716, inset -2px -2px 0px #6eb94f !important;
+  transform: translateY(1px);
 }
 
 .mc-mobile-launch:focus-visible {
-  outline: 3px solid #f0bc46;
-  outline-offset: 4px;
+  outline: 2px solid #000000;
+  outline-offset: 2px;
 }
 
 .mc-station-shell.is-mobile {
@@ -1567,22 +1634,58 @@
 .mc-station-sidebar-btns {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   margin-top: auto;
   width: 100%;
 }
 
 .mc-reset-inv-btn {
-  background: #8b3a3a !important;
+  background-color: #872c2c !important;
+  background-image: linear-gradient(180deg, #933232 0%, #7b2626 100%) !important;
+  box-shadow: inset 2px 2px 0px #ba4747, inset -2px -2px 0px #4d1414 !important;
   color: #ffffff !important;
-  text-shadow: 1px 1px #331111 !important;
-  border-color: #b35959 !important;
-  border-right-color: #4a1f1f !important;
-  border-bottom-color: #4a1f1f !important;
+  text-shadow: 2px 2px 0px #2d0a0a !important;
 }
 
-.mc-reset-inv-btn:hover {
-  background: #a84646 !important;
+.mc-reset-inv-btn:hover:not(:disabled) {
+  background-color: #a33636 !important;
+  background-image: linear-gradient(180deg, #b33f3f 0%, #942d2d 100%) !important;
+  box-shadow: inset 2px 2px 0px #d65c5c, inset -2px -2px 0px #400f0f !important;
+  color: #ffffa0 !important;
+  text-shadow: 2px 2px 0px #3f3f26 !important;
+}
+
+.mc-reset-inv-btn:active:not(:disabled) {
+  background-color: #631d1d !important;
+  background-image: none !important;
+  box-shadow: inset 2px 2px 0px #400f0f, inset -2px -2px 0px #ba4747 !important;
+  color: #ffffa0 !important;
+  transform: translateY(1px);
+}
+
+.dark-theme .mc-reset-inv-btn {
+  border: 2px solid #000000 !important;
+  background-color: #471520 !important;
+  background-image: linear-gradient(180deg, #571b28 0%, #3a1019 100%) !important;
+  box-shadow: inset 2px 2px 0px #7c2637, inset -2px -2px 0px #20050a !important;
+  color: #fecaca !important;
+  text-shadow: 2px 2px 0px #150205 !important;
+}
+
+.dark-theme .mc-reset-inv-btn:hover:not(:disabled) {
+  background-color: #631e2d !important;
+  background-image: linear-gradient(180deg, #752536 0%, #521824 100%) !important;
+  box-shadow: inset 2px 2px 0px #a8364d, inset -2px -2px 0px #180307 !important;
+  color: #ffffa0 !important;
+  text-shadow: 0 0 8px rgba(248, 113, 113, 0.5), 2px 2px 0px #150205 !important;
+}
+
+.dark-theme .mc-reset-inv-btn:active:not(:disabled) {
+  background-color: #2b0b12 !important;
+  background-image: none !important;
+  box-shadow: inset 2px 2px 0px #180307, inset -2px -2px 0px #7c2637 !important;
+  color: #ffffa0 !important;
+  transform: translateY(1px);
 }
 
 /* ==================== MINECRAFT ACHIEVEMENT TOAST (PIXEL-PERFECT IN-GAME STYLE) ==================== */
@@ -1591,12 +1694,13 @@
   top: 24px;
   right: 24px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 14px;
-  min-width: 270px;
-  max-width: 440px;
-  height: 60px;
-  padding: 8px 36px 8px 14px;
+  min-width: 280px;
+  max-width: 460px;
+  min-height: 60px;
+  height: auto;
+  padding: 10px 36px 10px 14px;
   box-sizing: border-box;
   background: #212121;
   border: 2px solid #555555;
@@ -1646,7 +1750,16 @@
   }
 }
 
-/* Floating item icon on left (no slot box, exactly as in reference image) */
+/* Container for all brewed potion icons on the left */
+.mc-station-toast-icons-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.mc-station-toast-icons-wrapper .mc-station-toast-icon,
 .mc-station-toast-icon {
   width: 32px;
   height: 32px;
@@ -1657,6 +1770,7 @@
   filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, 0.75));
   flex-shrink: 0;
   pointer-events: none;
+  margin-top: 0;
 }
 
 /* Text body */
@@ -1664,7 +1778,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 2px;
+  gap: 4px;
   flex: 1;
   min-width: 0;
 }
@@ -1691,6 +1805,43 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* Prepared Potions list inside achievement toast */
+.mc-station-toast-potions-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.mc-station-toast-potion-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #181818;
+  border: 1px solid #444444;
+  padding: 2px 6px 2px 4px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.mc-station-toast-potion-mini-icon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  flex-shrink: 0;
+}
+
+.mc-station-toast-potion-tag-name {
+  font-size: 12px;
+  font-weight: normal;
+  color: #f0f0f0;
+  text-shadow: 1px 1px 0px #111111;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 /* Subtle close button */

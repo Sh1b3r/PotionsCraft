@@ -156,6 +156,8 @@ export default function MinecraftStationWidget() {
 
   // Active Crafting Output (memoized so it does not flicker on re-renders)
   const craftingOutput = useMemo(() => checkCraftingRecipe(craftingGrid), [craftingGrid]);
+  const craftingOutputRef = useRef(craftingOutput);
+  craftingOutputRef.current = craftingOutput;
 
   // Helper to get slot item synchronously
   const getSlotValue = useCallback(
@@ -165,6 +167,7 @@ export default function MinecraftStationWidget() {
       if (slotType === 'ingredient') return brewingIngredientRef.current;
       if (slotType === 'bottle') return brewingBottlesRef.current[index];
       if (slotType === 'fuel') return fuelSlotRef.current;
+      if (slotType === 'output') return craftingOutputRef.current;
       return null;
     },
     []
@@ -657,6 +660,7 @@ export default function MinecraftStationWidget() {
 
       // Always clear any stale drag so subsequent clicks never get stuck
       dragRef.current = null;
+      const slotItem = getSlotValue(type, index);
 
       // Shift + Click handling
       if (event.shiftKey && !heldItemRef.current) {
@@ -803,14 +807,13 @@ export default function MinecraftStationWidget() {
     }
   }, [fuelCharges, fuelSlot, setSlotValue]);
   useEffect(() => {
-    const possible = canBrew(brewingIngredient, brewingBottles, 1);
+    const possible = canBrew(brewingIngredient, brewingBottles, fuelCharges);
     if (isBrewing) {
       if (!possible || activeIngredientRef.current !== brewingIngredient?.itemId) {
         setIsBrewing(false); setBrewingStep(0); setBrewingProgress(0); setBrewingBubbleFrame(null);
       }
     } else if (possible && fuelCharges > 0) {
       activeIngredientRef.current = brewingIngredient.itemId;
-      fuelChargesRef.current = fuelCharges - 1; setFuelCharges(fuelCharges - 1);
       setBrewingBubbleFrame(0);
       setIsBrewing(true);
     }
@@ -828,7 +831,7 @@ export default function MinecraftStationWidget() {
       // In-flight abort check: if reagent was removed or bottles changed, abort instantly
       const currentIng = brewingIngredientRef.current;
       const currentBottles = brewingBottlesRef.current;
-      if (!currentIng || currentIng.itemId !== ingredientId || !canBrew(currentIng, currentBottles, 1)) {
+      if (!currentIng || currentIng.itemId !== ingredientId || !canBrew(currentIng, currentBottles, fuelChargesRef.current)) {
         clearInterval(timer);
         setIsBrewing(false);
         setBrewingStep(0);
@@ -850,19 +853,29 @@ export default function MinecraftStationWidget() {
       if (progress < 1) return;
       clearInterval(timer);
       const ingredient = brewingIngredientRef.current;
-      if (ingredient?.itemId !== ingredientId || !canBrew(ingredient, brewingBottlesRef.current, 1)) {
+      if (ingredient?.itemId !== ingredientId || !canBrew(ingredient, brewingBottlesRef.current, fuelChargesRef.current)) {
         setIsBrewing(false); setBrewingStep(0); setBrewingProgress(0); setBrewingBubbleFrame(null); return;
       }
       let brewed = null;
       let brewedCount = 0;
+      const brewedList = [];
       brewingBottlesRef.current.forEach((bottle, index) => {
         const result = getBrewingResult(bottle, ingredientId);
         if (result) {
           setSlotValue('bottle', index, result);
           brewed = result;
           brewedCount++;
+          brewedList.push(result);
         }
       });
+      // Exactly 1 fuel charge is spent per brewing operation (NOT per potion)
+      if (brewedCount > 0) {
+        setFuelCharges(prev => {
+          const next = Math.max(0, prev - 1);
+          fuelChargesRef.current = next;
+          return next;
+        });
+      }
       const isBreath = ingredientId === 'dragons_breath' || ingredientId === 'dragon_breath';
       const emptyBottle = { ...MINECRAFT_ITEMS.glass_bottle, itemId: 'glass_bottle', count: 1 };
       setSlotValue('ingredient', 0, ingredient.count > 1 ? { ...ingredient, count: ingredient.count - 1 } : isBreath ? emptyBottle : null);
@@ -881,22 +894,94 @@ export default function MinecraftStationWidget() {
         const potionMatch = brewed.catalogId ? POTIONS_DATA.find(p => p.id === brewed.catalogId) : null;
         const sprite = brewed.sprite || brewed.image || potionMatch?.icon || '/items/brewing_stand.png';
 
-        let hasLocalBrewery = false;
+        // Group brewed potions for display in toast
+        const groupedPotions = [];
+        brewedList.forEach(p => {
+          const match = groupedPotions.find(g => g.name === p.name);
+          if (match) {
+            match.count += 1;
+          } else {
+            groupedPotions.push({
+              name: p.name,
+              sprite: p.sprite || p.image || potionMatch?.icon || '/items/brewing_stand.png',
+              catalogId: p.catalogId,
+              count: 1
+            });
+          }
+        });
+
+        // Track cumulative prepared potions history in localStorage
+        let cumulativeBrewed = [];
         try {
-          hasLocalBrewery = localStorage.getItem('potionscraft_achievement_local_brewery') === 'true';
+          cumulativeBrewed = JSON.parse(localStorage.getItem('potionscraft_brewed_potions_history') || '[]');
+        } catch {}
+        brewedList.forEach(p => {
+          if (p && p.name && !cumulativeBrewed.some(item => (typeof item === 'string' ? item === p.name : item.name === p.name))) {
+            cumulativeBrewed.push({
+              name: p.name,
+              catalogId: p.catalogId,
+              sprite: p.sprite || p.image || '/items/brewing_stand.png'
+            });
+          }
+        });
+        try {
+          localStorage.setItem('potionscraft_brewed_potions_history', JSON.stringify(cumulativeBrewed));
         } catch {}
 
+        // Helper to check Local Brewery achievement
+        let hasLocalBrewery = false;
+        try {
+          hasLocalBrewery =
+            localStorage.getItem('potionscraft_achievement_local_brewery') === 'true' ||
+            localStorage.getItem('potionscraft_achievement_local_brew') === 'true' ||
+            localStorage.getItem('potionscraft_achievement_mistseva_brovarnya') === 'true' ||
+            JSON.parse(localStorage.getItem('potionscraft_achievements') || '{}').local_brewery === true;
+        } catch {}
+
+        // Helper to check Master Alchemist achievement ("Майстер зілля")
         let hasMasterAlchemist = false;
         try {
-          hasMasterAlchemist = localStorage.getItem('potionscraft_achievement_master_alchemist') === 'true';
+          hasMasterAlchemist =
+            localStorage.getItem('potionscraft_achievement_master_alchemist') === 'true' ||
+            localStorage.getItem('potionscraft_achievement_master_zillya') === 'true' ||
+            localStorage.getItem('potionscraft_achievement_potion_master') === 'true' ||
+            localStorage.getItem('potionscraft_achievement_master_potion') === 'true' ||
+            JSON.parse(localStorage.getItem('potionscraft_achievements') || '{}').master_alchemist === true ||
+            JSON.parse(localStorage.getItem('potionscraft_achievements') || '{}').master_zillya === true;
+        } catch {}
+
+        // Track total cumulative potions brewed
+        let totalBrewed = 0;
+        try {
+          totalBrewed = parseInt(localStorage.getItem('potionscraft_total_potions_brewed') || '0', 10);
+          if (isNaN(totalBrewed)) totalBrewed = 0;
+        } catch {}
+        totalBrewed += brewedCount;
+        try {
+          localStorage.setItem('potionscraft_total_potions_brewed', String(totalBrewed));
         } catch {}
 
         let awardedAchievement = false;
 
-        // 1. «Місцева броварня» — awarded on first potion brewed
+        // Collect all individual brewed potions (one per bottle)
+        const allPotionsList = brewedList.map(p => {
+          const pMatch = p.catalogId ? POTIONS_DATA.find(pd => pd.id === p.catalogId) : null;
+          return {
+            name: p.name,
+            sprite: p.sprite || p.image || pMatch?.icon || '/items/brewing_stand.png',
+            catalogId: p.catalogId
+          };
+        });
+
+        // 1. «Місцева броварня» — awarded on first potion brewed, saved persistently
         if (!hasLocalBrewery) {
           try {
             localStorage.setItem('potionscraft_achievement_local_brewery', 'true');
+            localStorage.setItem('potionscraft_achievement_mistseva_brovarnya', 'true');
+            const curAch = JSON.parse(localStorage.getItem('potionscraft_achievements') || '{}');
+            curAch.local_brewery = true;
+            curAch.mistseva_brovarnya = true;
+            localStorage.setItem('potionscraft_achievements', JSON.stringify(curAch));
           } catch {}
           awardedAchievement = true;
           addToast({
@@ -905,14 +990,31 @@ export default function MinecraftStationWidget() {
             fromCard,
             timestamp: Date.now(),
             sprite,
-            customTitle: 'Досягнення отримано!'
+            customTitle: 'Досягнення отримано!',
+            isAchievement: true,
+            potions: groupedPotions,
+            allPotions: allPotionsList
           });
         }
 
-        // 2. «Майстер зілля» — awarded when 3 potions are brewed simultaneously
-        if (!hasMasterAlchemist && brewedCount === 3) {
+        // 2. «Майстер зілля» — awarded when 3 potions are brewed simultaneously or in total, saved persistently
+        const isMasterBrew =
+          !hasMasterAlchemist &&
+          (brewedCount >= 3 ||
+            totalBrewed >= 3 ||
+            (brewingBottlesRef.current.filter(b => b && (b.isPotion || b.itemId?.startsWith('potion_') || b.itemId?.includes('potion'))).length === 3 && brewedCount > 0));
+
+        if (isMasterBrew) {
           try {
             localStorage.setItem('potionscraft_achievement_master_alchemist', 'true');
+            localStorage.setItem('potionscraft_achievement_master_zillya', 'true');
+            localStorage.setItem('potionscraft_achievement_potion_master', 'true');
+            localStorage.setItem('potionscraft_achievement_master_potion', 'true');
+            const curAch = JSON.parse(localStorage.getItem('potionscraft_achievements') || '{}');
+            curAch.master_alchemist = true;
+            curAch.master_zillya = true;
+            curAch.potion_master = true;
+            localStorage.setItem('potionscraft_achievements', JSON.stringify(curAch));
           } catch {}
           awardedAchievement = true;
           addToast({
@@ -921,7 +1023,10 @@ export default function MinecraftStationWidget() {
             fromCard,
             timestamp: Date.now() + 1,
             sprite,
-            customTitle: 'Досягнення отримано!'
+            customTitle: 'Досягнення отримано!',
+            isAchievement: true,
+            potions: groupedPotions,
+            allPotions: allPotionsList
           });
         }
 
@@ -933,7 +1038,10 @@ export default function MinecraftStationWidget() {
             fromCard,
             timestamp: Date.now(),
             sprite,
-            customTitle: 'Зілля зварено!'
+            customTitle: 'Зілля зварено!',
+            isAchievement: false,
+            potions: groupedPotions,
+            allPotions: allPotionsList
           });
         }
       }
@@ -942,7 +1050,8 @@ export default function MinecraftStationWidget() {
   }, [isBrewing]);
   useEffect(() => {
     if (!brewedToast) return;
-    const timer = setTimeout(() => setBrewedToast(null), 4500);
+    const duration = brewedToast.potions && brewedToast.potions.length > 1 ? 6000 : 4500;
+    const timer = setTimeout(() => setBrewedToast(null), duration);
     return () => clearTimeout(timer);
   }, [brewedToast]);
 
@@ -1046,6 +1155,12 @@ export default function MinecraftStationWidget() {
   // Authentic Minecraft Card-Parity Tooltip System
   const getSlotTooltipData = useCallback(
     (slotType, index, item) => {
+      if (slotType === 'fuel-gauge') {
+        return {
+          title: 'Паливо варильної стійки',
+          lore: `§eЗалишилося зарядів: ${fuelChargesRef.current} / 20\n§71 вогняний порошок = 20 варінь\n§8(1 заряд витрачається після приготування зілля)`
+        };
+      }
 
       if (!item) return null;
 
@@ -1116,6 +1231,19 @@ export default function MinecraftStationWidget() {
     },
     [mobile, getSlotTooltipData, showTooltip, hideTooltip]
   );
+
+  // Dynamic Tooltip Auto-Refresh: when the item in the currently hovered slot updates
+  // (e.g. potion finishes brewing in brewing stand), immediately update the tooltip in real time.
+  useEffect(() => {
+    if (!hoveredSlotRef.current || mobile || heldItemRef.current || dragRef.current) return;
+    const { type, index } = hoveredSlotRef.current;
+    const currentItem = getSlotValue(type, index);
+    if (currentItem) {
+      handleSlotHover(type, index, currentItem);
+    } else {
+      hideTooltip();
+    }
+  }, [brewingBottles, brewingIngredient, craftingOutput, heldItem, mobile, getSlotValue, handleSlotHover, hideTooltip]);
 
   const handleBackgroundClick = event => {
     if (!event.target.closest('.mc-slot, button')) {
@@ -1350,7 +1478,10 @@ export default function MinecraftStationWidget() {
                     data-slot-type="output"
                     onPointerDown={handleCraftOutputClick}
                     onContextMenu={e => e.preventDefault()}
-                    onPointerEnter={() => handleSlotHover('output', 0, craftingOutput)}
+                    onPointerEnter={() => {
+                      hoveredSlotRef.current = { type: 'output', index: 0 };
+                      handleSlotHover('output', 0, craftingOutput);
+                    }}
                     onPointerLeave={() => { hoveredSlotRef.current = null; hideTooltip(); }}
                   >
                     {craftingOutput && (
@@ -1469,7 +1600,9 @@ export default function MinecraftStationWidget() {
               }}
               role="status"
               title={
-                brewedToast.name === 'Майстер зілля'
+                brewedToast.potions && brewedToast.potions.length > 0
+                  ? `${brewedToast.customTitle || 'Зілля зварено!'}: ${brewedToast.potions.map(p => `${p.name}${p.count > 1 ? ` × ${p.count}` : ''}`).join(', ')}`
+                  : brewedToast.name === 'Майстер зілля'
                   ? 'Зваріть 3 будь-які зілля одночасно на одній варильній стійці'
                   : brewedToast.name === 'Місцева броварня'
                   ? 'Зваріть своє перше зілля'
@@ -1478,17 +1611,39 @@ export default function MinecraftStationWidget() {
                   : ''
               }
             >
-              <img
-                src={brewedToast.sprite || '/items/brewing_stand.png'}
-                alt=""
-                className="mc-station-toast-icon"
-                draggable="false"
-              />
+              <div className="mc-station-toast-icons-wrapper">
+                {(brewedToast.allPotions && brewedToast.allPotions.length > 0
+                  ? brewedToast.allPotions
+                  : [{ sprite: brewedToast.sprite, name: brewedToast.name }]
+                ).map((item, idx) => (
+                  <img
+                    key={idx}
+                    src={item.sprite || '/items/brewing_stand.png'}
+                    alt={item.name || ''}
+                    className="mc-station-toast-icon"
+                    draggable="false"
+                  />
+                ))}
+              </div>
               <div className="mc-station-toast-body">
                 <div className="mc-station-toast-title">
                   {brewedToast.customTitle || 'Зілля зварено!'}
                 </div>
-                <div className="mc-station-toast-desc">{brewedToast.name}</div>
+                {brewedToast.isAchievement && (
+                  <div className="mc-station-toast-desc">{brewedToast.name}</div>
+                )}
+                {brewedToast.potions && brewedToast.potions.length > 0 && (
+                  <div className="mc-station-toast-potions-items">
+                    {brewedToast.potions.map((p, idx) => (
+                      <span key={idx} className="mc-station-toast-potion-tag" title={p.name}>
+                        <img src={p.sprite} alt="" className="mc-station-toast-potion-mini-icon" draggable="false" />
+                        <span className="mc-station-toast-potion-tag-name">
+                          {p.name}{p.count > 1 ? ` × ${p.count}` : ''}
+                        </span>
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
               <button
                 type="button"
@@ -1536,13 +1691,30 @@ export default function MinecraftStationWidget() {
                     localStorage.removeItem('potionscraft_station_inventory');
                   } catch {}
                   setInventory(buildInitialInventory());
+                  // Also completely reset the brewing stand
+                  setBrewingIngredient(null);
+                  brewingIngredientRef.current = null;
+                  setBrewingBottles([null, null, null]);
+                  brewingBottlesRef.current = [null, null, null];
+                  setFuelSlot(null);
+                  fuelSlotRef.current = null;
+                  setFuelCharges(0);
+                  fuelChargesRef.current = 0;
+                  setIsBrewing(false);
+                  setBrewingStep(0);
+                  setBrewingProgress(0);
+                  setBrewingBubbleFrame(null);
+                  activeIngredientRef.current = null;
+                  recipeLoadedFromCardRef.current = false;
+                  setContainerReturns(0);
+                  hideTooltip();
                   playCraftSuccessSound();
                   addToast({
-                    name: 'Початковий набір предметів відновлено',
-                    customTitle: 'Інвентар скинуто!'
+                    name: 'Початковий набір предметів та варильну стійку відновлено',
+                    customTitle: 'Інвентар і стійку скинуто!'
                   });
                 }}
-                title="Скинути стан інвентарю до початкового"
+                title="Скинути стан інвентарю та варильної стійки до початкового"
               >
                 Скинути інвентар
               </button>

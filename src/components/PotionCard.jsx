@@ -86,8 +86,22 @@ export default function PotionCard({
     >
       {/* ================= DESKTOP LAYOUT ================= */}
       <div className="card-desktop-layout">
-        {/* Minecraft Wiki Brewing Stand Fragment */}
-        <BrewingStandWidget potion={potion} />
+        {/* Left column: Brewing stand + Button underneath */}
+        <div className="card-stand-column">
+          <BrewingStandWidget potion={potion} />
+          <button
+            type="button"
+            className="card-load-stand-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              playButtonClickSound();
+              window.dispatchEvent(new CustomEvent('load_potion_recipe', { detail: { potionId: potion.id } }));
+            }}
+            title="Завантажити цей рецепт у варильну стійку"
+          >
+            <span>Зварити зілля</span>
+          </button>
+        </div>
 
         {/* Card Content with original structure */}
         <div className="card-content">
@@ -96,7 +110,6 @@ export default function PotionCard({
             <div className="card-title-group">
               <TooltipTrigger
                 title={potion.name}
-                extra="💡 Клацніть, щоб оглянути в 3D"
               >
                 <span className="invslot">
                   <span
@@ -147,8 +160,6 @@ export default function PotionCard({
                 lore={primaryEffectLore}
                 extra={
                   potion.id === 'invisibility'
-                    ? '⚡ Секретна пасхалка (Херпобрив)!'
-                    : ''
                 }
               >
                 <span className="sprite-file">
@@ -251,7 +262,7 @@ export default function PotionCard({
                 subtitle={`Тривалість: ${potion.upgrades.redstone}`}
                 lore={wikiPotion?.extendedMinetip || ''}
               >
-                <span className="card-upgrade-tag redstone-tag">Редстоун +</span>
+                <span className="card-upgrade-tag redstone-tag">Редстоун</span>
               </TooltipTrigger>
             )}
 
@@ -261,24 +272,10 @@ export default function PotionCard({
                 subtitle={`Посилення: ${potion.upgrades.glowstone}`}
                 lore={wikiPotion?.upgradedMinetip || ''}
               >
-                <span className="card-upgrade-tag glowstone-tag">Рівень II +</span>
+                <span className="card-upgrade-tag glowstone-tag">Рівень II</span>
               </TooltipTrigger>
             )}
           </div>
-
-          {/* Action button to load recipe into the brewing stand */}
-          <button
-            type="button"
-            className="card-load-stand-btn"
-            onClick={(e) => {
-              e.stopPropagation();
-              playButtonClickSound();
-              window.dispatchEvent(new CustomEvent('load_potion_recipe', { detail: { potionId: potion.id } }));
-            }}
-            title="Завантажити цей рецепт у варильну стійку"
-          >
-            <span>Встановити у стійку</span>
-          </button>
         </div>
       </div>
 
@@ -297,7 +294,6 @@ export default function PotionCard({
               <div className="mobile-header-potion-icon">
                 <TooltipTrigger
                   title={potion.name}
-                  extra="💡 Клацніть, щоб оглянути в 3D"
                 >
                   <span className="invslot">
                     <span
@@ -427,21 +423,6 @@ export default function PotionCard({
                 </TooltipTrigger>
               )}
             </div>
-
-            {/* Mobile action button to load recipe into the brewing stand */}
-            <button
-              type="button"
-              className="card-load-stand-btn mobile-load-stand-btn"
-              onClick={(e) => {
-                e.stopPropagation();
-                playButtonClickSound();
-                window.dispatchEvent(new CustomEvent('load_potion_recipe', { detail: { potionId: potion.id } }));
-              }}
-              title="Завантажити цей рецепт у варильну стійку"
-            >
-              <img src="/items/brewing_stand.png" alt="" className="card-load-stand-sprite" aria-hidden="true" />
-              <span>Встановити у стійку</span>
-            </button>
           </div>
         </div>
 

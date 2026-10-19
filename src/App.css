@@ -364,20 +364,21 @@ header#header2 {
 }
 
 #header2.light-theme {
-  background-color: rgb(198, 198, 198);
-  border-top: 2px solid rgb(219, 219, 219);
-  border-left: 2px solid rgb(219, 219, 219);
-  border-bottom: 3px solid rgb(91, 91, 91);
-  border-right: 2px solid rgb(91, 91, 91);
+  background-color: #c6c6c6;
+  border-top: 2px solid #ffffff;
+  border-left: none;
+  border-right: none;
+  border-bottom: 3px solid #000000;
+  box-shadow: inset 0 2px 0px #ffffff, inset 0 -2px 0px #555555, 0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
 #header2.dark-theme {
   background-color: #071924;
-  border-top: 2px solid #0e3347;
-  border-left: 2px solid #0e3347;
-  border-bottom: 3px solid #02090e;
-  border-right: 2px solid #02090e;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+  border-top: 2px solid #144966;
+  border-left: none;
+  border-right: none;
+  border-bottom: 3px solid #000000;
+  box-shadow: inset 0 2px 0px #144966, inset 0 -2px 0px #02090e, 0 4px 20px rgba(0, 0, 0, 0.8);
 }
 
 .headertext {
@@ -529,19 +530,19 @@ header#header2 {
 }
 
 #body21.light-theme {
-  background-color: rgb(255, 255, 255);
+  background-color: #c6c6c6;
   color: #000000;
+  border: 3px solid #000000;
+  border-radius: 0 !important;
+  box-shadow: inset 3px 3px 0px #ffffff, inset -3px -3px 0px #555555, 0 10px 30px rgba(0, 0, 0, 0.35);
 }
 
-/* Base Dark Theme (Obsidian Minimal - Mature & Clean Glassmorphism) */
 #body21.dark-theme {
-  background-color: rgba(3, 20, 28, 0.92);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background-color: #0b1e28;
   color: #ffffff;
-  border: 1px solid rgba(20, 184, 166, 0.35);
-  border-radius: 10px;
-  box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.9), 0 0 35px 2px rgba(45, 212, 191, 0.12);
+  border: 3px solid #000000;
+  border-radius: 0 !important;
+  box-shadow: inset 3px 3px 0px #1a3c4f, inset -3px -3px 0px #04121a, 0 10px 30px rgba(0, 0, 0, 0.7);
 }
 
 /* ==================== CANONICAL MINECRAFT DARK THEME (TURQUOISE / TEAL ACCENTS) ==================== */
@@ -697,17 +698,29 @@ h3 {
 /* ==================== WIKI BASE MODIFIERS TABLE SECTION ==================== */
 .wiki-section-container {
   margin-bottom: 25px;
-  background: rgba(0, 0, 0, 0.03);
-  border: 2px solid rgba(80, 80, 80, 0.25);
-  border-radius: 4px;
+  background-color: #c6c6c6;
+  background-image: linear-gradient(180deg, #d2d2d2 0%, #bebebe 100%);
+  border: 2px solid #000000 !important;
+  border-radius: 0 !important;
   padding: 18px;
+  box-shadow: inset 2px 2px 0px #ffffff, inset -2px -2px 0px #555555;
   transition: all 0.3s ease;
 }
 
+.light-theme .wiki-section-container {
+  background-color: #c6c6c6 !important;
+  background-image: linear-gradient(180deg, #d2d2d2 0%, #bebebe 100%) !important;
+  border: 2px solid #000000 !important;
+  border-radius: 0 !important;
+  box-shadow: inset 2px 2px 0px #ffffff, inset -2px -2px 0px #555555 !important;
+}
+
 .dark-theme .wiki-section-container {
-  background: rgba(18, 25, 20, 0.6);
-  border: 2px solid rgba(34, 197, 94, 0.3);
-  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5);
+  background-color: #0b1e28 !important;
+  background-image: none !important;
+  border: 2px solid #000000 !important;
+  border-radius: 0 !important;
+  box-shadow: inset 2px 2px 0px #1a3c4f, inset -2px -2px 0px #04121a !important;
 }
 
 .wiki-section-header {
@@ -717,29 +730,31 @@ h3 {
 }
 
 .wiki-section-title {
-  font-size: 12px;
+  font-size: 16px;
   margin: 0;
-  color: #764ba2;
+  font-family: 'Minecraft', monospace, sans-serif;
   letter-spacing: 0.5px;
 }
 
 body.light-theme .wiki-section-title,
 .light-theme .wiki-section-title {
-  color: #764ba2 !important;
+  color: #1e2456 !important;
+  text-shadow: 1px 1px 0px #ffffff !important;
 }
 
 .dark-theme .wiki-section-title {
-  color: #4ade80;
-  text-shadow: 2px 2px #0f172a;
+  color: #2dd4bf !important;
+  text-shadow: 1px 1px 0px #04121a !important;
 }
 
 .wiki-section-intro {
-  font-size: 15px;
+  font-size: 14px;
   line-height: 1.6;
   margin-bottom: 20px;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  font-family: 'Minecraft', monospace, sans-serif;
 }
 
 .wiki-section-intro p {
@@ -748,87 +763,103 @@ body.light-theme .wiki-section-title,
 
 .wiki-table-wrapper {
   overflow-x: auto;
-  border-radius: 4px;
+  border-radius: 0 !important;
   -webkit-overflow-scrolling: touch;
 }
 
 .minecraft-styled-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   text-align: center;
-  font-size: 15px;
+  font-family: 'Minecraft', monospace, sans-serif;
+  font-size: 14px;
   line-height: 1.4;
-  background: #ffffff;
-  border: 2px solid #8f8f8f;
-  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.15);
+  background: #c6c6c6;
+  border: 2px solid #000000 !important;
+  border-radius: 0 !important;
+  box-shadow: inset 2px 2px 0px #ffffff, inset -2px -2px 0px #555555;
 }
 
 .dark-theme .minecraft-styled-table {
-  background: #1b1b1b;
-  border: 2px solid #3c3c3c;
+  background: #071924 !important;
+  border: 2px solid #000000 !important;
+  border-radius: 0 !important;
+  box-shadow: inset 2px 2px 0px #144966, inset -2px -2px 0px #02090e;
   color: #e2e8f0;
 }
 
 .minecraft-styled-table thead tr {
-  background: #d8d8d8;
-  border-bottom: 2px solid #8f8f8f;
-}
-
-.dark-theme .minecraft-styled-table thead tr {
-  background: #2a2a2a;
-  border-bottom: 2px solid #4a4a4a;
-}
-
-.minecraft-styled-table th,
-.minecraft-styled-table td {
-  padding: 12px 14px;
-  border: 1px solid #bfbfbf;
-  vertical-align: middle;
-}
-
-.dark-theme .minecraft-styled-table th,
-.dark-theme .minecraft-styled-table td {
-  border: 1px solid #383838;
+  background-color: #b8b8b8;
+  background-image: linear-gradient(180deg, #cccccc 0%, #a8a8a8 100%);
 }
 
 .minecraft-styled-table thead th {
-  font-size: 16px;
+  padding: 12px 14px;
+  border: 1px solid #000000 !important;
+  box-shadow: inset 1px 1px 0px #ffffff, inset -1px -1px 0px #555555;
+  font-family: 'Minecraft', monospace, sans-serif;
+  font-size: 14px;
   font-weight: bold;
-  color: #1f2937;
+  color: #222222;
+  text-shadow: 1px 1px 0px #ffffff;
   letter-spacing: 0.5px;
 }
 
 .dark-theme .minecraft-styled-table thead th {
-  color: #f1f5f9;
+  background-color: #0e3347 !important;
+  box-shadow: inset 1px 1px 0px #1a4a63, inset -1px -1px 0px #04121a;
+  color: #54dfcd !important;
+  text-shadow: 1px 1px 0px #000000;
 }
 
+.minecraft-styled-table th,
+.minecraft-styled-table td {
+  padding: 10px 14px;
+  border: 1px solid #787878;
+  vertical-align: middle;
+  font-family: 'Minecraft', monospace, sans-serif;
+}
+
+.dark-theme .minecraft-styled-table th,
+.dark-theme .minecraft-styled-table td {
+  border: 1px solid #0f354a;
+}
+
+.light-theme .minecraft-styled-table tbody tr:nth-child(even),
 .minecraft-styled-table tbody tr:nth-child(even) {
-  background-color: #f9fafb;
+  background-color: #d6d6d6;
+}
+
+.light-theme .minecraft-styled-table tbody tr:nth-child(odd),
+.minecraft-styled-table tbody tr:nth-child(odd) {
+  background-color: #e4e4e4;
 }
 
 .dark-theme .minecraft-styled-table tbody tr:nth-child(even) {
-  background-color: #222222;
+  background-color: #071924 !important;
 }
 
-.minecraft-styled-table tbody tr:hover {
-  background-color: rgba(118, 75, 162, 0.12);
+.dark-theme .minecraft-styled-table tbody tr:nth-child(odd) {
+  background-color: #0a2332 !important;
 }
 
 body.light-theme .minecraft-styled-table tbody tr:hover,
 .light-theme .minecraft-styled-table tbody tr:hover {
-  background-color: rgba(118, 75, 162, 0.12) !important;
+  background-color: rgba(123, 132, 235, 0.25) !important;
 }
 
 .dark-theme .minecraft-styled-table tbody tr:hover {
-  background-color: rgba(34, 197, 94, 0.15);
+  background-color: rgba(45, 212, 191, 0.2) !important;
 }
 
 .table-item-name {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: bold;
   text-align: left;
   white-space: nowrap;
-  color: #111827;
+  color: #1e2456;
+  font-family: 'Minecraft', monospace, sans-serif;
 }
 
 .dark-theme .table-item-name {
@@ -837,29 +868,30 @@ body.light-theme .minecraft-styled-table tbody tr:hover,
 
 .wiki-name-link,
 .wiki-potion-link {
-  color: #0645ad;
-  text-decoration: underline;
-  text-decoration-color: rgba(6, 69, 173, 0.4);
+  color: #3b43a8;
+  text-decoration: none;
   cursor: pointer;
+  font-weight: bold;
+  font-family: 'Minecraft', monospace, sans-serif;
   transition: all 0.15s ease;
 }
 
 .wiki-name-link:hover,
 .wiki-potion-link:hover {
-  color: #0b0080;
-  text-decoration-color: #0b0080;
+  color: #606af0;
+  text-decoration: underline;
 }
 
 .dark-theme .wiki-name-link,
 .dark-theme .wiki-potion-link {
-  color: #60a5fa;
-  text-decoration-color: rgba(96, 165, 250, 0.4);
+  color: #54dfcd;
+  text-decoration: none;
 }
 
 .dark-theme .wiki-name-link:hover,
 .dark-theme .wiki-potion-link:hover {
-  color: #93c5fd;
-  text-decoration-color: #93c5fd;
+  color: #99f4e5;
+  text-decoration: underline;
 }
 
 .table-icon-cell {
@@ -948,27 +980,25 @@ body.light-theme .minecraft-styled-table tbody tr:hover,
 .search-system-container {
   margin: 20px 0 28px 0;
   padding: 16px;
-  border-radius: 4px;
+  border-radius: 0 !important;
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
 .light-theme .search-system-container {
-  background-color: rgb(215, 215, 215);
-  border-top: 2px solid rgb(235, 235, 235);
-  border-left: 2px solid rgb(235, 235, 235);
-  border-bottom: 2px solid rgb(120, 120, 120);
-  border-right: 2px solid rgb(120, 120, 120);
+  background-color: #c6c6c6;
+  background-image: linear-gradient(180deg, #d2d2d2 0%, #bebebe 100%);
+  border: 2px solid #000000 !important;
+  border-radius: 0 !important;
+  box-shadow: inset 2px 2px 0px #ffffff, inset -2px -2px 0px #555555;
 }
 
 .dark-theme .search-system-container {
-  background-color: #242528;
-  border-top: 2px solid #3a3b40;
-  border-left: 2px solid #3a3b40;
-  border-bottom: 2px solid #141416;
-  border-right: 2px solid #141416;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  background-color: #0b1e28 !important;
+  border: 2px solid #000000 !important;
+  border-radius: 0 !important;
+  box-shadow: inset 2px 2px 0px #1a3c4f, inset -2px -2px 0px #04121a;
 }
 
 .search-bar-row {
@@ -997,7 +1027,7 @@ body.light-theme .minecraft-styled-table tbody tr:hover,
   width: 100%;
   height: 42px;
   padding: 0 40px 0 38px;
-  font-family: 'Minecraft', sans-serif;
+  font-family: 'Minecraft', monospace, sans-serif;
   font-size: 15px;
   outline: none;
   box-sizing: border-box;
@@ -1007,24 +1037,27 @@ body.light-theme .minecraft-styled-table tbody tr:hover,
 .light-theme .search-input {
   background-color: #ffffff;
   color: #1e293b;
-  border: 2px solid #94a3b8;
-  box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.15);
+  border: 2px solid #000000 !important;
+  border-radius: 0 !important;
+  box-shadow: inset 2px 2px 0px #373737, inset -2px -2px 0px #ffffff;
 }
 
 .light-theme .search-input:focus {
-  border-color: #764ba2;
-  box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.15), 0 0 8px rgba(102, 126, 234, 0.4);
+  border-color: #7078e3 !important;
+  box-shadow: inset 2px 2px 0px #474ea4, 0 0 0 1px #7078e3;
 }
 
 .dark-theme .search-input {
-  background-color: #18191c;
+  background-color: #04121a;
   color: #ffffff;
-  border: 2px solid #3e4046;
-  box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.6);
+  border: 2px solid #000000 !important;
+  border-radius: 0 !important;
+  box-shadow: inset 2px 2px 0px #000000, inset -2px -2px 0px #1a3c4f;
 }
 
 .dark-theme .search-input:focus {
-  border-color: #22c55e;
+  border-color: #2dd4bf !important;
+  box-shadow: inset 2px 2px 0px #04121a, 0 0 0 1px #2dd4bf;
 }
 
 .search-clear-btn {
@@ -1048,16 +1081,31 @@ body.light-theme .minecraft-styled-table tbody tr:hover,
   padding: 0 16px;
   font-family: 'Minecraft', sans-serif;
   font-size: 14px;
-  background: #ef4444;
-  border: 2px solid #b91c1c;
+  background-color: #ef4444;
+  background-image: linear-gradient(180deg, #f87171 0%, #dc2626 100%);
+  border: 2px solid #000000 !important;
+  border-radius: 0 !important;
+  box-shadow: inset 2px 2px 0px #fca5a5, inset -2px -2px 0px #991b1b;
   color: #ffffff;
+  text-shadow: 1px 1px 0px #7f1d1d;
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.2s ease;
+  box-sizing: border-box;
 }
 
 .search-reset-all-btn:hover {
-  background: #dc2626;
+  background-color: #f87171;
+  background-image: linear-gradient(180deg, #fca5a5 0%, #ef4444 100%);
+  box-shadow: inset 2px 2px 0px #fecaca, inset -2px -2px 0px #991b1b;
+  color: #ffffa0;
+  text-shadow: 1px 1px 0px #353314;
+}
+
+.search-reset-all-btn:active {
+  background-color: #dc2626;
+  background-image: none;
+  box-shadow: inset 2px 2px 0px #7f1d1d, inset -2px -2px 0px #fca5a5;
+  transform: translateY(1px);
 }
 
 .search-categories-row {
@@ -1080,55 +1128,108 @@ body.light-theme .minecraft-styled-table tbody tr:hover,
   align-items: center;
   gap: 6px;
   padding: 6px 14px;
-  font-family: 'Minecraft', sans-serif;
+  font-family: 'Minecraft', monospace, sans-serif;
   font-size: 13px;
   cursor: pointer;
-  border: 2px solid transparent;
-  border-radius: 2px;
-  transition: all 0.2s ease;
+  border: 2px solid #000000 !important;
+  border-radius: 0 !important;
+  transition: none !important;
+  box-sizing: border-box;
 }
 
 .light-theme .category-tab-btn {
-  background: #e2e8f0;
-  color: #334155;
-  border-color: #cbd5e1;
+  background-color: #c6c6c6;
+  background-image: linear-gradient(180deg, #dbdbdb 0%, #b8b8b8 100%);
+  box-shadow: inset 2px 2px 0px #ffffff, inset -2px -2px 0px #555555;
+  color: #2a2a2a;
+  text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.7);
 }
 
 .light-theme .category-tab-btn:hover {
-  background: rgba(102, 126, 234, 0.18);
-  color: #512e7f;
-  border-color: #764ba2;
+  background-color: #d6d6d6;
+  background-image: linear-gradient(180deg, #e8e8e8 0%, #c4c4c4 100%);
+  box-shadow: inset 2px 2px 0px #ffffff, inset -2px -2px 0px #555555;
+  color: #ffffa0 !important;
+  text-shadow: 1px 1px 0px #353314 !important;
 }
 
 .light-theme .category-tab-btn.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  background-color: #7b84eb !important;
+  background-image: linear-gradient(180deg, #8790f3 0%, #7078e3 100%) !important;
+  box-shadow: inset 2px 2px 0px #b0b6fe, inset -2px -2px 0px #474ea4 !important;
   color: #ffffff !important;
-  border-color: #512e7f !important;
-  box-shadow: 0 2px 8px rgba(118, 75, 162, 0.35) !important;
+  text-shadow: 1px 1px 0px #313674 !important;
+}
+
+.light-theme .category-tab-btn.active:hover {
+  background-color: #8b94f0 !important;
+  background-image: linear-gradient(180deg, #969df5 0%, #7e87ea 100%) !important;
+  box-shadow: inset 2px 2px 0px #c4c8fe, inset -2px -2px 0px #474ea4 !important;
+  color: #ffffa0 !important;
+  text-shadow: 1px 1px 0px #353314 !important;
+}
+
+.light-theme .category-tab-btn:active {
+  background-color: #a0a0a0 !important;
+  background-image: none !important;
+  box-shadow: inset 2px 2px 0px #555555, inset -2px -2px 0px #ffffff !important;
+  transform: translateY(1px);
 }
 
 .dark-theme .category-tab-btn {
-  background: #2e3035;
-  color: #cbd5e1;
-  border-color: #3e4046;
+  background: #09202e !important;
+  border-color: #000000 !important;
+  box-shadow: inset 2px 2px 0px #1a3c4f, inset -2px -2px 0px #04121a;
+  color: #79c5b8 !important;
 }
 
 .dark-theme .category-tab-btn:hover {
-  background: #3a3c42;
+  background: #174a54 !important;
+  color: #ffffa0 !important;
+  box-shadow: inset 2px 2px 0px #246d65, inset -2px -2px 0px #041413 !important;
 }
 
 .dark-theme .category-tab-btn.active {
-  background: #15803d;
-  color: #ffffff;
-  border-color: #22c55e;
-  box-shadow: none !important;
+  background-color: #0f3d38 !important;
+  background-image: linear-gradient(180deg, #144e48 0%, #0a2d29 100%) !important;
+  box-shadow: inset 2px 2px 0px #246d65, inset -2px -2px 0px #041413 !important;
+  border-color: #000000 !important;
+  color: #54dfcd !important;
+  text-shadow: 1px 1px 0px #031110 !important;
 }
 
 .cat-badge {
-  background: rgba(0, 0, 0, 0.25);
-  padding: 1px 6px;
-  border-radius: 10px;
+  padding: 1px 5px;
+  border-radius: 0 !important;
   font-size: 11px;
+  font-family: 'Minecraft', monospace, sans-serif;
+  line-height: 1.2;
+}
+
+.light-theme .cat-badge {
+  background: #888888;
+  color: #ffffff;
+  border: 1px solid #4a4a4a;
+  text-shadow: 1px 1px 0px #333333;
+}
+
+.light-theme .category-tab-btn.active .cat-badge {
+  background: #474ea4 !important;
+  color: #ffffff !important;
+  border: 1px solid #313674 !important;
+  box-shadow: inset 1px 1px 0px #232753 !important;
+}
+
+.dark-theme .cat-badge {
+  background: #041413;
+  color: #54dfcd;
+  border: 1px solid #246d65;
+}
+
+.dark-theme .category-tab-btn.active .cat-badge {
+  background: #041413 !important;
+  color: #ffffa0 !important;
+  border: 1px solid #54dfcd !important;
 }
 
 .search-results-count {
@@ -1166,63 +1267,86 @@ body.light-theme .minecraft-styled-table tbody tr:hover,
   gap: 6px;
 }
 
-.reagent-pill-btn {
-  padding: 3px 8px;
-  font-family: 'Minecraft', sans-serif;
-  font-size: 11px;
-  background: rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  cursor: pointer;
-  border-radius: 2px;
-  transition: all 0.15s ease;
-}
-
-.dark-theme .reagent-pill-btn {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.18);
-  color: #e2e8f0;
-}
-
-.reagent-pill-btn:hover {
-  background: rgba(102, 126, 234, 0.18);
-  border-color: #764ba2;
-  color: #512e7f;
-}
-
-.reagent-pill-btn.active {
-  background: #764ba2;
-  color: #ffffff;
-  border-color: #512e7f;
-}
-
+.reagent-pill-btn,
 .potion-filter-pill-btn {
-  padding: 3px 8px;
-  font-family: 'Minecraft', sans-serif;
-  font-size: 11px;
-  background: rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  padding: 4px 10px;
+  font-family: 'Minecraft', monospace, sans-serif;
+  font-size: 12px;
   cursor: pointer;
-  border-radius: 2px;
-  transition: all 0.15s ease;
+  border: 2px solid #000000 !important;
+  border-radius: 0 !important;
+  transition: none !important;
   text-transform: capitalize;
+  box-sizing: border-box;
 }
 
+.light-theme .reagent-pill-btn,
+.light-theme .potion-filter-pill-btn {
+  background-color: #c6c6c6;
+  background-image: linear-gradient(180deg, #dbdbdb 0%, #b8b8b8 100%);
+  box-shadow: inset 1px 1px 0px #ffffff, inset -1px -1px 0px #555555;
+  color: #2a2a2a;
+  text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.7);
+}
+
+.light-theme .reagent-pill-btn:hover,
+.light-theme .potion-filter-pill-btn:hover {
+  background-color: #d6d6d6;
+  background-image: linear-gradient(180deg, #e8e8e8 0%, #c4c4c4 100%);
+  box-shadow: inset 1px 1px 0px #ffffff, inset -1px -1px 0px #555555;
+  color: #ffffa0 !important;
+  text-shadow: 1px 1px 0px #353314 !important;
+}
+
+.light-theme .reagent-pill-btn.active,
+.light-theme .potion-filter-pill-btn.active {
+  background-color: #7b84eb !important;
+  background-image: linear-gradient(180deg, #8790f3 0%, #7078e3 100%) !important;
+  box-shadow: inset 2px 2px 0px #b0b6fe, inset -2px -2px 0px #474ea4 !important;
+  color: #ffffff !important;
+  text-shadow: 1px 1px 0px #313674 !important;
+}
+
+.light-theme .reagent-pill-btn.active:hover,
+.light-theme .potion-filter-pill-btn.active:hover {
+  background-color: #8b94f0 !important;
+  background-image: linear-gradient(180deg, #969df5 0%, #7e87ea 100%) !important;
+  box-shadow: inset 2px 2px 0px #c4c8fe, inset -2px -2px 0px #474ea4 !important;
+  color: #ffffa0 !important;
+  text-shadow: 1px 1px 0px #353314 !important;
+}
+
+.light-theme .reagent-pill-btn:active,
+.light-theme .potion-filter-pill-btn:active {
+  background-color: #a0a0a0 !important;
+  background-image: none !important;
+  box-shadow: inset 2px 2px 0px #555555, inset -2px -2px 0px #ffffff !important;
+  transform: translateY(1px);
+}
+
+.dark-theme .reagent-pill-btn,
 .dark-theme .potion-filter-pill-btn {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.18);
-  color: #e2e8f0;
+  background: #09202e !important;
+  border-color: #000000 !important;
+  box-shadow: inset 1px 1px 0px #1a3c4f, inset -1px -1px 0px #04121a;
+  color: #79c5b8 !important;
 }
 
-.potion-filter-pill-btn:hover {
-  background: rgba(102, 126, 234, 0.18);
-  border-color: #764ba2;
-  color: #512e7f;
+.dark-theme .reagent-pill-btn:hover,
+.dark-theme .potion-filter-pill-btn:hover {
+  background: #174a54 !important;
+  color: #ffffa0 !important;
+  box-shadow: inset 1px 1px 0px #246d65, inset -1px -1px 0px #041413 !important;
 }
 
-.potion-filter-pill-btn.active {
-  background: #764ba2;
-  color: #ffffff;
-  border-color: #512e7f;
+.dark-theme .reagent-pill-btn.active,
+.dark-theme .potion-filter-pill-btn.active {
+  background-color: #0f3d38 !important;
+  background-image: linear-gradient(180deg, #144e48 0%, #0a2d29 100%) !important;
+  box-shadow: inset 2px 2px 0px #246d65, inset -2px -2px 0px #041413 !important;
+  border-color: #000000 !important;
+  color: #54dfcd !important;
+  text-shadow: 1px 1px 0px #031110 !important;
 }
 
 .mobile-quick-filters {
@@ -1251,13 +1375,7 @@ body.light-theme .minecraft-styled-table tbody tr:hover,
   margin: 0 2px;
 }
 
-.potion-filter-pill-btn.effect-pill {
-  border-color: rgba(34, 197, 94, 0.4);
-}
 
-.dark-theme .potion-filter-pill-btn.effect-pill {
-  border-color: rgba(74, 222, 128, 0.35);
-}
 
 .card-desktop-layout {
   display: flex;
@@ -1273,15 +1391,19 @@ body.light-theme .minecraft-styled-table tbody tr:hover,
 .search-empty-state {
   text-align: center;
   padding: 40px 20px;
-  background: rgba(0, 0, 0, 0.05);
-  border: 2px dashed rgba(100, 100, 100, 0.3);
-  border-radius: 4px;
+  background-color: #c6c6c6;
+  border: 2px solid #000000;
+  border-radius: 0 !important;
+  box-shadow: inset 2px 2px 0px #ffffff, inset -2px -2px 0px #555555;
   margin: 20px 0;
+  font-family: 'Minecraft', monospace, sans-serif;
 }
 
 .dark-theme .search-empty-state {
-  background: rgba(0, 0, 0, 0.3);
-  border-color: rgba(255, 255, 255, 0.15);
+  background-color: #0b1e28;
+  border: 2px solid #000000;
+  border-radius: 0 !important;
+  box-shadow: inset 2px 2px 0px #1a3c4f, inset -2px -2px 0px #04121a;
 }
 
 .empty-state-icon {
@@ -1292,12 +1414,14 @@ body.light-theme .minecraft-styled-table tbody tr:hover,
 .search-empty-state h3 {
   font-size: 20px;
   margin: 0 0 6px 0;
+  font-family: 'Minecraft', monospace, sans-serif;
 }
 
 .search-empty-state p {
   font-size: 14px;
-  color: #64748b;
+  color: #334155;
   margin-bottom: 16px;
+  font-family: 'Minecraft', monospace, sans-serif;
 }
 
 .dark-theme .search-empty-state p {
@@ -1306,12 +1430,30 @@ body.light-theme .minecraft-styled-table tbody tr:hover,
 
 .empty-reset-btn {
   padding: 8px 18px;
-  font-family: 'Minecraft', sans-serif;
+  font-family: 'Minecraft', monospace, sans-serif;
   font-size: 13px;
-  background: #22c55e;
-  border: 2px solid #16a34a;
-  color: #ffffff;
+  background-color: #7b84eb;
+  background-image: linear-gradient(180deg, #8790f3 0%, #7078e3 100%);
+  border: 2px solid #000000 !important;
+  border-radius: 0 !important;
+  box-shadow: inset 2px 2px 0px #b0b6fe, inset -2px -2px 0px #474ea4 !important;
+  color: #ffffff !important;
+  text-shadow: 1px 1px 0px #313674 !important;
   cursor: pointer;
+}
+
+.empty-reset-btn:hover {
+  background-color: #8b94f0;
+  background-image: linear-gradient(180deg, #969df5 0%, #7e87ea 100%);
+  color: #ffffa0 !important;
+  text-shadow: 1px 1px 0px #353314 !important;
+}
+
+.empty-reset-btn:active {
+  background-color: #6a72d9;
+  background-image: none;
+  box-shadow: inset 2px 2px 0px #353b82, inset -2px -2px 0px #b0b6fe !important;
+  transform: translateY(1px);
 }
 
 /* ==================== POTIONS GRID (3 COLUMNS ON PC, 1 ON MOBILE) ==================== */
@@ -1346,61 +1488,108 @@ body.light-theme .minecraft-styled-table tbody tr:hover,
   overflow: hidden;
   transition: var(--theme-paint-transition);
   box-sizing: border-box;
+  border-radius: 0 !important;
 }
 
 .card:hover {
-  /* Keep the SVG pixel grid out of a fractionally translated compositor layer. */
   transform: none;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
 }
 
 .card.light-theme {
-  background-color: rgb(198, 198, 198);
-  border-top: 2px solid rgb(219, 219, 219);
-  border-left: 2px solid rgb(219, 219, 219);
-  border-bottom: 2px solid rgb(91, 91, 91);
-  border-right: 2px solid rgb(91, 91, 91);
+  background-color: #c6c6c6;
+  border: 2px solid #000000 !important;
+  box-shadow: inset 2px 2px 0px #ffffff, inset -2px -2px 0px #555555;
   color: #000000;
 }
 
+.card.light-theme:hover {
+  box-shadow: inset 2px 2px 0px #ffffff, inset -2px -2px 0px #555555, 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
 .card.light-theme .mcui-Brewing_Stand {
-  background-color: rgb(198, 198, 198);
+  background-color: #c6c6c6;
 }
 
 .card.dark-theme {
-  background-color: #2c2d30;
-  border-top: 2px solid #3e4046;
-  border-left: 2px solid #3e4046;
-  border-bottom: 2px solid #18191c;
-  border-right: 2px solid #18191c;
+  background-color: #0b1e28;
+  border: 2px solid #000000 !important;
+  box-shadow: inset 2px 2px 0px #1a3c4f, inset -2px -2px 0px #04121a;
   color: #ffffff;
-  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.5);
 }
 
 .card.dark-theme:hover {
-  box-shadow: 0px 6px 22px rgba(0, 0, 0, 0.7);
+  box-shadow: inset 2px 2px 0px #1a3c4f, inset -2px -2px 0px #04121a, 0 6px 16px rgba(0, 0, 0, 0.6);
 }
 
 .card.dark-theme .mcui-Brewing_Stand {
-  background-color: #2c2d30;
+  background-color: #0b1e28;
   border: none;
 }
 
 /* ==================== MINECRAFT WIKI MCUI BREWING STAND ==================== */
+.card-stand-column {
+  flex: 0 0 146px;
+  width: 146px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 4px 7px 10px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  border-right: none !important;
+}
+
+.card-stand-column .card-brewing-stand-box {
+  flex: 1 1 auto;
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-right: none !important;
+  box-shadow: none !important;
+  padding: 0;
+  margin: 0;
+}
+
+.card-stand-column .card-load-stand-btn {
+  margin: 0 0 0 auto !important;
+  padding: 3px 6px !important;
+  font-size: 10.5px !important;
+  letter-spacing: 0.2px !important;
+  width: 130px !important;
+  max-width: 130px !important;
+  height: 24px !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+}
+
 .card-brewing-stand-box {
-  flex: 0 0 160px;
-  width: 160px;
+  flex: 0 0 146px;
+  width: 146px;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   background: transparent;
-  border-right: none;
+  border-right: none !important;
+  box-shadow: none !important;
   box-sizing: border-box;
   padding: 0;
   margin: 0;
   user-select: none;
   overflow: hidden;
+}
+
+.card.dark-theme .card-brewing-stand-box {
+  border-right: none !important;
+  box-shadow: none !important;
 }
 
 .card-brewing-stand-box>div {
@@ -1761,7 +1950,7 @@ body.dark-theme .invslot.mcui-output3 {
   flex-grow: 1;
   min-width: 0;
   height: 100%;
-  padding: 10px 10px 10px 8px;
+  padding: 6px 5px 6px 3px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -1929,11 +2118,12 @@ body.dark-theme .invslot.mcui-output3 {
 }
 
 .category-section-title {
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 700;
   margin: 12px 0 2px 0;
-  font-family: 'Minecraft', sans-serif;
+  font-family: 'Minecraft', monospace, sans-serif;
   letter-spacing: 0.5px;
+  text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.8);
 }
 
 .positive-title {
@@ -1965,16 +2155,16 @@ body.dark-theme .invslot.mcui-output3 {
 
 /* Middle description row */
 .card-desc-row {
-  font-size: 13.5px;
-  line-height: 1.35;
-  margin: 4px 0;
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.28;
+  margin: 1px 0;
   color: #334155;
   overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 5;
-  line-clamp: 5;
-  -webkit-box-orient: vertical;
 }
 
 .dark-theme .card-desc-row {
@@ -1983,10 +2173,18 @@ body.dark-theme .invslot.mcui-output3 {
 
 .card-desc-row p {
   margin: 0;
-  font-size: 13.5px;
-  line-height: 1.35;
+  font-size: 15px;
+  line-height: 1.28;
   color: inherit;
   font-weight: normal;
+  text-align: center;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 7;
+  line-clamp: 7;
+  -webkit-box-orient: vertical;
 }
 
 .wiki-effect-desc {
@@ -2001,12 +2199,21 @@ body.dark-theme .invslot.mcui-output3 {
   color: #f8fafc;
 }
 
+.hearts,
 .mc-hearts {
   display: inline-flex;
   align-items: center;
-  vertical-align: middle;
-  margin: 0 2px;
   white-space: nowrap;
+  gap: 2px;
+  vertical-align: -2px;
+  margin: 0 3px;
+  line-height: 1;
+}
+
+.mc-hearts .iconbar {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
 }
 
 .mc-hearts-prefix,
@@ -2029,90 +2236,129 @@ body.dark-theme .invslot.mcui-output3 {
   white-space: nowrap !important;
 }
 
+.hearts img,
+.mc-hearts img,
 .mc-heart-img {
-  width: 12px;
-  height: 12px;
+  width: 15px;
+  height: 15px;
+  object-fit: contain;
   image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
   image-rendering: crisp-edges;
   vertical-align: middle;
-  margin: 0 1px;
+  display: inline-block;
+  margin: 0;
 }
 
 /* Bottom stats row */
 .card-bottom-row {
   display: flex;
   align-items: center;
+  justify-content: center;
+  width: 100%;
   flex-wrap: wrap;
-  gap: 8px;
-  font-size: 13px;
+  gap: 3px 5px;
+  font-size: 11px;
+  margin-top: auto;
   padding-top: 2px;
 }
 
 .card-stat-pill {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
   padding: 2px 6px;
-  background: rgba(0, 0, 0, 0.06);
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  border-radius: 2px;
+  border-radius: 0 !important;
+  border: 1.5px solid #000000 !important;
   white-space: nowrap;
+  font-family: 'Minecraft', monospace, sans-serif;
+  font-size: 11px;
+  line-height: 1;
+  height: 22px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.light-theme .card-stat-pill {
+  background: #b5b5b5;
+  box-shadow: inset 1px 1px 0px #ffffff, inset -1px -1px 0px #707070;
+  color: #1e293b;
 }
 
 .dark-theme .card-stat-pill {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.14);
+  background: #071924;
+  border-color: #000000 !important;
+  box-shadow: inset 1px 1px 0px #1a3c4f, inset -1px -1px 0px #04121a;
+  color: #e2e8f0;
 }
 
 .stat-label {
-  color: #64748b;
+  color: #475569;
   font-weight: bold;
 }
 
+.light-theme .stat-label {
+  color: #2b354f;
+}
+
 .dark-theme .stat-label {
-  color: #94a3b8;
+  color: #79c5b8;
 }
 
 .stat-value.time-val {
-  color: #4f46e5;
+  color: #474ea4;
   font-weight: bold;
 }
 
 .dark-theme .stat-value.time-val {
-  color: #818cf8;
+  color: #54dfcd;
 }
 
 .card-upgrade-tag {
-  font-size: 10px;
-  padding: 2px 5px;
-  border-radius: 2px;
-  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 0 !important;
+  border: 1.5px solid #000000 !important;
+  font-weight: normal;
+  font-family: 'Minecraft', monospace, sans-serif;
   white-space: nowrap;
   cursor: default;
+  height: 22px;
+  box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 .card-upgrade-tag.redstone-tag {
-  background: rgba(239, 68, 68, 0.15);
-  color: #dc2626;
-  border: 1px solid rgba(239, 68, 68, 0.35);
+  background-color: #ef4444;
+  background-image: linear-gradient(180deg, #f87171 0%, #dc2626 100%);
+  color: #ffffff;
+  box-shadow: inset 1px 1px 0px #fca5a5, inset -1px -1px 0px #991b1b;
+  text-shadow: 1px 1px 0px #7f1d1d;
 }
 
 .dark-theme .card-upgrade-tag.redstone-tag {
-  background: rgba(239, 68, 68, 0.25);
-  color: #f87171;
-  border-color: #ef4444;
+  background-color: #991b1b;
+  background-image: linear-gradient(180deg, #b91c1c 0%, #7f1d1d 100%);
+  color: #fecaca;
+  box-shadow: inset 1px 1px 0px #ef4444, inset -1px -1px 0px #450a0a;
 }
 
 .card-upgrade-tag.glowstone-tag {
-  background: rgba(234, 179, 8, 0.15);
-  color: #ca8a04;
-  border: 1px solid rgba(234, 179, 8, 0.35);
+  background-color: #eab308;
+  background-image: linear-gradient(180deg, #facc15 0%, #ca8a04 100%);
+  color: #3f2500;
+  box-shadow: inset 1px 1px 0px #fef08a, inset -1px -1px 0px #854d0e;
+  text-shadow: 1px 1px 0px #fef08a;
 }
 
 .dark-theme .card-upgrade-tag.glowstone-tag {
-  background: rgba(234, 179, 8, 0.25);
-  color: #facc15;
-  border-color: #eab308;
+  background-color: #854d0e;
+  background-image: linear-gradient(180deg, #a16207 0%, #713f12 100%);
+  color: #fef08a;
+  box-shadow: inset 1px 1px 0px #eab308, inset -1px -1px 0px #422006;
 }
 
 /* ==================== MINECRAFT RECIPE ACTION BUTTON ("Встановити у стійку") ==================== */
@@ -2120,83 +2366,73 @@ body.dark-theme .invslot.mcui-output3 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  margin-top: 10px;
-  padding: 6px 14px;
-  width: fit-content;
+  gap: 6px;
+  margin-top: 4px;
+  padding: 3px 8px;
+  width: 100%;
+  max-width: 144px;
   background-color: #c6c6c6;
-  border-top: 2px solid #ffffff;
-  border-left: 2px solid #ffffff;
-  border-bottom: 2px solid #373737;
-  border-right: 2px solid #373737;
-  box-shadow: 0 0 0 2px #000000, 0 3px 0 rgba(0, 0, 0, 0.28);
+  background-image: linear-gradient(180deg, #dbdbdb 0%, #b8b8b8 100%);
+  border: 2px solid #000000 !important;
+  border-radius: 0 !important;
+  box-shadow: inset 2px 2px 0px #ffffff, inset -2px -2px 0px #555555;
   color: #2a2a2a;
   font-family: 'Minecraft', monospace;
-  font-size: 12px;
+  font-size: 10.5px;
   font-weight: normal;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.2px;
   cursor: pointer;
   text-shadow: 1px 1px 0 #ffffff;
   user-select: none;
   box-sizing: border-box;
   image-rendering: pixelated;
-  transition: transform 0.06s ease, background-color 0.12s ease, color 0.12s ease;
+  transition: transform 0.06s ease;
 }
 
 .card-load-stand-btn:hover {
-  background-color: #dcdcdc;
-  border-top-color: #ffffff;
-  border-left-color: #ffffff;
-  border-bottom-color: #222222;
-  border-right-color: #222222;
-  color: #000000;
-  box-shadow: 0 0 0 2px #000000, 0 3px 6px rgba(0, 0, 0, 0.35);
+  background-color: #d6d6d6;
+  background-image: linear-gradient(180deg, #e8e8e8 0%, #c4c4c4 100%);
+  color: #ffffa0 !important;
+  text-shadow: 1px 1px 0px #353314 !important;
+  box-shadow: inset 2px 2px 0px #ffffff, inset -2px -2px 0px #555555;
 }
 
 .card-load-stand-btn:active {
-  border-top: 2px solid #373737;
-  border-left: 2px solid #373737;
-  border-bottom: 2px solid #ffffff;
-  border-right: 2px solid #ffffff;
-  background-color: #a8a8a8;
-  transform: translate(1px, 2px);
-  box-shadow: 0 0 0 2px #000000, 0 1px 0 rgba(0, 0, 0, 0.2);
+  background-color: #a0a0a0 !important;
+  background-image: none !important;
+  box-shadow: inset 2px 2px 0px #555555, inset -2px -2px 0px #ffffff !important;
+  transform: translateY(1px);
 }
 
 /* Dark Theme (Sculk / Obsidian GUI style) */
 .dark-theme .card-load-stand-btn,
 body.dark-theme .card-load-stand-btn {
-  background-color: #0d303b;
-  border-top: 2px solid #28616b;
-  border-left: 2px solid #28616b;
-  border-bottom: 2px solid #020c11;
-  border-right: 2px solid #020c11;
-  box-shadow: 0 0 0 2px #041018, 0 3px 0 rgba(0, 0, 0, 0.55);
-  color: #99f4e5;
-  text-shadow: 1px 1px 0 #020c11, 0 0 8px rgba(45, 212, 191, 0.45);
+  background-color: #0f2c38 !important;
+  background-image: linear-gradient(180deg, #173b4a 0%, #0c242f 100%) !important;
+  border: 2px solid #000000 !important;
+  border-radius: 0 !important;
+  box-shadow: inset 2px 2px 0px #24586d, inset -2px -2px 0px #05141b !important;
+  color: #54dfcd !important;
+  text-shadow: 1px 1px 0px #020c11 !important;
 }
 
 .dark-theme .card-load-stand-btn:hover,
 body.dark-theme .card-load-stand-btn:hover {
-  background-color: #144250;
-  border-top-color: #54dfcd;
-  border-left-color: #54dfcd;
-  border-bottom-color: #020c11;
-  border-right-color: #020c11;
-  color: #ffffff;
-  text-shadow: 1px 1px 0 #020c11, 0 0 12px rgba(84, 223, 205, 0.85);
-  box-shadow: 0 0 0 2px #041018, 0 0 12px rgba(84, 223, 205, 0.35), 0 3px 0 rgba(0, 0, 0, 0.55);
+  background-color: #174254 !important;
+  background-image: linear-gradient(180deg, #205368 0%, #113645 100%) !important;
+  box-shadow: inset 2px 2px 0px #317894, inset -2px -2px 0px #05141b !important;
+  color: #ffffa0 !important;
+  text-shadow: 1px 1px 0px #353314 !important;
 }
 
 .dark-theme .card-load-stand-btn:active,
 body.dark-theme .card-load-stand-btn:active {
-  border-top: 2px solid #020c11;
-  border-left: 2px solid #020c11;
-  border-bottom: 2px solid #28616b;
-  border-right: 2px solid #28616b;
-  background-color: #071e27;
-  transform: translate(1px, 2px);
-  box-shadow: 0 0 0 2px #041018, 0 1px 0 rgba(0, 0, 0, 0.3);
+  background-color: #081a22 !important;
+  background-image: none !important;
+  box-shadow: inset 2px 2px 0px #05141b, inset -2px -2px 0px #24586d !important;
+  transform: translateY(1px) !important;
+  color: #54dfcd !important;
+  text-shadow: 1px 1px 0px #020c11 !important;
 }
 
 /* Authentic Pixel Icon */
@@ -2224,26 +2460,7 @@ body.dark-theme .card-load-stand-btn:active {
   height: 15px;
 }
 
-.hearts,
-.mc-hearts {
-  display: inline-flex;
-  align-items: center;
-  white-space: nowrap;
-  gap: 2px;
-  vertical-align: -2px;
-  margin: 0 4px;
-}
 
-.hearts img,
-.mc-hearts img,
-.mc-heart-img {
-  width: 14px;
-  height: 14px;
-  image-rendering: pixelated;
-  image-rendering: -moz-crisp-edges;
-  image-rendering: crisp-edges;
-  vertical-align: middle;
-}
 
 .mc-tip-line {
   line-height: 1.35;
@@ -2773,13 +2990,13 @@ body.dark-theme .card-load-stand-btn:active {
 
   .body2 h2 {
     font-size: 16px;
-    margin: 14px 0 8px 0;
+    margin: 14px 0 8px;
     padding-bottom: 4px;
   }
 
   .category-section-title {
     font-size: 14px;
-    margin: 8px 0 0 0;
+    margin: 8px 0 0;
     padding-bottom: 4px;
   }
 
@@ -2809,16 +3026,8 @@ body.dark-theme .card-load-stand-btn:active {
     font-size: 12px;
   }
 
-  /* Requirement 2: Only mobile: remove "Знайдено: N" */
-  .search-results-count {
-    display: none !important;
-  }
-
-  /* Requirement 3: Only mobile: hide desktop filters and show 3 adaptive potion filters directly in ONE line after "Фільтр:" */
-  .desktop-quick-filters {
-    display: none !important;
-  }
-
+  .search-results-count,
+  .desktop-quick-filters,
   .quick-reagents-list {
     display: none !important;
   }
@@ -2896,23 +3105,20 @@ body.dark-theme .card-load-stand-btn:active {
     gap: 8px;
   }
 
-  /* Top area: Brewing stand and info column vertically centered */
   .mobile-card-top-area {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: flex-start;
     gap: 10px;
     width: 100%;
   }
 
-  /* Centered Brewing stand */
   .mobile-brewing-stand-container {
-    flex: 0 0 132px;
-    width: 132px;
+    flex: 0 0 140px;
+    width: 140px;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    align-self: center;
+    justify-content: flex-start;
+    align-items: flex-start;
     margin: 0;
     padding: 0;
   }
@@ -2922,8 +3128,8 @@ body.dark-theme .card-load-stand-btn:active {
     width: 100% !important;
     height: auto !important;
     display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
     padding: 0 !important;
     margin: 0 !important;
     border: none !important;
@@ -2931,28 +3137,18 @@ body.dark-theme .card-load-stand-btn:active {
   }
 
   .mobile-brewing-stand-container .card-brewing-stand-box>div {
-    width: 100% !important;
+    width: auto !important;
     height: auto !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
+    display: block !important;
   }
 
   .mobile-brewing-stand-container .mcui-Brewing_Stand {
-    width: 128px !important;
-    height: 111px !important;
     border: none !important;
     border-right: none !important;
-    margin: 0 auto !important;
+    margin: 0 !important;
     padding: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
-    align-items: center !important;
-    text-align: center !important;
   }
 
-  /* Info column to the right of brewing stand */
   .mobile-card-info-col {
     flex: 1;
     min-width: 0;
@@ -2962,7 +3158,6 @@ body.dark-theme .card-load-stand-btn:active {
     gap: 8px;
   }
 
-  /* Single row: 1. Potion icon, 2. Potion name, 3. Effect icon */
   .mobile-single-header-row {
     display: flex !important;
     flex-direction: row !important;
@@ -2996,7 +3191,6 @@ body.dark-theme .card-load-stand-btn:active {
     image-rendering: pixelated;
   }
 
-  /* Potion title allowed to wrap onto 2 lines with proper Ukrainian hyphenation rules */
   .mobile-header-potion-title {
     flex: 1;
     min-width: 0;
@@ -3032,13 +3226,8 @@ body.dark-theme .card-load-stand-btn:active {
   .mobile-header-effect-icons .mobile-effect-icon-img {
     width: 32px;
     height: 32px;
-    aspect-ratio: 1 / 1;
-    object-fit: contain;
-    image-rendering: auto !important;
-    image-rendering: -webkit-optimize-contrast !important;
-    -webkit-font-smoothing: antialiased !important;
+    image-rendering: pixelated;
     vertical-align: middle;
-    display: block;
   }
 
   .mobile-pills-row {
@@ -3058,7 +3247,6 @@ body.dark-theme .card-load-stand-btn:active {
     padding: 2px 5px;
   }
 
-  /* Description below (increased font size for mobile readability) */
   .mobile-card-desc-box {
     width: 100%;
     font-size: 16px;
@@ -3099,15 +3287,11 @@ body.dark-theme .card-load-stand-btn:active {
   .mobile-header-effect-icons .mobile-effect-icon-img {
     width: 28px;
     height: 28px;
-    aspect-ratio: 1 / 1;
-    object-fit: contain;
-    image-rendering: auto !important;
-    image-rendering: -webkit-optimize-contrast !important;
   }
 
   .mobile-brewing-stand-container {
-    flex: 0 0 132px;
-    width: 132px;
+    flex: 0 0 140px;
+    width: 140px;
   }
 }
 
@@ -3170,47 +3354,74 @@ html[data-theme-transition="crossfade"]::view-transition-new(root) {
   }
 }
 
-/* Mobile and light theme accents: purple hues matching the light theme animated gradient (#667eea / #764ba2). */
+/* Mobile day theme: UI accents using purple palette mapped to the turquoise contrast hierarchy (accent face, dark bevel, deep shadow, dark ink text, light top highlight) */
 body.light-theme {
-  --mobile-accent: #764ba2;
-  --mobile-accent-edge: #512e7f;
+  --mobile-accent: #8b8df8;
+  --mobile-accent-edge: #514eb5;
   --mobile-accent-shadow: #3b1d63;
-  --mobile-accent-ink: #ffffff;
-  --mobile-accent-light: #a5b4fc;
+  --mobile-accent-ink: #1c1348;
+  --mobile-accent-light: #e0e7ff;
   --mobile-accent-tint: #ede9fe;
 }
 
+/* When body2 (grey mat/container) is present: button is purple */
 body.light-theme .mc-mobile-launch {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: #ffffff;
-  border-color: var(--mobile-accent-light);
-  box-shadow: inset 0 -4px var(--mobile-accent-edge), 0 4px var(--mobile-accent-shadow), 0 8px 20px rgba(118, 75, 162, 0.35);
+  border: 2px solid var(--mobile-accent-edge) !important;
+  border-radius: 0 !important;
+  background-color: var(--mobile-accent) !important;
+  background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: #ffffff !important;
+  box-shadow: inset 0 -4px var(--mobile-accent-edge), 0 4px var(--mobile-accent-shadow), 0 8px 20px rgba(118, 75, 162, 0.35) !important;
+  transition: none !important;
 }
 
 body.light-theme .mc-mobile-launch:hover {
-  background: linear-gradient(135deg, #818cf8 0%, #667eea 100%);
+  background-color: #818cf8 !important;
+  background-image: linear-gradient(135deg, #818cf8 0%, #667eea 100%) !important;
+}
+
+body.light-theme .mc-mobile-launch:hover .mc-mobile-launch-title,
+body.light-theme .mc-mobile-launch:hover .mc-mobile-launch-chevron {
+  color: #ffffa0 !important;
+  text-shadow: 1px 1px 0px #353314 !important;
+}
+
+body.light-theme .mc-mobile-launch:hover .mc-mobile-launch-hint {
+  color: #ffffe0 !important;
+  text-shadow: 1px 1px 0px #353314 !important;
 }
 
 body.light-theme .mc-mobile-launch:active {
-  box-shadow: inset 0 3px var(--mobile-accent-shadow), 0 2px var(--mobile-accent-shadow);
+  background-color: #512e7f !important;
+  background-image: none !important;
+  box-shadow: inset 2px 2px 0px #3b1d63, inset -2px -2px 0px #a5b4fc !important;
+  transform: translateY(1px);
 }
 
 body.light-theme .mc-mobile-launch-icon {
-  background: var(--mobile-accent-tint);
-  border-color: var(--mobile-accent-edge);
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 body.light-theme .mc-mobile-launch-title {
-  text-shadow: 1px 1px var(--mobile-accent-shadow);
+  color: #ffffff !important;
+  text-shadow: 1px 1px var(--mobile-accent-shadow) !important;
 }
 
 body.light-theme .mc-mobile-launch-hint {
-  color: var(--mobile-accent-tint);
+  color: var(--mobile-accent-tint) !important;
+  text-shadow: 1px 1px var(--mobile-accent-shadow) !important;
+}
+
+body.light-theme .mc-mobile-launch-chevron {
+  color: #ffffff !important;
+  text-shadow: 1px 1px var(--mobile-accent-shadow) !important;
 }
 
 body.light-theme .mc-mobile-launch:focus-visible,
 body.light-theme .is-mobile button:focus-visible {
-  outline-color: var(--mobile-accent-edge);
+  outline: 2px solid #000000 !important;
+  outline-offset: 2px;
 }
 
 body.light-theme .is-mobile button[aria-pressed='true'] {
@@ -3227,51 +3438,48 @@ body.light-theme .mc-pocket-stage .mc-slot[data-selected='true'] {
 
 body.light-theme .mc-pocket-settings input,
 body.light-theme .mc-pocket-split>input {
-  accent-color: var(--mobile-accent);
+  accent-color: var(--mobile-accent-edge);
 }
 
+/* Light theme catalog filter accents: matching the Minecraft launch button (#7b84eb) */
 @media (max-width: 850px),
 (pointer: coarse) {
   body.light-theme .minecraft-styled-table tbody tr:hover {
-    background-color: rgba(118, 75, 162, 0.12) !important;
+    background-color: rgba(123, 132, 235, 0.15) !important;
   }
 
   body.light-theme :is(.reagent-pill-btn, .potion-filter-pill-btn):hover {
-    background: rgba(102, 126, 234, 0.18) !important;
-    color: var(--mobile-accent-edge) !important;
-    border-color: var(--mobile-accent) !important;
-  }
-
-  body.light-theme .potion-filter-pill-btn.effect-pill {
-    border-color: rgba(118, 75, 162, 0.35);
+    color: #ffffa0 !important;
+    text-shadow: 1px 1px 0px #353314 !important;
   }
 
   body.light-theme :is(.category-tab-btn.active, .reagent-pill-btn.active, .potion-filter-pill-btn.active, .empty-reset-btn) {
-    background: var(--mobile-accent) !important;
-    color: var(--mobile-accent-ink) !important;
-    border-color: var(--mobile-accent-edge) !important;
+    background-color: #7b84eb !important;
+    background-image: linear-gradient(180deg, #8790f3 0%, #7078e3 100%) !important;
+    box-shadow: inset 2px 2px 0px #b0b6fe, inset -2px -2px 0px #474ea4 !important;
+    color: #ffffff !important;
+    border: 2px solid #000000 !important;
+    text-shadow: 1px 1px 0px #313674 !important;
   }
 }
 
-/* Use the purple gradient filter accents on desktop. */
+/* Use the Minecraft periwinkle-blue button filter accents on desktop */
 @media (min-width: 851px) and (pointer: fine) {
   body.light-theme .minecraft-styled-table tbody tr:hover {
-    background-color: rgba(118, 75, 162, 0.12) !important;
+    background-color: rgba(123, 132, 235, 0.15) !important;
   }
 
   body.light-theme :is(.reagent-pill-btn, .potion-filter-pill-btn):hover {
-    background: rgba(102, 126, 234, 0.18) !important;
-    color: var(--mobile-accent-edge) !important;
-    border-color: var(--mobile-accent) !important;
-  }
-
-  body.light-theme .potion-filter-pill-btn.effect-pill {
-    border-color: rgba(118, 75, 162, 0.35);
+    color: #ffffa0 !important;
+    text-shadow: 1px 1px 0px #353314 !important;
   }
 
   body.light-theme :is(.category-tab-btn.active, .reagent-pill-btn.active, .potion-filter-pill-btn.active) {
-    background: var(--mobile-accent) !important;
-    color: var(--mobile-accent-ink) !important;
-    border-color: var(--mobile-accent-edge) !important;
+    background-color: #7b84eb !important;
+    background-image: linear-gradient(180deg, #8790f3 0%, #7078e3 100%) !important;
+    box-shadow: inset 2px 2px 0px #b0b6fe, inset -2px -2px 0px #474ea4 !important;
+    color: #ffffff !important;
+    border: 2px solid #000000 !important;
+    text-shadow: 1px 1px 0px #313674 !important;
   }
 }

@@ -16,7 +16,7 @@ export default function MinecraftHearts({
   const hearts = [];
 
   const fullIcon = type === 'poison' ? '/Poisoned_Heart_29.webp' : '/Heart_29.webp';
-  const halfIcon = '/Half_Heart_29.webp';
+  const halfIcon = type === 'poison' ? '/Poisoned_Half_Heart_29.webp' : '/Half_Heart_29.webp';
 
   // Render full hearts
   for (let i = 0; i < fullCount; i++) {
@@ -24,12 +24,11 @@ export default function MinecraftHearts({
       <img
         key={`full-${i}`}
         src={fullIcon}
-        alt="❤️"
+        alt={type === 'poison' ? '💚' : '❤️'}
         title={label || `${fullCount} ${fullCount > 1 ? 'серця' : 'серце'}`}
         className="mc-heart-img"
         width="14"
         height="14"
-        loading="lazy"
       />
     );
   }
@@ -41,12 +40,11 @@ export default function MinecraftHearts({
         <img
           key={`half-${j}`}
           src={halfIcon}
-          alt="💔"
+          alt={type === 'poison' ? '💔' : '💔'}
           title={label || '0.5 серця'}
           className="mc-heart-img"
           width="14"
           height="14"
-          loading="lazy"
         />
       );
     }

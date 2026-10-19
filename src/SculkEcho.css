@@ -90,7 +90,7 @@ body.dark-theme .gradient-container { background-color: #0f766e; }
 .dark-theme input::placeholder { color: var(--sculk-muted); }
 .dark-theme :is(.search-input, .mc-pocket-search):focus { border-color: var(--sculk-glow) !important; }
 .dark-theme :is(.category-tab-btn, .reagent-pill-btn, .potion-filter-pill-btn,
-  .reset-btn, .pixel-btn, .modal-close-btn, .mc-brewing-ref-btn,
+  .reset-btn, .pixel-btn, .modal-close-btn,
   .mc-container-return, .is-mobile button) {
   background: var(--sculk-raised) !important;
   color: var(--sculk-text) !important;
@@ -155,13 +155,37 @@ body.dark-theme .gradient-container { background-color: #0f766e; }
 .dark-theme .card-upgrade-tag.glowstone-tag { background: #3e392c; border-color: #9c8d60; color: #eddbad; }
 
 .dark-theme .mc-mobile-launch {
-  background: #124641;
-  border-color: var(--sculk-glow);
-  box-shadow: inset 0 -4px #092d30, 0 4px var(--sculk-shadow), 0 0 22px #54dfcd25;
+  border: 2px solid #000000 !important;
+  border-radius: 0 !important;
+  background-color: #0f3d38 !important;
+  background-image: linear-gradient(180deg, #144e48 0%, #0a2d29 100%) !important;
+  box-shadow: inset 2px 2px 0px #246d65, inset -2px -2px 0px #041413 !important;
+  color: #54dfcd !important;
+  transition: none !important;
 }
-.dark-theme .mc-mobile-launch:hover { background: #185d55; }
-.dark-theme .mc-mobile-launch-icon { background: var(--sculk-void); border-color: var(--sculk-edge); }
-.dark-theme .mc-mobile-launch-title { text-shadow: 2px 2px var(--sculk-shadow); }
-.dark-theme .mc-mobile-launch-hint { color: var(--sculk-echo); }
-.dark-theme .mc-mobile-launch:focus-visible { outline-color: var(--sculk-echo); }
+.dark-theme .mc-mobile-launch:hover {
+  background-color: #175750 !important;
+  background-image: linear-gradient(180deg, #1c6860 0%, #124741 100%) !important;
+  box-shadow: inset 2px 2px 0px #2dd4bf, inset -2px -2px 0px #071f1d !important;
+}
+.dark-theme .mc-mobile-launch:hover .mc-mobile-launch-title,
+.dark-theme .mc-mobile-launch:hover .mc-mobile-launch-chevron {
+  color: #ffffa0 !important;
+  text-shadow: 2px 2px 0px #24220b !important;
+}
+.dark-theme .mc-mobile-launch:hover .mc-mobile-launch-hint {
+  color: #ffffe0 !important;
+  text-shadow: 1px 1px 0px #24220b !important;
+}
+.dark-theme .mc-mobile-launch:active {
+  background-color: #092b27 !important;
+  background-image: none !important;
+  box-shadow: inset 2px 2px 0px #030e0d, inset -2px -2px 0px #246d65 !important;
+  transform: translateY(1px);
+}
+.dark-theme .mc-mobile-launch-icon { background: var(--sculk-void); border-color: #000000; }
+.dark-theme .mc-mobile-launch-title { color: #54dfcd !important; text-shadow: 2px 2px 0px #031110 !important; }
+.dark-theme .mc-mobile-launch-hint { color: var(--sculk-echo) !important; text-shadow: 1px 1px 0px #031110 !important; }
+.dark-theme .mc-mobile-launch-chevron { color: #54dfcd !important; text-shadow: 2px 2px 0px #031110 !important; }
+.dark-theme .mc-mobile-launch:focus-visible { outline: 2px solid #54dfcd !important; outline-offset: 2px; }
 .dark-theme .minecraft-tooltip-box { background-color: #031116f5; border-color: var(--sculk-glow); box-shadow: 0 0 0 2px var(--sculk-edge), 0 4px 16px #020c1188; }
