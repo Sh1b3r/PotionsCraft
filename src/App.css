@@ -1713,6 +1713,14 @@ body.dark-theme .invslot.mcui-output3 {
   margin: 0;
 }
 
+/* Center potion bottle sprites in slots (corrects the 1px right/down bias in Minecraft bottle sprites) */
+.mcui-output .invslot-item,
+.card-potion-slot .invslot-item,
+.mobile-card-potion-group .invslot-item {
+  top: -1px;
+  left: -1px;
+}
+
 .invslot-item-image a {
   display: block;
   width: 32px;
