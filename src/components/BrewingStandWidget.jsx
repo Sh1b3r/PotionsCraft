@@ -21,14 +21,14 @@ export default function BrewingStandWidget({ potion, inModal = false }) {
     title: reagentTitle
   };
 
-  // Outputs from wiki data or fallback
-  const output1 = wikiData?.output1;
-  const output2 = wikiData?.output2 || (!wikiData?.output1 && !wikiData?.output3 ? {
+  // The base potion bottle is always placed in the center slot (output2) for visual consistency across cards
+  const output1 = null;
+  const output2 = wikiData?.output2 || wikiData?.output1 || {
     title: potion.base || 'Незграбне зілля',
     localSrc: potion.baseSprite || '/items/water_bottle.png',
     text: '&7Немає ефектів'
-  } : null);
-  const output3 = wikiData?.output3;
+  };
+  const output3 = null;
 
   const renderSlot = (slotData, slotClass, defaultLabel) => {
     if (slotData) {
@@ -79,7 +79,7 @@ export default function BrewingStandWidget({ potion, inModal = false }) {
             <BrewingStandFrame emptyBottles={[!output1, !output2, !output3]} />
             {/* Top Input Row: Bubbling + Reagent Slot + Downward Arrow */}
             <span className="mcui-input">
-              <BrewingBubbles isBrewing={false} height={57} />
+              <BrewingBubbles isBrewing height={57} />
 
               <TooltipTrigger
                 as="span"

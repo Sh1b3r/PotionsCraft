@@ -74,7 +74,9 @@ export default function MinecraftStationWidget() {
       const saved = localStorage.getItem('potionscraft_station_inventory');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length === 72) return parsed;
+        // Ensure saved inventory is 72 slots and contains vital brewing fuel (blaze_powder)
+        const hasBlazePowder = Array.isArray(parsed) && parsed.some(it => it && it.itemId === 'blaze_powder');
+        if (Array.isArray(parsed) && parsed.length === 72 && hasBlazePowder) return parsed;
       }
     } catch {}
     return buildInitialInventory();
@@ -186,12 +188,24 @@ export default function MinecraftStationWidget() {
         const next = typeof value === 'function' ? value(brewingIngredientRef.current) : value;
         brewingIngredientRef.current = next;
         setBrewingIngredient(next);
+        if (!next || !canBrew(next, brewingBottlesRef.current, 1) || next.itemId !== activeIngredientRef.current) {
+          setIsBrewing(false);
+          setBrewingStep(0);
+          setBrewingProgress(0);
+          setBrewingBubbleFrame(null);
+        }
       } else if (slotType === 'bottle') {
         recipeLoadedFromCardRef.current = false;
         const next = [...brewingBottlesRef.current];
         next[index] = typeof value === 'function' ? value(next[index]) : value;
         brewingBottlesRef.current = next;
         setBrewingBottles(next);
+        if (!canBrew(brewingIngredientRef.current, next, 1)) {
+          setIsBrewing(false);
+          setBrewingStep(0);
+          setBrewingProgress(0);
+          setBrewingBubbleFrame(null);
+        }
       } else if (slotType === 'fuel') {
         const next = typeof value === 'function' ? value(fuelSlotRef.current) : value;
         fuelSlotRef.current = next;
@@ -447,60 +461,44 @@ export default function MinecraftStationWidget() {
 
   const visitSlot = (type, index) => {
     const drag = dragRef.current;
-    if (!drag || drag.settled || type === 'output') return;
-    const key = type + '-' + index;
-    if (drag.slots.has(key)) return;
+    if (!drag || type === 'output') return;
+    const key = `${type}-${index}`;
+    if (drag.visitedKeys?.has(key)) return;
+
     const held = heldItemRef.current;
-    if (!drag.stack) drag.stack = held;
-    if (!drag.stack || !accepts(type, drag.stack)) return;
+    if (!held) return;
 
-    const item = getSlotValue(type, index);
-    if (item && !sameStack(item, drag.stack)) {
-      if (!drag.slots.size && held) {
-        slotClick(type, index, drag.one);
-        drag.settled = true;
+    if (drag.one) {
+      // RMB Drag: place 1 in each visited slot (unchanged, works ideally)
+      if (drag.picked) return;
+      if (!accepts(type, held)) return;
+      const item = getSlotValue(type, index);
+      if (item && !sameStack(item, held)) return;
+      if ((item?.count || 0) >= limit(type, held)) return;
+
+      drag.visitedKeys.add(key);
+      const placed = deposit(type, index, 1);
+      if (placed > 0) {
+        playItemClickSound();
       }
-      return;
-    }
-    if ((item?.count || 0) >= limit(type, drag.stack)) return;
-
-    if (drag.one || (type !== 'inventory' && type !== 'crafting')) {
-      if (!heldItemRef.current) return;
-      drag.slots.set(key, { type, index });
-      deposit(type, index, drag.one ? 1 : heldItemRef.current.count);
-      if (!drag.one) drag.settled = true;
     } else {
-      if (drag.slots.size >= drag.stack.count) return;
-      drag.slots.set(key, { type, index, original: item });
-      const each = Math.floor(drag.stack.count / drag.slots.size);
-      let placed = 0;
-      for (const slot of drag.slots.values()) {
-        const count = Math.min(each, limit(slot.type, drag.stack) - (slot.original?.count || 0));
-        setSlotValue(slot.type, slot.index, { ...drag.stack, count: (slot.original?.count || 0) + count });
-        placed += count;
-      }
-      hold(placed < drag.stack.count ? { ...drag.stack, count: drag.stack.count - placed } : null);
+      // LMB Drag: Gathering technique ("техніка збору")
+      // Sweeps across slots with matching items and collects them into the held stack up to maxStack (64)
+      if (held.count >= (held.maxStack || 64)) return;
+      const item = getSlotValue(type, index);
+      if (!item || !sameStack(item, held)) return;
+      const space = (held.maxStack || 64) - held.count;
+      const amount = Math.min(item.count, space);
+      if (amount <= 0) return;
+
+      drag.visitedKeys.add(key);
+      setSlotValue(type, index, item.count > amount ? { ...item, count: item.count - amount } : null);
+      hold({ ...held, count: held.count + amount });
+      playItemClickSound();
     }
-    playItemClickSound();
   };
 
-  const finishGesture = event => {
-    const drag = dragRef.current;
-    if (drag && event?.pointerId != null && event.pointerId !== drag.pointerId) return;
-    if (!drag) return;
-    if (event?.type === 'pointerup' && event.button !== (drag.one ? 2 : 0)) return;
-    if (event?.type === 'pointerup') {
-      const target = document.elementFromPoint(event.clientX, event.clientY)?.closest('[data-slot-index]');
-      if (target && drag.picked && !drag.one) {
-        const targetType = target.dataset.slotType;
-        const targetIndex = Number(target.dataset.slotIndex);
-        if (heldItemRef.current && (targetType !== drag.type || targetIndex !== drag.index)) {
-          slotClick(targetType, targetIndex, false);
-        }
-      } else if (target && !drag.picked) {
-        visitSlot(target.dataset.slotType, +target.dataset.slotIndex);
-      }
-    }
+  const finishGesture = () => {
     dragRef.current = null;
   };
 
@@ -610,6 +608,12 @@ export default function MinecraftStationWidget() {
     };
     const blur = () => gesturesRef.current.cancelGesture();
     window.addEventListener('pointermove', move);
+    const handleContextMenu = e => {
+      if (e.target.closest('#mc-workbench, .mc-workbench-layout, .mc-floating-held-item, .mc-workstation-info')) {
+        e.preventDefault();
+      }
+    };
+    window.addEventListener('contextmenu', handleContextMenu);
     window.addEventListener('pointerup', end);
     window.addEventListener('pointercancel', end);
     window.addEventListener('keydown', handleKeyDown);
@@ -617,6 +621,7 @@ export default function MinecraftStationWidget() {
     return () => {
       gesturesRef.current.cancelGesture();
       window.removeEventListener('pointermove', move);
+      window.removeEventListener('contextmenu', handleContextMenu);
       window.removeEventListener('pointerup', end);
       window.removeEventListener('pointercancel', end);
       window.removeEventListener('keydown', handleKeyDown);
@@ -645,11 +650,13 @@ export default function MinecraftStationWidget() {
       }
 
       if (event.button !== 0 && event.button !== 2) return;
-      if (dragRef.current) return;
       event.preventDefault();
       event.stopPropagation();
       hideTooltip();
       setMousePos({ x: event.clientX, y: event.clientY });
+
+      // Always clear any stale drag so subsequent clicks never get stuck
+      dragRef.current = null;
 
       // Shift + Click handling
       if (event.shiftKey && !heldItemRef.current) {
@@ -663,9 +670,18 @@ export default function MinecraftStationWidget() {
       const key = `${type}-${index}`;
 
       // Double-click handling: ONLY with LMB, within 300ms
-      if (!mobile && event.button === 0 && heldItemRef.current && previous?.button === 0 && now - previous.time < 300) {
+      const targetItem = heldItemRef.current || slotItem || previous?.item;
+      if (!mobile && event.button === 0 && targetItem && previous?.button === 0 && now - previous.time < 300) {
+        if (!heldItemRef.current) {
+          if (slotItem) {
+            hold({ ...slotItem });
+            setSlotValue(type, index, null);
+          } else if (previous?.item) {
+            hold({ ...previous.item });
+          }
+        }
         if (event.shiftKey) {
-          shiftCollectAll(heldItemRef.current);
+          shiftCollectAll(heldItemRef.current || targetItem);
         } else {
           collect();
         }
@@ -673,27 +689,82 @@ export default function MinecraftStationWidget() {
         playItemClickSound();
         return;
       }
-      clickRef.current = { key, time: now, button: event.button };
+      clickRef.current = { key, time: now, button: event.button, item: heldItemRef.current || slotItem };
 
-      const picked = !heldItemRef.current;
-      const one = event.button === 2;
-      const drag = {
-        type,
-        index,
-        picked,
-        one,
-        slots: new Map(picked ? [[key, { type, index }]] : []),
-        pointerId: event.pointerId,
-        buttonMask: one ? 2 : 1
-      };
-      dragRef.current = drag;
+      const held = heldItemRef.current;
+      const isRight = event.button === 2;
 
-      if (picked) {
-        slotClick(type, index, one);
-      }
-      drag.stack = heldItemRef.current;
-      if (!picked) {
-        visitSlot(type, index);
+      if (!held) {
+        // Empty hand: pick up stack (LMB) or half stack (RMB)
+        slotClick(type, index, isRight);
+        dragRef.current = {
+          type,
+          index,
+          picked: isRight, // For RMB, prevent painting on origin; for LMB, allow dragging to gather immediately
+          one: isRight,
+          stack: heldItemRef.current,
+          visitedKeys: new Set([key]),
+          pointerId: event.pointerId,
+          buttonMask: isRight ? 2 : 1
+        };
+      } else {
+        // Holding item in hand:
+        if (isRight) {
+          // In Minecraft, RMB with held item on a slot with a DIFFERENT item does nothing
+          if (slotItem && !sameStack(slotItem, held)) {
+            return;
+          }
+          if (!accepts(type, held) || (slotItem?.count || 0) >= limit(type, held)) {
+            return;
+          }
+
+          // Deposit 1 item immediately on press
+          const placed = deposit(type, index, 1);
+          if (placed > 0) {
+            playItemClickSound();
+          }
+
+          dragRef.current = {
+            type,
+            index,
+            picked: false,
+            one: true,
+            stack: held,
+            visitedKeys: new Set([key]),
+            pointerId: event.pointerId,
+            buttonMask: 2
+          };
+        } else {
+          // LMB with held item:
+          if (slotItem && !sameStack(slotItem, held)) {
+            // Swap items
+            slotClick(type, index, false);
+            dragRef.current = {
+              type,
+              index,
+              picked: false,
+              one: false,
+              stack: heldItemRef.current,
+              visitedKeys: new Set([key]),
+              pointerId: event.pointerId,
+              buttonMask: 1
+            };
+          } else {
+            // Place or start left-drag gathering
+            deposit(type, index, held.count);
+            playItemClickSound();
+            dragRef.current = {
+              type,
+              index,
+              picked: false,
+              one: false,
+              stack: heldItemRef.current,
+              visitedKeys: new Set([key]),
+              pointerId: event.pointerId,
+              buttonMask: 1
+            };
+          }
+        }
       }
 
       if (event.currentTarget.hasPointerCapture?.(event.pointerId)) {
@@ -745,10 +816,27 @@ export default function MinecraftStationWidget() {
     }
   }, [brewingIngredient, brewingBottles, fuelCharges, isBrewing]);
   useEffect(() => {
-    if (!isBrewing) return;
+    if (!isBrewing) {
+      setBrewingProgress(0);
+      setBrewingStep(0);
+      setBrewingBubbleFrame(null);
+      return;
+    }
     const start = Date.now();
     const ingredientId = activeIngredientRef.current;
     const timer = setInterval(() => {
+      // In-flight abort check: if reagent was removed or bottles changed, abort instantly
+      const currentIng = brewingIngredientRef.current;
+      const currentBottles = brewingBottlesRef.current;
+      if (!currentIng || currentIng.itemId !== ingredientId || !canBrew(currentIng, currentBottles, 1)) {
+        clearInterval(timer);
+        setIsBrewing(false);
+        setBrewingStep(0);
+        setBrewingProgress(0);
+        setBrewingBubbleFrame(null);
+        return;
+      }
+
       const elapsed = Date.now() - start;
       const progress = Math.min(1, elapsed / TOTAL_BREW_TIME);
       const currentStep = Math.min(ARROW_STEPS, Math.floor(elapsed / STEP_DURATION));
@@ -908,11 +996,22 @@ export default function MinecraftStationWidget() {
       const reagentItem = MINECRAFT_ITEMS[reagentKey] || MINECRAFT_ITEMS.nether_wart;
 
       // Base bottle resolution
-      const baseName = (wikiData?.output2?.title || potionDef?.base || '').toLowerCase();
-      const baseKey =
-        baseName.includes('водян') || baseName.includes('звичайне') || baseName.includes('water')
-          ? 'water_bottle'
-          : 'awkward_potion';
+      let baseKey = 'awkward_potion';
+      if (potionDef?.id === 'invisibility') {
+        baseKey = 'potion_night_vision';
+      } else if (potionDef?.id === 'harming') {
+        baseKey = 'potion_healing';
+      } else if (potionDef?.id === 'slowness') {
+        baseKey = 'potion_swiftness';
+      } else if (['awkward', 'mundane', 'thick', 'weakness'].includes(potionDef?.id)) {
+        baseKey = 'water_bottle';
+      } else {
+        const baseName = (wikiData?.output2?.title || wikiData?.output1?.title || potionDef?.base || '').toLowerCase();
+        baseKey =
+          baseName.includes('водян') || baseName.includes('звичайне') || baseName.includes('water')
+            ? 'water_bottle'
+            : 'awkward_potion';
+      }
       const baseItem = MINECRAFT_ITEMS[baseKey] || MINECRAFT_ITEMS.awkward_potion;
 
       // Place in brewing stand
@@ -1121,11 +1220,11 @@ export default function MinecraftStationWidget() {
                   aria-label="Прогрес варіння"
                   aria-valuemin={0}
                   aria-valuemax={100}
-                  aria-valuenow={Math.floor(brewingProgress)}
+                  aria-valuenow={isBrewing ? Math.floor(brewingProgress) : 0}
                   onMouseEnter={() => handleSlotHover('arrow', 0, null)}
                   onMouseLeave={hideTooltip}
                 >
-                  <BrewingArrow filledHeight={brewingStep} />
+                  <BrewingArrow filledHeight={isBrewing ? brewingStep : 0} />
                 </div>
 
                 {/* 4, 5, 6. Bottom 3 Output Bottle Slots (uses authentic uniform CSS silhouette from be.html) */}
@@ -1411,7 +1510,7 @@ export default function MinecraftStationWidget() {
             <h3>Крафт</h3>
             <div className="mc-workstation-info-title">{craftingOutput ? `${craftingOutput.name} × ${craftingOutput.count}` : 'Сітка 3 × 3'}</div>
             <dl className="mc-station-shortcuts">
-              <div><dt>ЛКМ</dt><dd>Взяти / покласти стопку; обмін предметами.</dd></div>
+              <div><dt>ЛКМ</dt><dd>Клік — взяти / покласти. Утримання й протяжка — зібрати однакові.</dd></div>
               <div><dt>ПКМ</dt><dd>Взяти половину / покласти 1. Протяжка — по 1 у слот.</dd></div>
               <div><dt>Подвійний ЛКМ</dt><dd>Зібрати однакові предмети до повної стопки.</dd></div>
               <div><dt>Shift + клік</dt><dd>Швидке перенесення; на результаті — крафт усіх.</dd></div>

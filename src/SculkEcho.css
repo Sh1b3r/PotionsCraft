@@ -17,14 +17,14 @@ html[data-theme='dark'], body.dark-theme {
   --slot-silhouette: #488894;
   --brewing-pipe-body: #285761;
   --brewing-pipe-light: #7bd6cb;
-  --brewing-arrow-fill: #d0fff4;
+  --brewing-arrow-fill: #54dfcd;
   --brewing-arrow-shadow: #020c11;
-  --brewing-arrow-body: #54dfcd;
-  --brewing-arrow-light: #b0fff0;
-  --brewing-fuel-shadow: #28616b;
+  --brewing-arrow-body: #123c47;
+  --brewing-arrow-light: #28616b;
+  --brewing-fuel-shadow: #020c11;
   --brewing-fuel-detail: var(--sculk-shadow);
-  --brewing-fuel-body: #387b83;
-  --brewing-fuel-light: var(--sculk-echo);
+  --brewing-fuel-body: #123c47;
+  --brewing-fuel-light: #28616b;
   background-color: var(--sculk-void);
   color: var(--sculk-text);
   color-scheme: dark;
@@ -32,8 +32,8 @@ html[data-theme='dark'], body.dark-theme {
 }
 
 body.dark-theme .gradient-container { background-color: #0f766e; }
-.dark-theme .mc-fuel-gauge-fill { background-image: none; }
-.dark-theme .mc-fuel-gauge-sculk { display: block; }
+.dark-theme .mc-fuel-gauge-fill { background-image: url('/mc_fuel_bar_fill_dark.png?v=1'); }
+.dark-theme .mc-fuel-gauge-sculk { display: none; }
 .dark-theme .mc-bubbles-texture { filter: none !important; }
 .mc-bubbles-dark { display: none; }
 .mc-bubbles-light { display: block; }
@@ -134,17 +134,19 @@ body.dark-theme .gradient-container { background-color: #0f766e; }
 .dark-theme .mcui-grid .invslot { background-color: transparent !important; transition: none !important; }
 .dark-theme .mc-brewing-stand-stage .mc-slot:hover,
 .dark-theme .mcui-grid .invslot:hover { background-color: #54dfcd18 !important; transition: none !important; }
-.dark-theme :is(.card .mcui-Brewing_Stand, .card-brewing-stand-box.in-modal-stand .mcui-Brewing_Stand) {
-  background-color: var(--sculk-void) !important;
+.dark-theme .card .mcui-Brewing_Stand {
+  background-color: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.dark-theme .card-brewing-stand-box.in-modal-stand .mcui-Brewing_Stand {
+  background-color: var(--sculk-panel) !important;
   border: 2px solid var(--sculk-shadow) !important;
   border-right-color: var(--sculk-edge) !important;
   border-bottom-color: var(--sculk-edge) !important;
-  border-radius: 2px;
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6) !important;
-}
-.dark-theme .card-desktop-layout .card-brewing-stand-box .mcui-Brewing_Stand {
-  width: 144px !important;
-  height: 127px !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
 }
 .dark-theme .card:hover { box-shadow: 0 6px 20px #020c1188, 0 0 16px #54dfcd20 !important; }
 .dark-theme .card-stat-pill { background: var(--sculk-raised); border-color: var(--sculk-edge); }
