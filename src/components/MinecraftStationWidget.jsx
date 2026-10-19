@@ -1399,13 +1399,13 @@ export default function MinecraftStationWidget() {
         }} /> : <>
       <div className="mc-workbench-viewport-scaler">
         <div className="mc-workbench-layout">
-          <aside className="mc-workstation-info mc-station-sidebar mc-station-brewing-info" aria-label="Стан варильної стійки">
-            <h3>Варіння</h3>
-            <div className="mc-workstation-info-title">{isBrewing ? `Варіння · ${Math.ceil(20 * (1 - brewingProgress / 100))} с` : 'Очікування'}</div>
-            <dl><div><dt>Паливо</dt><dd>{fuelCharges} / 20</dd></div><div><dt>Пляшечки</dt><dd>{brewingBottles.filter(Boolean).length} / 3</dd></div></dl>
-            <p>{brewingIngredient ? `Інгредієнт: ${brewingIngredient.name}` : 'Інгредієнт ще не додано.'}</p>
-            <h4>Як варити</h4>
-            <ol><li>Паливо — вогняний порошок.</li><li>До трьох пляшечок у нижні слоти.</li><li>Інгредієнт — зверху. Час варіння: 20 секунд.</li></ol>
+          <aside className="mc-workstation-info mc-station-sidebar mc-station-brewing-info" aria-label="Стан варильної стійки" lang="uk">
+            <h3>Ва&shy;рін&shy;ня</h3>
+            <div className="mc-workstation-info-title">{isBrewing ? `Варіння · ${Math.ceil(20 * (1 - brewingProgress / 100))} с` : 'Очі\u00ADку\u00ADван\u00ADня'}</div>
+            <dl><div><dt>Па&shy;ли&shy;во</dt><dd>{fuelCharges} / 20</dd></div><div><dt>Пля&shy;шеч&shy;ки</dt><dd>{brewingBottles.filter(Boolean).length} / 3</dd></div></dl>
+            <p>{brewingIngredient ? `Інгредієнт: ${brewingIngredient.name}` : 'Ін\u00ADгре\u00ADді\u00ADєнт ще не до\u00ADда\u00ADно.'}</p>
+            <h4>Як ва&shy;ри&shy;ти</h4>
+            <ol><li>Па&shy;ли&shy;во — вог&shy;ня&shy;ний по&shy;ро&shy;шок.</li><li>До трьох пля&shy;ше&shy;чок у ниж&shy;ні сло&shy;ти.</li><li>Ін&shy;гре&shy;ді&shy;єнт — звер&shy;ху. Час ва&shy;рін&shy;ня: 20 се&shy;кунд.</li></ol>
           </aside>
         <div
           className="mc-brewing-workbench"
@@ -1661,16 +1661,16 @@ export default function MinecraftStationWidget() {
             document.body
           )}
         </div>
-          <aside className="mc-workstation-info mc-station-sidebar mc-station-crafting-info" aria-label="Стан крафту">
+          <aside className="mc-workstation-info mc-station-sidebar mc-station-crafting-info" aria-label="Стан крафту" lang="uk">
             <h3>Крафт</h3>
-            <div className="mc-workstation-info-title">{craftingOutput ? `${craftingOutput.name} × ${craftingOutput.count}` : 'Сітка 3 × 3'}</div>
+            <div className="mc-workstation-info-title">{craftingOutput ? `${craftingOutput.name} × ${craftingOutput.count}` : 'Сіт\u00ADка 3 × 3'}</div>
             <dl className="mc-station-shortcuts">
-              <div><dt>ЛКМ</dt><dd>Клік — взяти / покласти. Утримання й протяжка — зібрати однакові.</dd></div>
-              <div><dt>ПКМ</dt><dd>Взяти половину / покласти 1. Протяжка — по 1 у слот.</dd></div>
-              <div><dt>Подвійний ЛКМ</dt><dd>Зібрати однакові предмети до повної стопки.</dd></div>
-              <div><dt>Shift + клік</dt><dd>Швидке перенесення; на результаті — крафт усіх.</dd></div>
-              <div><dt>Клавіші 1–9</dt><dd>Швидкий обмін зі слотом хотбара.</dd></div>
-              <div><dt>Q / Ctrl+Q</dt><dd>Скинути 1 предмет / усю стопку в інвентар.</dd></div>
+              <div><dt>ЛКМ</dt><dd>Клік — взя&shy;ти / по&shy;клас&shy;ти. Утри&shy;ман&shy;ня й про&shy;тяж&shy;ка — зі&shy;бра&shy;ти од&shy;на&shy;ко&shy;ві.</dd></div>
+              <div><dt>ПКМ</dt><dd>Взя&shy;ти по&shy;ло&shy;ви&shy;ну / по&shy;клас&shy;ти 1. Про&shy;тяж&shy;ка — по 1 у слот.</dd></div>
+              <div><dt>Под&shy;вій&shy;ний ЛКМ</dt><dd>Зі&shy;бра&shy;ти од&shy;на&shy;ко&shy;ві пред&shy;ме&shy;ти до пов&shy;ної стоп&shy;ки.</dd></div>
+              <div><dt>Shift + клік</dt><dd>Швид&shy;ке пе&shy;ре&shy;не&shy;сен&shy;ня; на ре&shy;зуль&shy;та&shy;ті — крафт усіх.</dd></div>
+              <div><dt>Кла&shy;ві&shy;ші 1–9</dt><dd>Швид&shy;кий об&shy;мін зі сло&shy;том хот&shy;ба&shy;ра.</dd></div>
+              <div><dt>Q / Ctrl+Q</dt><dd>Ски&shy;ну&shy;ти 1 пред&shy;мет / усю стоп&shy;ку в ін&shy;вен&shy;тар.</dd></div>
             </dl>
             <div className="mc-station-sidebar-btns">
               <button
@@ -1679,7 +1679,7 @@ export default function MinecraftStationWidget() {
                 disabled={!craftingGrid.some(Boolean)}
                 onClick={() => { returnHeld(); clearPocketGrid(); }}
               >
-                Очистити сітку
+                Очис&shy;ти&shy;ти сіт&shy;ку
               </button>
               <button
                 type="button"
@@ -1716,7 +1716,7 @@ export default function MinecraftStationWidget() {
                 }}
                 title="Скинути стан інвентарю та варильної стійки до початкового"
               >
-                Скинути інвентар
+                Ски&shy;ну&shy;ти ін&shy;вен&shy;тар
               </button>
             </div>
           </aside>

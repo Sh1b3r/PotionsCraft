@@ -1457,7 +1457,25 @@
   flex-direction: column;
   font-size: 13px;
   line-height: 1.45;
-  overflow-wrap: anywhere;
+  word-break: normal;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphenate-limit-chars: 5 2 2;
+}
+
+.mc-workstation-info p,
+.mc-workstation-info dd,
+.mc-workstation-info dt,
+.mc-workstation-info li,
+.mc-workstation-info div,
+.mc-workstation-info button {
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 
 /* Only the central GUI determines the height of the shared grid row. */
@@ -1558,7 +1576,24 @@
   color: var(--sculk-echo);
 }
 
-@container (max-width: 1124px) {
+@container (max-width: 996px) {
+  .mc-workbench-layout {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .mc-workbench-layout>.mc-brewing-workbench {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    justify-self: center;
+  }
+
+  .mc-station-sidebar {
+    grid-row: 2;
+    contain: none;
+  }
+}
+
+@media (max-width: 1100px) {
   .mc-workbench-layout {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

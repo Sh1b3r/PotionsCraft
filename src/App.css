@@ -1466,7 +1466,7 @@ body.light-theme .minecraft-styled-table tbody tr:hover,
   margin: 0 auto;
 }
 
-@media (max-width: 1200px) and (min-width: 851px) {
+@media (max-width: 1100px) and (min-width: 851px) {
   .potions {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -2036,7 +2036,7 @@ body.dark-theme .invslot.mcui-output3 {
   overflow: hidden;
 }
 
-@media (max-width: 1200px) and (min-width: 851px) {
+@media (max-width: 1100px) and (min-width: 851px) {
   .card h3.cardh3 {
     font-size: 14px;
     line-height: 1.16;
