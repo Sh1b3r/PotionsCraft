@@ -1723,7 +1723,7 @@ body.dark-theme .invslot.mcui-output3 {
 .mobile-header-potion-slot .invslot-item,
 .mobile-header-potion-icon .invslot-item {
   top: -1px;
-  left: 0;
+  left: 1px;
 }
 
 .invslot-item-image a {
@@ -1791,6 +1791,8 @@ body.dark-theme .invslot.mcui-output3 {
   width: 32px;
   height: 32px;
   position: relative;
+  top: -1px;
+  left: 1px;
   display: flex;
   align-items: center;
   justify-content: center;
