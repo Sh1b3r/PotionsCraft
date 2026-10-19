@@ -71,7 +71,9 @@
   image-rendering: -webkit-crisp-edges !important;
   image-rendering: pixelated !important;
   image-rendering: crisp-edges !important;
-  object-fit: contain;
+  object-fit: fill;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 html {
@@ -1591,7 +1593,6 @@ h3 {
   height: 40px;
   /* Original pipe placement; the output row keeps its existing position. */
   margin: -20px 34px -16px;
-  vertical-align: baseline;
 }
 
 .mcui-output {
@@ -1637,6 +1638,28 @@ body.dark-theme .invslot,
   border: 0;
   padding: 2px;
   background-color: transparent;
+}
+
+/* Slot and item stabilization: prevent subpixel jitter/shaking on hover */
+.card-brewing-stand-box .mcui-Brewing_Stand,
+.card-brewing-stand-box .mcui-input,
+.card-brewing-stand-box .mcui-output,
+.card-brewing-stand-box .mc-tooltip-trigger,
+.card-brewing-stand-box .invslot,
+.card-brewing-stand-box .invslot-item,
+.card-brewing-stand-box .invslot img,
+.mcui-Brewing_Stand .invslot,
+.mcui-Brewing_Stand .invslot-item,
+.mcui-Brewing_Stand .invslot img {
+  transform: none !important;
+  transition: none !important;
+  animation: none !important;
+  will-change: auto !important;
+}
+
+.card-brewing-stand-box .invslot *,
+.mcui-Brewing_Stand .invslot * {
+  pointer-events: none;
 }
 
 .mcui-output .mc-tooltip-trigger {
@@ -1736,11 +1759,12 @@ body.dark-theme .invslot.mcui-output3 {
   image-rendering: pixelated;
   image-rendering: crisp-edges;
   flex-shrink: 0;
-  transition: transform 0.15s ease;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .card-title-group .invslot:hover .card-potion-img {
-  transform: scale(1.1);
+  transform: none;
 }
 
 .card h3.cardh3 {
@@ -1757,6 +1781,7 @@ body.dark-theme .invslot.mcui-output3 {
   line-height: 1.18;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -1863,6 +1888,7 @@ body.dark-theme .invslot.mcui-output3 {
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 5;
+  line-clamp: 5;
   -webkit-box-orient: vertical;
 }
 
@@ -2991,8 +3017,7 @@ body,
   .potion-filter-pill-btn, .search-empty-state,
   .card-desc-row, .wiki-effect-desc b, .card-stat-pill,
   .stat-label, .stat-value, .card-upgrade-tag, .mobile-card-desc-box,
-  .mcui-Brewing_Stand, .invslot,
-  .mc-brewing-workbench, .mc-slot, .mc-brewing-ref-btn,
+  .mc-brewing-workbench, .mc-brewing-ref-btn,
   .mc-brewing-header-label, .mc-crafting-header-label, .mc-inventory-header-label,
   .potion-modal-content, .modal-stats-card) {
   transition: var(--theme-paint-transition);

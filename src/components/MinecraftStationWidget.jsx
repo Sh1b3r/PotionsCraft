@@ -568,7 +568,9 @@ export default function MinecraftStationWidget() {
 
   useEffect(() => {
     const move = event => {
-      setMousePos({ x: event.clientX, y: event.clientY });
+      if (heldItemRef.current) {
+        setMousePos({ x: event.clientX, y: event.clientY });
+      }
       if (dragRef.current && event.pointerId !== dragRef.current.pointerId) return;
       if (dragRef.current && !(event.buttons & dragRef.current.buttonMask)) {
         gesturesRef.current.cancelGesture();
@@ -817,7 +819,7 @@ export default function MinecraftStationWidget() {
       // Ingredient resolution
       const spritePath = wikiData?.reagent?.localSrc || potionDef?.ingredientSprite || '';
       let reagentKey = spritePath.replace(/^\/items\//, '').replace(/\.png$/, '');
-      if (reagentKey === 'glistering_melon') reagentKey = 'glistering_melon_slice';
+      if (reagentKey === 'glistering_melon_slice') reagentKey = 'glistering_melon';
       if (!MINECRAFT_ITEMS[reagentKey]) {
         if (reagentKey.includes('nether_wart')) reagentKey = 'nether_wart';
         else if (reagentKey.includes('carrot')) reagentKey = 'golden_carrot';

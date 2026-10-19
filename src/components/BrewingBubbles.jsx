@@ -1,30 +1,55 @@
-import React, { useId } from 'react';
+import React from 'react';
 import { BUBBLE_EMPTY_FRAME, BUBBLE_FRAMES_LIGHT } from '../data/brewingBubbleFrames';
 
 export default function BrewingBubbles({ isBrewing = false, frameIndex = null, height = 58 }) {
-  const filterId = useId();
-  const imageHref = !isBrewing
-    ? BUBBLE_EMPTY_FRAME
-    : typeof frameIndex === 'number' && frameIndex >= 0 && frameIndex < BUBBLE_FRAMES_LIGHT.length
-      ? BUBBLE_FRAMES_LIGHT[frameIndex]
-      : '/Grid_layout_Brewing_Bubbles.gif';
+  if (!isBrewing) {
+    return (
+      <span className="mcui-bubbling" style={{ height: `${height}px` }}>
+        <img
+          src={BUBBLE_EMPTY_FRAME}
+          alt=""
+          width="24"
+          height={height}
+          className="mc-bubbles-texture"
+          draggable="false"
+        />
+      </span>
+    );
+  }
+
+  if (typeof frameIndex === 'number' && frameIndex >= 0 && frameIndex < BUBBLE_FRAMES_LIGHT.length) {
+    return (
+      <span className="mcui-bubbling" style={{ height: `${height}px` }}>
+        <img
+          src={BUBBLE_FRAMES_LIGHT[frameIndex]}
+          alt=""
+          width="24"
+          height={height}
+          className="mc-bubbles-texture"
+          draggable="false"
+        />
+      </span>
+    );
+  }
 
   return (
-    <svg className="mcui-bubbling" width="24" height={height} viewBox={`0 0 24 ${height}`}
-      style={{ backgroundImage: 'none', '--sculk-bubbles-filter': `url(#${filterId})` }}
-      aria-hidden="true" focusable="false">
-      <defs>
-        <filter id={filterId} colorInterpolationFilters="sRGB">
-          {/* Map the sprite's three gray tones to Sculk shadow, body and echo.
-              Preserve alpha and the original frames and timing. */}
-          <feComponentTransfer>
-            <feFuncR type="discrete" tableValues={`${2 / 255} ${56 / 255} ${153 / 255}`} />
-            <feFuncG type="discrete" tableValues={`${12 / 255} ${123 / 255} ${244 / 255}`} />
-            <feFuncB type="discrete" tableValues={`${17 / 255} ${131 / 255} ${229 / 255}`} />
-          </feComponentTransfer>
-        </filter>
-      </defs>
-      <image className="mc-bubbles-texture" href={imageHref} width="24" height="58" />
-    </svg>
+    <span className="mcui-bubbling" style={{ height: `${height}px` }}>
+      <img
+        src="/Grid_layout_Brewing_Bubbles.gif"
+        alt=""
+        width="24"
+        height={height}
+        className="mc-bubbles-texture mc-bubbles-light"
+        draggable="false"
+      />
+      <img
+        src="/Grid_layout_Brewing_Bubbles_dark.gif"
+        alt=""
+        width="24"
+        height={height}
+        className="mc-bubbles-texture mc-bubbles-dark"
+        draggable="false"
+      />
+    </span>
   );
 }

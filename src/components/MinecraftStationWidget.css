@@ -45,12 +45,10 @@
 
 .mc-brewing-workbench {
   align-self: start;
-  --mc-gui-scale: 1;
   --mc-inventory-width: 648px;
   width: 684px;
   flex: none;
-  transform: scale(var(--mc-gui-scale));
-  transform-origin: top center;
+  transform: none !important;
 }
 
 /* ==================== UPPER SECTION: WORKSTATIONS ==================== */
@@ -466,7 +464,9 @@
   position: relative;
   cursor: pointer;
   touch-action: none;
-  transition: none;
+  transition: none !important;
+  transform: none !important;
+  will-change: auto !important;
 }
 
 .mc-slot:hover,
@@ -503,6 +503,8 @@
   image-rendering: crisp-edges;
   pointer-events: none;
   display: block;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 /* Authentic Minecraft item stack count:

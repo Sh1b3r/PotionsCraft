@@ -34,7 +34,13 @@ html[data-theme='dark'], body.dark-theme {
 body.dark-theme .gradient-container { background-color: #0f766e; }
 .dark-theme .mc-fuel-gauge-fill { background-image: none; }
 .dark-theme .mc-fuel-gauge-sculk { display: block; }
-.dark-theme .mc-bubbles-texture { filter: var(--sculk-bubbles-filter); }
+.dark-theme .mc-bubbles-texture { filter: none !important; }
+.mc-bubbles-dark { display: none; }
+.mc-bubbles-light { display: block; }
+.dark-theme .mc-bubbles-dark,
+.card.dark-theme .mc-bubbles-dark { display: block; }
+.dark-theme .mc-bubbles-light,
+.card.dark-theme .mc-bubbles-light { display: none; }
 .dark-theme .mcui-grid, .dark-theme .mc-brewing-stand-stage {
   --slot-bevel-light: var(--sculk-edge);
   --brewing-pipe-shadow: var(--sculk-shadow);
@@ -116,7 +122,8 @@ body.dark-theme .gradient-container { background-color: #0f766e; }
   border-bottom-color: var(--sculk-edge) !important;
   border-right-color: var(--sculk-edge) !important;
 }
-.dark-theme :is(.mc-slot, .invslot, .is-mobile .mc-pocket-slot):hover { background-color: #1c4b55 !important; }
+.dark-theme :is(.mc-slot, .invslot, .is-mobile .mc-pocket-slot) { transition: none !important; }
+.dark-theme :is(.mc-slot, .invslot, .is-mobile .mc-pocket-slot):hover { background-color: #1c4b55 !important; transition: none !important; }
 .dark-theme .mc-pocket-slot[data-selected='true'],
 .dark-theme .mc-pocket-stage .mc-slot[data-selected='true'] {
   outline-color: var(--sculk-glow) !important;
@@ -124,9 +131,9 @@ body.dark-theme .gradient-container { background-color: #0f766e; }
 }
 /* Transparent hit areas expose the shared SVG slot frames. */
 .dark-theme .mc-brewing-stand-stage .mc-slot,
-.dark-theme .mcui-grid .invslot { background-color: transparent !important; }
+.dark-theme .mcui-grid .invslot { background-color: transparent !important; transition: none !important; }
 .dark-theme .mc-brewing-stand-stage .mc-slot:hover,
-.dark-theme .mcui-grid .invslot:hover { background-color: #54dfcd18 !important; }
+.dark-theme .mcui-grid .invslot:hover { background-color: #54dfcd18 !important; transition: none !important; }
 .dark-theme :is(.card .mcui-Brewing_Stand, .card-brewing-stand-box.in-modal-stand .mcui-Brewing_Stand) {
   background-color: var(--sculk-panel) !important;
   border-color: var(--sculk-edge) !important;

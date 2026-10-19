@@ -304,11 +304,11 @@ export function useTooltip() {
   return ctx;
 }
 
-export function TooltipTrigger({ title, subtitle, lore, color, extra, children, className = '', style = {}, onClick }) {
+export function TooltipTrigger({ as: Tag = 'div', title, subtitle, lore, color, extra, children, className = '', style = {}, onClick }) {
   const { showTooltip, hideTooltip } = useTooltip();
 
   return (
-    <div
+    <Tag
       className={`mc-tooltip-trigger ${className}`}
       style={style}
       onMouseEnter={() => {
@@ -323,6 +323,6 @@ export function TooltipTrigger({ title, subtitle, lore, color, extra, children, 
       }}
     >
       {children}
-    </div>
+    </Tag>
   );
 }

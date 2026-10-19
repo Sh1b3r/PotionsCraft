@@ -34,6 +34,7 @@ export default function BrewingStandWidget({ potion, inModal = false }) {
     if (slotData) {
       return (
         <TooltipTrigger
+          as="span"
           title={slotData.title}
           lore={slotData.text || '&7Немає ефектів'}
         >
@@ -55,8 +56,7 @@ export default function BrewingStandWidget({ potion, inModal = false }) {
                   width="32"
                   height="32"
                   className="mw-file-element"
-                  loading="lazy"
-                  decoding="async"
+                  draggable="false"
                 />
               </span>
             </span>
@@ -82,6 +82,7 @@ export default function BrewingStandWidget({ potion, inModal = false }) {
               <BrewingBubbles isBrewing height={57} />
 
               <TooltipTrigger
+                as="span"
                 title={reagentMeta.title}
                 lore={reagentMeta.lore}
               >
@@ -102,8 +103,7 @@ export default function BrewingStandWidget({ potion, inModal = false }) {
                         width="32"
                         height="32"
                         className="mw-file-element"
-                        loading="lazy"
-                        decoding="async"
+                        draggable="false"
                       />
                     </span>
                   </span>
