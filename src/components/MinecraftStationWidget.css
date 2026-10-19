@@ -1587,26 +1587,25 @@
 
 /* ==================== MINECRAFT ACHIEVEMENT TOAST (PIXEL-PERFECT IN-GAME STYLE) ==================== */
 .mc-station-toast {
-  position: absolute;
-  top: -50px;
-  left: 50%;
-  transform: translateX(-50%);
+  position: fixed;
+  top: 24px;
+  right: 24px;
   display: flex;
   align-items: center;
   gap: 14px;
   min-width: 270px;
   max-width: 440px;
-  height: 58px;
-  padding: 8px 32px 8px 14px;
+  height: 60px;
+  padding: 8px 36px 8px 14px;
   box-sizing: border-box;
   background: #212121;
   border: 2px solid #555555;
   outline: 2px solid #000000;
   border-radius: 4px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.75);
-  z-index: 100;
+  z-index: 999999;
   cursor: default;
-  animation: mcAchievementToastIn 0.25s cubic-bezier(0.18, 0.89, 0.32, 1.25);
+  animation: mcAchievementToastIn 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.25);
   font-family: 'Minecraft', 'Minecraftia', monospace, sans-serif;
   user-select: none;
 }
@@ -1618,21 +1617,32 @@
 
 .mc-station-toast.is-clickable:hover {
   border-color: #888888;
-  transform: translate(-50%, -2px);
+  transform: translateY(-2px);
 }
 
 @keyframes mcAchievementToastIn {
   0% {
     opacity: 0;
-    transform: translate(-50%, -14px) scale(0.94);
+    transform: translateY(-20px) scale(0.95);
   }
   60% {
     opacity: 1;
-    transform: translate(-50%, 2px) scale(1.02);
+    transform: translateY(2px) scale(1.02);
   }
   100% {
     opacity: 1;
-    transform: translate(-50%, 0) scale(1);
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 600px) {
+  .mc-station-toast {
+    top: 16px;
+    right: 16px;
+    left: 16px;
+    max-width: none;
+    min-width: 0;
+    width: auto;
   }
 }
 

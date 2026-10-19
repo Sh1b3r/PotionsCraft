@@ -800,7 +800,7 @@ export default function MinecraftStationWidget() {
             fromCard,
             timestamp: Date.now(),
             sprite,
-            customTitle: 'Досягнення отримано!'
+            customTitle: 'Зілля зварено!'
           });
         }
       }
@@ -893,13 +893,6 @@ export default function MinecraftStationWidget() {
       }
 
       recipeLoadedFromCardRef.current = true;
-      setBrewedToast({
-        name: potionDef?.name || 'Рецепт завантажено',
-        catalogId: potionId,
-        customTitle: 'Досягнення отримано!',
-        fromCard: true,
-        sprite: potionDef?.icon || '/items/brewing_stand.png'
-      });
     };
 
     window.addEventListener('load_potion_recipe', handleLoadRecipe);
@@ -1324,7 +1317,7 @@ export default function MinecraftStationWidget() {
 
 
           {/* ==================== MINECRAFT ACHIEVEMENT POPUP ==================== */}
-          {brewedToast && (
+          {brewedToast && createPortal(
             <div
               className={`mc-station-toast ${!brewedToast.fromCard && brewedToast.catalogId ? 'is-clickable' : ''}`}
               onClick={() => {
@@ -1343,7 +1336,7 @@ export default function MinecraftStationWidget() {
               />
               <div className="mc-station-toast-body">
                 <div className="mc-station-toast-title">
-                  {brewedToast.customTitle || 'Досягнення отримано!'}
+                  {brewedToast.customTitle || 'Зілля зварено!'}
                 </div>
                 <div className="mc-station-toast-desc">{brewedToast.name}</div>
               </div>
@@ -1359,7 +1352,8 @@ export default function MinecraftStationWidget() {
               >
                 ✕
               </button>
-            </div>
+            </div>,
+            document.body
           )}
         </div>
           <aside className="mc-workstation-info mc-station-sidebar mc-station-crafting-info" aria-label="Стан крафту">
