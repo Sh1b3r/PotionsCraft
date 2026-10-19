@@ -1089,9 +1089,7 @@ export default function MinecraftStationWidget() {
 
                 {/* 2. Brewing Steam / Bubbles Column */}
                 <div className="mc-brewing-bubbles-column">
-                  {isBrewing && (
-                    <BrewingBubbles isBrewing={isBrewing} frameIndex={brewingBubbleFrame} />
-                  )}
+                  <BrewingBubbles isBrewing={isBrewing} frameIndex={isBrewing ? brewingBubbleFrame : null} />
                 </div>
 
                 {/* 3. Top Reagent Slot */}

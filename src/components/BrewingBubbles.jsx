@@ -8,7 +8,24 @@ export default function BrewingBubbles({ isBrewing = false, frameIndex = null, h
         className="mcui-bubbling mcui-bubbling-idle"
         style={{ width: '24px', height: `${height}px`, display: 'inline-block' }}
         aria-hidden="true"
-      />
+      >
+        <img
+          src="/mc_bubbles_empty.png"
+          alt=""
+          width="24"
+          height={height}
+          className="mc-bubbles-texture mc-bubbles-light"
+          draggable="false"
+        />
+        <img
+          src="/mc_bubbles_empty_dark.png"
+          alt=""
+          width="24"
+          height={height}
+          className="mc-bubbles-texture mc-bubbles-dark"
+          draggable="false"
+        />
+      </span>
     );
   }
 
