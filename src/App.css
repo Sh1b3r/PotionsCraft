@@ -1723,7 +1723,7 @@ body.dark-theme .invslot.mcui-output3 {
 .mobile-header-potion-slot .invslot-item,
 .mobile-header-potion-icon .invslot-item {
   top: -1px;
-  left: 1px;
+  left: 0;
 }
 
 .invslot-item-image a {
@@ -1791,8 +1791,6 @@ body.dark-theme .invslot.mcui-output3 {
   width: 32px;
   height: 32px;
   position: relative;
-  top: -1px;
-  left: 1px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1895,6 +1893,7 @@ body.dark-theme .invslot.mcui-output3 {
     width: 30px;
     height: 30px;
   }
+
   .card-effect-badges {
     gap: 8px;
   }
@@ -3247,7 +3246,11 @@ body.light-theme .mc-pocket-split>input {
     color: var(--mobile-accent-shadow);
     border-color: var(--mobile-accent-edge);
   }
-  body.light-theme .potion-filter-pill-btn.effect-pill { border-color: #2dd4bf66; }
+
+  body.light-theme .potion-filter-pill-btn.effect-pill {
+    border-color: #2dd4bf66;
+  }
+
   body.light-theme :is(.category-tab-btn.active, .reagent-pill-btn.active, .potion-filter-pill-btn.active) {
     background: var(--mobile-accent);
     color: var(--mobile-accent-ink);
