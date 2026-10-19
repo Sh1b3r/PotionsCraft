@@ -152,42 +152,46 @@ export default function PotionCard({
                 }
               >
                 <span className="sprite-file">
-                  <span className="pixel-image">
-                    {potion.id === 'healing' ? (
-                      <a
-                        href="https://matias.ma/nsfw/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="effect-link"
-                      >
-                        <img
-                          src={potion.effectIcon}
-                          alt="Ефект"
-                          className="card-effect-img"
-                          width="26"
-                          height="26"
-                        />
-                      </a>
-                    ) : potion.id === 'invisibility' ? (
-                      <a href="/heroine.html" className="effect-link">
-                        <img
-                          src={potion.effectIcon}
-                          alt="Ефект"
-                          className="card-effect-img"
-                          width="26"
-                          height="26"
-                        />
-                      </a>
-                    ) : (
+                  {potion.id === 'healing' ? (
+                    <a
+                      href="https://matias.ma/nsfw/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="effect-link"
+                    >
                       <img
                         src={potion.effectIcon}
                         alt="Ефект"
                         className="card-effect-img"
-                        width="26"
-                        height="26"
+                        width="28"
+                        height="28"
+                        loading="lazy"
+                        decoding="async"
                       />
-                    )}
-                  </span>
+                    </a>
+                  ) : potion.id === 'invisibility' ? (
+                    <a href="/heroine.html" className="effect-link">
+                      <img
+                        src={potion.effectIcon}
+                        alt="Ефект"
+                        className="card-effect-img"
+                        width="28"
+                        height="28"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </a>
+                  ) : (
+                    <img
+                      src={potion.effectIcon}
+                      alt="Ефект"
+                      className="card-effect-img"
+                      width="28"
+                      height="28"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  )}
                 </span>
               </TooltipTrigger>
               {potion.secondaryEffectIcon && (
@@ -195,15 +199,15 @@ export default function PotionCard({
                   lore={secondaryEffectLore}
                 >
                   <span className="sprite-file">
-                    <span className="pixel-image">
-                      <img
-                        src={potion.secondaryEffectIcon}
-                        alt="Додатковий ефект"
-                        className="card-effect-img"
-                        width="26"
-                        height="26"
-                      />
-                    </span>
+                    <img
+                      src={potion.secondaryEffectIcon}
+                      alt="Додатковий ефект"
+                      className="card-effect-img"
+                      width="28"
+                      height="28"
+                      loading="lazy"
+                      decoding="async"
+                    />
                   </span>
                 </TooltipTrigger>
               )}
@@ -346,15 +350,15 @@ export default function PotionCard({
                   lore={primaryEffectLore}
                 >
                   <span className="sprite-file">
-                    <span className="pixel-image">
-                      <img
-                        src={potion.effectIcon}
-                        alt="Ефект"
-                        className="mobile-effect-icon-img"
-                        width="32"
-                        height="32"
-                      />
-                    </span>
+                    <img
+                      src={potion.effectIcon}
+                      alt="Ефект"
+                      className="mobile-effect-icon-img"
+                      width="32"
+                      height="32"
+                      loading="lazy"
+                      decoding="async"
+                    />
                   </span>
                 </TooltipTrigger>
                 {potion.secondaryEffectIcon && (
@@ -362,15 +366,15 @@ export default function PotionCard({
                     lore={secondaryEffectLore}
                   >
                     <span className="sprite-file">
-                      <span className="pixel-image">
-                        <img
-                          src={potion.secondaryEffectIcon}
-                          alt="Додатковий ефект"
-                          className="mobile-effect-icon-img"
-                          width="32"
-                          height="32"
-                        />
-                      </span>
+                      <img
+                        src={potion.secondaryEffectIcon}
+                        alt="Додатковий ефект"
+                        className="mobile-effect-icon-img"
+                        width="32"
+                        height="32"
+                        loading="lazy"
+                        decoding="async"
+                      />
                     </span>
                   </TooltipTrigger>
                 )}

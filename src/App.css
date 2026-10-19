@@ -55,9 +55,12 @@
 .ingredient-icon,
 .potion-result-icon,
 .table-item-icon,
-.effect-icon {
-  image-rendering: auto;
-  -webkit-font-smoothing: antialiased;
+.effect-icon,
+.card-effect-img,
+.mobile-effect-icon-img {
+  image-rendering: auto !important;
+  image-rendering: -webkit-optimize-contrast !important;
+  -webkit-font-smoothing: antialiased !important;
   object-fit: contain;
 }
 
@@ -1818,20 +1821,43 @@ body.dark-theme .invslot.mcui-output3 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  line-height: 1;
+}
+
+.effect-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  text-decoration: none;
 }
 
 .card-effect-img {
-  width: 26px;
-  height: 26px;
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
+  width: 28px;
+  height: 28px;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  image-rendering: auto !important;
+  image-rendering: -webkit-optimize-contrast !important;
+  -webkit-font-smoothing: antialiased !important;
   flex-shrink: 0;
   transition: transform 0.15s ease;
   vertical-align: middle;
+  display: block;
 }
 
 .card-effect-badges .sprite-file:hover .card-effect-img {
   transform: scale(1.15);
+}
+
+@media (min-width: 1400px) {
+  .card-effect-img {
+    width: 30px;
+    height: 30px;
+  }
+  .card-effect-badges {
+    gap: 8px;
+  }
 }
 
 /* ==================== CATEGORY SECTIONS ==================== */
@@ -2943,8 +2969,13 @@ body.dark-theme .card-load-stand-btn:active {
   .mobile-header-effect-icons .mobile-effect-icon-img {
     width: 32px;
     height: 32px;
-    image-rendering: pixelated;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    image-rendering: auto !important;
+    image-rendering: -webkit-optimize-contrast !important;
+    -webkit-font-smoothing: antialiased !important;
     vertical-align: middle;
+    display: block;
   }
 
   .mobile-pills-row {
@@ -3005,6 +3036,10 @@ body.dark-theme .card-load-stand-btn:active {
   .mobile-header-effect-icons .mobile-effect-icon-img {
     width: 28px;
     height: 28px;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    image-rendering: auto !important;
+    image-rendering: -webkit-optimize-contrast !important;
   }
 
   .mobile-brewing-stand-container {
