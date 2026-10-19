@@ -1672,7 +1672,10 @@ body.dark-theme .invslot,
 }
 
 .mcui-output .mc-tooltip-trigger {
+  display: inline-block;
   vertical-align: top;
+  margin: 0;
+  padding: 0;
 }
 
 .mcui-input .invslot {
