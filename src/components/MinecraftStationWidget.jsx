@@ -1117,7 +1117,7 @@ export default function MinecraftStationWidget() {
           }
         }
 
-        // 4. «Володар зіллєваріння» — track all 123 potion variants (regular, splash, lingering, +redstone, +glowstone)
+        // 4. «Володар зіллєваріння» — track all 135 potion variants (4 base foundations + 19 effect potions in all forms)
         let hasPotionOverlord = false;
         try {
           hasPotionOverlord =

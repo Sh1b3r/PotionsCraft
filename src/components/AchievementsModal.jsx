@@ -132,6 +132,7 @@ export default function AchievementsModal({ isOpen, onClose, isDark }) {
         if (variantTypeFilter === 'lingering' && v.delivery !== 'lingering') return false;
         if (variantTypeFilter === 'extended' && v.tier !== 'extended') return false;
         if (variantTypeFilter === 'level2' && v.tier !== 'level2') return false;
+        if (variantTypeFilter === 'base' && !v.isBase) return false;
       }
       return true;
     });
@@ -270,20 +271,20 @@ export default function AchievementsModal({ isOpen, onClose, isDark }) {
 
               {/* Category sub-stats pills */}
               <div className="mc-ach-chips-row">
-                <span className={`mc-ach-chip ${variantStats.regularCount >= 41 ? 'done' : ''}`} title="Звичайні питні зілля">
-                  🧪 Звичайні: {variantStats.regularCount}/41
+                <span className={`mc-ach-chip ${variantStats.regularCount >= (variantStats.totalRegular || 45) ? 'done' : ''}`} title="Звичайні питні зілля">
+                  🧪 Звичайні: {variantStats.regularCount}/{variantStats.totalRegular || 45}
                 </span>
-                <span className={`mc-ach-chip ${variantStats.splashCount >= 41 ? 'done' : ''}`} title="Вибухові зілля (з порохом)">
-                  💥 Вибухові: {variantStats.splashCount}/41
+                <span className={`mc-ach-chip ${variantStats.splashCount >= (variantStats.totalSplash || 45) ? 'done' : ''}`} title="Вибухові зілля (з порохом)">
+                  💥 Вибухові: {variantStats.splashCount}/{variantStats.totalSplash || 45}
                 </span>
-                <span className={`mc-ach-chip ${variantStats.lingeringCount >= 41 ? 'done' : ''}`} title="Осідальні зілля (з диханням дракона)">
-                  💨 Осідальні: {variantStats.lingeringCount}/41
+                <span className={`mc-ach-chip ${variantStats.lingeringCount >= (variantStats.totalLingering || 45) ? 'done' : ''}`} title="Осідальні зілля (з диханням дракона)">
+                  💨 Осідальні: {variantStats.lingeringCount}/{variantStats.totalLingering || 45}
                 </span>
-                <span className={`mc-ach-chip ${variantStats.extendedCount >= 39 ? 'done' : ''}`} title="Подовжені зілля (з редстоуном)">
-                  ⏳ Редстоун: {variantStats.extendedCount}/39
+                <span className={`mc-ach-chip ${variantStats.extendedCount >= (variantStats.totalExtended || 39) ? 'done' : ''}`} title="Подовжені зілля (з редстоуном)">
+                  ⏳ Редстоун: {variantStats.extendedCount}/{variantStats.totalExtended || 39}
                 </span>
-                <span className={`mc-ach-chip ${variantStats.level2Count >= 27 ? 'done' : ''}`} title="Посилені II/IV зілля (зі світлопилом)">
-                  ⚡ Світлопил: {variantStats.level2Count}/27
+                <span className={`mc-ach-chip ${variantStats.level2Count >= (variantStats.totalLevel2 || 27) ? 'done' : ''}`} title="Посилені II/IV зілля (зі світлопилом)">
+                  ⚡ Світлопил: {variantStats.level2Count}/{variantStats.totalLevel2 || 27}
                 </span>
               </div>
 
@@ -397,6 +398,13 @@ export default function AchievementsModal({ isOpen, onClose, isDark }) {
                     onClick={() => setVariantTypeFilter('level2')}
                   >
                     ⚡ Посилені II
+                  </button>
+                  <button
+                    type="button"
+                    className={`mc-type-pill ${variantTypeFilter === 'base' ? 'active' : ''}`}
+                    onClick={() => setVariantTypeFilter('base')}
+                  >
+                    💧 Базові основи
                   </button>
                 </div>
               </div>

@@ -529,7 +529,11 @@ export const MINECRAFT_ITEMS = {
  * Returns authentic pixel-perfect sprite path for normal, splash, or lingering potions
  */
 export function getPotionSprite(itemId, isSplash = false, isLingering = false) {
-  if (itemId === 'mundane_potion' || itemId === 'thick_potion') itemId = 'water_bottle';
+  if (itemId === 'mundane_potion' || itemId === 'thick_potion' || itemId === 'awkward_potion') {
+    if (isLingering) return '/items/lingering_water_bottle.png';
+    if (isSplash) return '/items/splash_water_bottle.png';
+    return '/items/water_bottle.png';
+  }
   if (!itemId || itemId === 'water_bottle') {
     if (isLingering) return '/items/lingering_water_bottle.png';
     if (isSplash) return '/items/splash_water_bottle.png';
