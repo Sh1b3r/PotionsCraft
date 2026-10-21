@@ -228,7 +228,7 @@ export function getBrewingResult(bottleItem, ingredientId) {
   // Verified against PotionBrewing / Builder in Mojang's Java 1.21.1 client.
   if (['water_bottle', 'splash_water_bottle', 'lingering_water_bottle'].includes(bId)) {
     const mundaneReagents = ['redstone', 'breeze_rod', 'slime_block', 'stone', 'cobweb',
-      'magma_cream', 'rabbit_foot', 'sugar', 'glistering_melon', 'spider_eye', 'ghast_tear', 'blaze_powder'];
+      'magma_cream', 'rabbit_foot', 'glistering_melon', 'spider_eye', 'ghast_tear', 'blaze_powder'];
     const baseId = ingredientId === 'glowstone' ? 'thick_potion' : mundaneReagents.includes(ingredientId) ? 'mundane_potion' : null;
     if (baseId) {
       const lingering = isLingering || bId === 'lingering_water_bottle';
