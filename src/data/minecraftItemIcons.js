@@ -122,14 +122,14 @@ export const MINECRAFT_ITEMS = {
   },
   water_bottle: {
     id: 'water_bottle',
-    name: 'Пляшечка води',
+    name: 'Пляшка води',
     sprite: '/items/water_bottle.png',
     maxStack: 1,
     isPotion: true,
   },
   splash_water_bottle: {
     id: 'splash_water_bottle',
-    name: 'Вибухова пляшечка води',
+    name: 'Вибухова пляшка води',
     sprite: '/items/splash_water_bottle.png',
     maxStack: 1,
     isPotion: true,
@@ -137,7 +137,7 @@ export const MINECRAFT_ITEMS = {
   },
   lingering_water_bottle: {
     id: 'lingering_water_bottle',
-    name: 'Осідальна пляшечка води',
+    name: 'Осідальна пляшка води',
     sprite: '/items/lingering_water_bottle.png',
     maxStack: 1,
     isPotion: true,
@@ -146,7 +146,7 @@ export const MINECRAFT_ITEMS = {
   },
   glass_bottle: {
     id: 'glass_bottle',
-    name: 'Скляна пляшечка',
+    name: 'Скляна пляшка',
     sprite: '/items/glass_bottle.png',
     maxStack: 64,
   },

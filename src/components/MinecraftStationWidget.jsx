@@ -574,9 +574,9 @@ export default function MinecraftStationWidget() {
       if (heldItemRef.current) {
         setMousePos({ x: event.clientX, y: event.clientY });
       }
-      if (dragRef.current && event.pointerId !== dragRef.current.pointerId) return;
-      if (dragRef.current && !(event.buttons & dragRef.current.buttonMask)) {
+      if (dragRef.current && !(event.buttons & (dragRef.current.buttonMask || 3))) {
         gesturesRef.current.cancelGesture();
+        dragRef.current = null;
         return;
       }
       const target = document.elementFromPoint(event.clientX, event.clientY)?.closest('[data-slot-index]');
@@ -584,12 +584,16 @@ export default function MinecraftStationWidget() {
         gesturesRef.current.visitSlot(target.dataset.slotType, +target.dataset.slotIndex);
       }
     };
-    const end = event => gesturesRef.current.finishGesture(event);
+    const end = event => {
+      gesturesRef.current.finishGesture(event);
+      dragRef.current = null;
+    };
     const handleKeyDown = event => {
       if (event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
       if (event.key === 'Escape') {
         gesturesRef.current.cancelGesture();
         gesturesRef.current.returnHeld();
+        dragRef.current = null;
         hideTooltip();
       }
       if (/^[1-9]$/.test(event.key)) {
@@ -599,7 +603,10 @@ export default function MinecraftStationWidget() {
         gesturesRef.current.dropItem(event.ctrlKey);
       }
     };
-    const blur = () => gesturesRef.current.cancelGesture();
+    const blur = () => {
+      gesturesRef.current.cancelGesture();
+      dragRef.current = null;
+    };
     window.addEventListener('pointermove', move);
     const handleContextMenu = e => {
       if (e.target.closest('#mc-workbench, .mc-workbench-layout, .mc-floating-held-item, .mc-workstation-info')) {
@@ -767,11 +774,22 @@ export default function MinecraftStationWidget() {
     },
     onPointerEnter: event => {
       hoveredSlotRef.current = { type, index };
+      if (!event.buttons && dragRef.current) {
+        dragRef.current = null;
+      }
       const drag = dragRef.current;
       if (drag && (event.buttons & drag.buttonMask)) {
         gesturesRef.current.visitSlot(type, index);
       } else {
-        handleSlotHover(type, index, item);
+        handleSlotHover(type, index, item, event);
+      }
+    },
+    onPointerMove: event => {
+      if (!event.buttons && dragRef.current) {
+        dragRef.current = null;
+      }
+      if (!mobile && !heldItemRef.current && !dragRef.current) {
+        handleSlotHover(type, index, item, event);
       }
     },
     onPointerLeave: () => {
@@ -1221,6 +1239,13 @@ export default function MinecraftStationWidget() {
         };
       }
 
+      if (slotType === 'arrow') {
+        return {
+          title: 'Прогрес варіння',
+          lore: isBrewing ? `§aВаріння зілля... ${Math.floor(brewingProgress)}%` : '§7Вставте інгредієнт та зілля для початку варіння'
+        };
+      }
+
       if (!item) return null;
 
       // Potion item tooltip
@@ -1272,18 +1297,21 @@ export default function MinecraftStationWidget() {
           (item.description ? `§7${item.description}` : item.englishName ? `§8${item.englishName}` : null)
       };
     },
-    []
+    [isBrewing, brewingProgress]
   );
 
   const handleSlotHover = useCallback(
-    (slotType, index, item) => {
+    (slotType, index, item, event) => {
+      if (event && !event.buttons && dragRef.current) {
+        dragRef.current = null;
+      }
       if (mobile || heldItemRef.current || dragRef.current) {
         hideTooltip();
         return;
       }
       const tipData = getSlotTooltipData(slotType, index, item);
       if (tipData) {
-        showTooltip(tipData);
+        showTooltip(tipData, event);
       } else {
         hideTooltip();
       }
@@ -1408,7 +1436,8 @@ export default function MinecraftStationWidget() {
                   aria-valuemin={0}
                   aria-valuemax={100}
                   aria-valuenow={isBrewing ? Math.floor(brewingProgress) : 0}
-                  onMouseEnter={() => handleSlotHover('arrow', 0, null)}
+                  onMouseEnter={(e) => handleSlotHover('arrow', 0, null, e)}
+                  onMouseMove={(e) => handleSlotHover('arrow', 0, null, e)}
                   onMouseLeave={hideTooltip}
                 >
                   <BrewingArrow filledHeight={isBrewing ? brewingStep : 0} />
@@ -1538,9 +1567,14 @@ export default function MinecraftStationWidget() {
                     data-slot-type="output"
                     onPointerDown={handleCraftOutputClick}
                     onContextMenu={e => e.preventDefault()}
-                    onPointerEnter={() => {
+                    onPointerEnter={(e) => {
                       hoveredSlotRef.current = { type: 'output', index: 0 };
-                      handleSlotHover('output', 0, craftingOutput);
+                      handleSlotHover('output', 0, craftingOutput, e);
+                    }}
+                    onPointerMove={(e) => {
+                      if (!mobile && !heldItemRef.current) {
+                        handleSlotHover('output', 0, craftingOutput, e);
+                      }
                     }}
                     onPointerLeave={() => { hoveredSlotRef.current = null; hideTooltip(); }}
                   >

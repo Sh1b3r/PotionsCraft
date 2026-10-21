@@ -160,18 +160,28 @@ export function TooltipProvider({ children }) {
   const posRef = useRef({ x: 0, y: 0 });
 
   const updatePosition = (clientX, clientY) => {
-    posRef.current = { x: clientX, y: clientY };
+    if (typeof clientX === 'number' && typeof clientY === 'number' && (clientX > 0 || clientY > 0)) {
+      posRef.current = { x: clientX, y: clientY };
+    }
     const el = tooltipRef.current;
     if (!el) return;
+
+    let targetX = posRef.current.x;
+    let targetY = posRef.current.y;
+
+    // Prevent placing at (0, 0) if no coordinates recorded yet
+    if (targetX <= 0 && targetY <= 0) {
+      return;
+    }
 
     const width = el.offsetWidth || 180;
     const height = el.offsetHeight || 30;
 
-    let x = clientX + 12;
-    let y = clientY - 12;
+    let x = targetX + 12;
+    let y = targetY - 12;
 
     if (x + width > window.innerWidth - 8) {
-      x = clientX - width - 12;
+      x = targetX - width - 12;
     }
     if (x < 8) x = 8;
     if (x + width > window.innerWidth - 8) {
@@ -179,7 +189,7 @@ export function TooltipProvider({ children }) {
     }
 
     if (y < 8) {
-      y = clientY + 20;
+      y = targetY + 20;
     } else if (y + height > window.innerHeight - 8) {
       y = Math.max(8, window.innerHeight - height - 8);
     }
@@ -189,11 +199,18 @@ export function TooltipProvider({ children }) {
   };
 
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      updatePosition(e.clientX, e.clientY);
+    const handleMove = (e) => {
+      posRef.current = { x: e.clientX, y: e.clientY };
+      if (tooltipRef.current) {
+        updatePosition(e.clientX, e.clientY);
+      }
     };
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousemove', handleMove, { passive: true });
+    window.addEventListener('pointermove', handleMove, { passive: true });
+    return () => {
+      window.removeEventListener('mousemove', handleMove);
+      window.removeEventListener('pointermove', handleMove);
+    };
   }, []);
 
   useLayoutEffect(() => {
@@ -205,6 +222,9 @@ export function TooltipProvider({ children }) {
   // Event delegation to catch any element with data-minetip attributes as in be.html
   useEffect(() => {
     const handleMouseOver = (e) => {
+      if (e.clientX && e.clientY) {
+        posRef.current = { x: e.clientX, y: e.clientY };
+      }
       const target = e.target.closest(
         '[data-minetip-title], [data-minetip-text], [data-minetip], .invslot-item'
       );
@@ -232,7 +252,11 @@ export function TooltipProvider({ children }) {
       const target = e.target.closest(
         '[data-minetip-title], [data-minetip-text], [data-minetip], .invslot-item'
       );
-      if (target && !target.closest('.mc-tooltip-trigger, .mc-slot, .mc-workbench-layout')) {
+      if (!target) return;
+      // Do not hide tooltip if moving into a child element inside target
+      if (e.relatedTarget && target.contains(e.relatedTarget)) return;
+
+      if (!target.closest('.mc-tooltip-trigger, .mc-slot, .mc-workbench-layout')) {
         setTooltip(null);
       }
     };
@@ -245,7 +269,19 @@ export function TooltipProvider({ children }) {
     };
   }, []);
 
-  const showTooltip = useCallback((data) => {
+  const showTooltip = useCallback((data, coordsOrEvent) => {
+    if (coordsOrEvent) {
+      let cx = coordsOrEvent.clientX;
+      let cy = coordsOrEvent.clientY;
+      if ((typeof cx !== 'number' || typeof cy !== 'number') && coordsOrEvent.currentTarget?.getBoundingClientRect) {
+        const rect = coordsOrEvent.currentTarget.getBoundingClientRect();
+        cx = rect.right + 8;
+        cy = rect.top;
+      }
+      if (typeof cx === 'number' && typeof cy === 'number' && (cx > 0 || cy > 0)) {
+        posRef.current = { x: cx, y: cy };
+      }
+    }
     setTooltip(data);
   }, []);
 
@@ -311,9 +347,14 @@ export function TooltipTrigger({ as: Tag = 'div', title, subtitle, lore, color, 
     <Tag
       className={`mc-tooltip-trigger ${className}`}
       style={style}
-      onMouseEnter={() => {
+      onMouseEnter={(e) => {
         if (title || subtitle || lore) {
-          showTooltip({ title, subtitle, lore, color, extra });
+          showTooltip({ title, subtitle, lore, color, extra }, e);
+        }
+      }}
+      onMouseMove={(e) => {
+        if (title || subtitle || lore) {
+          showTooltip({ title, subtitle, lore, color, extra }, e);
         }
       }}
       onMouseLeave={hideTooltip}
