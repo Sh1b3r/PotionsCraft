@@ -433,12 +433,63 @@
   width: var(--mc-inventory-width);
 }
 
+.mc-inventory-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin: 0 0 6px;
+  box-sizing: border-box;
+}
+
 .mc-inventory-header-label {
   font-size: 15px;
   color: #303030;
-  margin: 0 0 6px;
+  margin: 0;
   letter-spacing: 0.5px;
   text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.mc-inventory-restock-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background-color: #c6c6c6;
+  background-image: linear-gradient(180deg, #dbdbdb 0%, #b8b8b8 100%);
+  border: 2px solid #000000 !important;
+  border-radius: 0 !important;
+  box-shadow: inset 1px 1px 0px #ffffff, inset -1px -1px 0px #555555;
+  color: #2b2b2b;
+  font-family: 'Minecraft', monospace;
+  font-size: 11px;
+  padding: 2px 8px;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.05s ease, background-color 0.1s ease;
+}
+
+.mc-inventory-restock-btn:hover {
+  background-color: #d8d8d8;
+  color: #1a6d3f;
+}
+
+.mc-inventory-restock-btn:active {
+  background-color: #a0a0a0;
+  box-shadow: inset 1px 1px 0px #555555, inset -1px -1px 0px #ffffff;
+  transform: translateY(1px);
+}
+
+.dark-theme .mc-inventory-restock-btn {
+  background-color: #0e2430;
+  background-image: linear-gradient(180deg, #153443 0%, #0b1c26 100%);
+  border-color: #000000 !important;
+  box-shadow: inset 1px 1px 0px #22596e, inset -1px -1px 0px #040e14;
+  color: #79f1d9;
+  text-shadow: 1px 1px 0px #020b0f;
+}
+
+.dark-theme .mc-inventory-restock-btn:hover {
+  color: #55ff55;
 }
 
 /* Three rows of eighteen slots; retain all 54 storage slots. */

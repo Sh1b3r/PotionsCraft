@@ -4293,6 +4293,399 @@ body.light-theme .mc-pocket-split>input {
   background: linear-gradient(90deg, #55ff55 0%, #ffff55 100%);
 }
 
+/* ==================== ВОЛОДАР ЗІЛЛЄВАРІННЯ (OVERLORD ACHIEVEMENT) ==================== */
+.overlord-section-title {
+  color: #7b2cbf !important;
+  text-shadow: 1px 1px 0 #ffffff !important;
+  margin-top: 12px;
+}
+.dark-theme .overlord-section-title {
+  color: #c77dff !important;
+  text-shadow: 2px 2px 0 #1e0038 !important;
+}
+
+.overlord-card {
+  border: 2px solid #7b2cbf !important;
+  background: #fbf5ff !important;
+  box-shadow: inset 1px 1px 0 #e0aaff, 0 2px 8px rgba(123, 44, 191, 0.15);
+}
+.dark-theme .overlord-card {
+  border-color: #9d4edd !important;
+  background: #1a102a !important;
+  box-shadow: inset 1px 1px 0 #3c096c, 0 4px 16px rgba(157, 78, 221, 0.25);
+}
+.overlord-card.is-unlocked {
+  border-color: #ffd700 !important;
+  background: #fffbe6 !important;
+  box-shadow: 0 0 16px rgba(255, 215, 0, 0.5), inset 0 0 8px rgba(255, 215, 0, 0.2);
+}
+.dark-theme .overlord-card.is-unlocked {
+  background: #251c0a !important;
+  border-color: #ffe066 !important;
+  box-shadow: 0 0 20px rgba(255, 224, 102, 0.4), inset 0 0 8px rgba(255, 224, 102, 0.2);
+}
+
+.overlord-icon-box {
+  border-color: #7b2cbf !important;
+  background: #f3e8ff !important;
+}
+.dark-theme .overlord-icon-box {
+  border-color: #9d4edd !important;
+  background: #2d1847 !important;
+}
+
+.overlord-name {
+  color: #5a189a !important;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.dark-theme .overlord-name {
+  color: #e0aaff !important;
+}
+
+.overlord-crown {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  font-size: 15px;
+  filter: drop-shadow(0 0 4px #ffd700);
+}
+
+.overlord-tag {
+  display: inline-block;
+  background: #ffd700;
+  color: #000000;
+  font-size: 9px;
+  font-weight: bold;
+  padding: 1px 6px;
+  border-radius: 2px;
+  letter-spacing: 0.5px;
+  box-shadow: 0 0 6px rgba(255, 215, 0, 0.6);
+}
+
+.overlord-progress-wrap {
+  border-color: #7b2cbf !important;
+}
+.dark-theme .overlord-progress-wrap {
+  border-color: #9d4edd !important;
+}
+
+.overlord-progress-fill {
+  background: linear-gradient(90deg, #7b2cbf 0%, #c77dff 50%, #ffd700 100%) !important;
+}
+
+/* Chips sub-stats row */
+.mc-ach-chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 6px 0;
+}
+
+.mc-ach-chip {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  font-size: 10px;
+  padding: 2px 6px;
+  color: #444444;
+  border-radius: 2px;
+}
+.dark-theme .mc-ach-chip {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+}
+
+.mc-ach-chip.done {
+  background: #e3faea;
+  border-color: #2e8b57;
+  color: #1a6d3f;
+  font-weight: bold;
+}
+.dark-theme .mc-ach-chip.done {
+  background: #0f2a1d;
+  border-color: #55ff55;
+  color: #55ff55;
+}
+
+/* Checklist Navigation Tabs */
+.mc-ach-checklist-nav {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+  border-bottom: 2px solid #888888;
+  padding-bottom: 6px;
+}
+.dark-theme .mc-ach-checklist-nav {
+  border-bottom-color: #243447;
+}
+
+.mc-ach-nav-tab {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #c6c6c6;
+  background-image: linear-gradient(180deg, #dbdbdb 0%, #b8b8b8 100%);
+  border: 2px solid #000000 !important;
+  border-radius: 0 !important;
+  box-shadow: inset 2px 2px 0px #ffffff, inset -2px -2px 0px #555555;
+  color: #1e1e1f;
+  font-family: 'Minecraft', monospace;
+  font-size: 12px;
+  padding: 6px 10px;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.05s ease;
+}
+
+.mc-ach-nav-tab.active {
+  background-color: #3b82f6;
+  background-image: linear-gradient(180deg, #60a5fa 0%, #2563eb 100%);
+  box-shadow: inset 2px 2px 0px #93c5fd, inset -2px -2px 0px #1d4ed8;
+  color: #ffffff;
+  text-shadow: 1px 1px 0 #0f172a;
+}
+
+.dark-theme .mc-ach-nav-tab {
+  background-color: #0e2430;
+  background-image: linear-gradient(180deg, #153443 0%, #0b1c26 100%);
+  border-color: #000000 !important;
+  box-shadow: inset 2px 2px 0px #22596e, inset -2px -2px 0px #040e14;
+  color: #54dfcd;
+  text-shadow: 1px 1px 0px #020b0f;
+}
+
+.dark-theme .mc-ach-nav-tab.active {
+  background-color: #7b2cbf;
+  background-image: linear-gradient(180deg, #9d4edd 0%, #5a189a 100%);
+  box-shadow: inset 2px 2px 0px #c77dff, inset -2px -2px 0px #3c096c;
+  color: #ffffa0;
+  text-shadow: 1px 1px 0 #240046;
+}
+
+/* Variants Toolbar */
+.mc-ach-variants-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 6px 0;
+}
+
+.mc-ach-type-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.mc-type-pill {
+  display: inline-flex;
+  align-items: center;
+  background: #dbdbdb;
+  border: 1px solid #777777;
+  color: #333333;
+  font-family: 'Minecraft', monospace;
+  font-size: 10px;
+  padding: 2px 6px;
+  cursor: pointer;
+  user-select: none;
+}
+.dark-theme .mc-type-pill {
+  background: #17212d;
+  border-color: #334455;
+  color: #cbd5e1;
+}
+
+.mc-type-pill.active {
+  background: #2e8b57;
+  color: #ffffff;
+  border-color: #1a6d3f;
+}
+.dark-theme .mc-type-pill.active {
+  background: #55ff55;
+  color: #000000;
+  border-color: #22aa22;
+  font-weight: bold;
+}
+
+/* Variants Grid */
+.mc-ach-variants-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 6px;
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 4px;
+  background: #b8b8b8;
+  border: 2px solid #888888;
+  box-shadow: inset 1px 1px 0 #555555;
+}
+.dark-theme .mc-ach-variants-grid {
+  background: #111822;
+  border-color: #243447;
+  box-shadow: inset 1px 1px 0 #090e15;
+}
+
+.mc-ach-variant-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #cccccc;
+  border: 1px solid #999999;
+  padding: 4px 6px;
+  box-sizing: border-box;
+}
+.dark-theme .mc-ach-variant-item {
+  background: #17212d;
+  border-color: #243447;
+}
+
+.mc-ach-variant-item.brewed {
+  border-color: #2e8b57;
+  background: #dbf5e4;
+}
+.dark-theme .mc-ach-variant-item.brewed {
+  border-color: #28543f;
+  background: #0f241c;
+}
+
+.mc-ach-variant-item.unbrewed {
+  opacity: 0.65;
+}
+
+.mc-ach-variant-icon-box {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mc-ach-variant-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+.mc-ach-variant-item.unbrewed .mc-ach-variant-icon {
+  filter: grayscale(100%) brightness(0.7);
+}
+
+.mc-ach-variant-check {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  font-size: 11px;
+  font-weight: bold;
+  color: #2e8b57;
+  text-shadow: 1px 1px 0 #ffffff;
+}
+.dark-theme .mc-ach-variant-check {
+  color: #55ff55;
+  text-shadow: 1px 1px 0 #000000;
+}
+
+.mc-ach-variant-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.mc-ach-variant-name {
+  font-size: 11px;
+  font-weight: bold;
+  color: #222222;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+.dark-theme .mc-ach-variant-name {
+  color: #e2f1f8;
+}
+
+.mc-ach-variant-tags {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
+  flex-wrap: wrap;
+}
+
+.tag-del, .tag-tier, .tag-status {
+  font-size: 9px;
+  padding: 1px 4px;
+  border-radius: 2px;
+  line-height: 1;
+}
+
+.tag-del.tag-regular {
+  background: #e2e8f0;
+  color: #334155;
+}
+.dark-theme .tag-del.tag-regular {
+  background: #1e293b;
+  color: #94a3b8;
+}
+
+.tag-del.tag-splash {
+  background: #fee2e2;
+  color: #991b1b;
+}
+.dark-theme .tag-del.tag-splash {
+  background: #3f1212;
+  color: #f87171;
+}
+
+.tag-del.tag-lingering {
+  background: #f3e8ff;
+  color: #6b21a8;
+}
+.dark-theme .tag-del.tag-lingering {
+  background: #301048;
+  color: #d8b4fe;
+}
+
+.tag-tier.tag-extended {
+  background: #fef3c7;
+  color: #92400e;
+}
+.dark-theme .tag-tier.tag-extended {
+  background: #39240a;
+  color: #fbbf24;
+}
+
+.tag-tier.tag-level2 {
+  background: #fef08a;
+  color: #854d0e;
+  font-weight: bold;
+}
+.dark-theme .tag-tier.tag-level2 {
+  background: #362908;
+  color: #fde047;
+}
+
+.tag-status.brewed {
+  color: #2e8b57;
+  font-weight: bold;
+}
+.dark-theme .tag-status.brewed {
+  color: #55ff55;
+}
+
+.tag-status.unbrewed {
+  color: #777777;
+}
+.dark-theme .tag-status.unbrewed {
+  color: #667788;
+}
+
 .mc-achievements-footer {
   display: flex;
   justify-content: flex-end;

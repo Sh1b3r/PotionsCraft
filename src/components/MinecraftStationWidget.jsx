@@ -25,6 +25,7 @@ import MobileStationShell, { useMobileStation, usePocketSettings } from './Mobil
 import { WIKI_REAGENTS, WIKI_POTIONS } from '../data/wikiTooltipsData';
 import { BREWING_STAND_DATA } from '../data/brewingStandData';
 import { POTIONS_DATA } from '../data/potionsData';
+import { identifyPotionVariant, TOTAL_VARIANTS_COUNT } from '../data/potionVariantsData';
 import './MinecraftStationWidget.css';
 
 // All valid Minecraft brewing reagents that can be placed in the reagent slot
@@ -114,6 +115,22 @@ export default function MinecraftStationWidget() {
   const addToast = useCallback((toast) => {
     setToastQueue(prev => [...prev, toast]);
   }, []);
+
+  const handleRestockInventory = useCallback(() => {
+    const newInv = buildInitialInventory();
+    inventoryRef.current = newInv;
+    setInventory(newInv);
+    playRefuelSound();
+    dragRef.current = null;
+    heldItemRef.current = null;
+    setHeldItem(null);
+    addToast({
+      name: 'Припаси поповнено',
+      customTitle: 'Інвентар оновлено!',
+      sprite: '/items/blaze_powder.png',
+      timestamp: Date.now()
+    });
+  }, [addToast]);
 
   useEffect(() => {
     if (!brewedToast && toastQueue.length > 0) {
@@ -1107,7 +1124,60 @@ export default function MinecraftStationWidget() {
           }
         }
 
-        // 4. Regular brew title if no achievements were unlocked during this brew
+        // 4. «Володар зіллєваріння» — track all 123 potion variants (regular, splash, lingering, +redstone, +glowstone)
+        let hasPotionOverlord = false;
+        try {
+          hasPotionOverlord =
+            localStorage.getItem('potionscraft_achievement_potion_overlord') === 'true' ||
+            localStorage.getItem('potionscraft_achievement_volodar_zillyavarinnya') === 'true' ||
+            JSON.parse(localStorage.getItem('potionscraft_achievements') || '{}').potion_overlord === true;
+        } catch {}
+
+        let cumulativeVariants = [];
+        try {
+          cumulativeVariants = JSON.parse(localStorage.getItem('potionscraft_brewed_variants') || '[]');
+        } catch {}
+
+        let newVariantsAdded = 0;
+        brewedList.forEach(p => {
+          const vKey = identifyPotionVariant(p);
+          if (vKey && !cumulativeVariants.includes(vKey)) {
+            cumulativeVariants.push(vKey);
+            newVariantsAdded++;
+          }
+        });
+
+        if (newVariantsAdded > 0) {
+          try {
+            localStorage.setItem('potionscraft_brewed_variants', JSON.stringify(cumulativeVariants));
+          } catch {}
+        }
+
+        const isOverlordComplete = cumulativeVariants.length >= TOTAL_VARIANTS_COUNT;
+        if (isOverlordComplete && !hasPotionOverlord) {
+          try {
+            localStorage.setItem('potionscraft_achievement_potion_overlord', 'true');
+            localStorage.setItem('potionscraft_achievement_volodar_zillyavarinnya', 'true');
+            const curAch = JSON.parse(localStorage.getItem('potionscraft_achievements') || '{}');
+            curAch.potion_overlord = true;
+            curAch.volodar_zillyavarinnya = true;
+            localStorage.setItem('potionscraft_achievements', JSON.stringify(curAch));
+          } catch {}
+          awardedAchievement = true;
+          addToast({
+            name: 'Володар зіллєваріння',
+            catalogId: 'potion_overlord',
+            fromCard,
+            timestamp: Date.now() + 3,
+            sprite: '/items/advancements_book.png',
+            customTitle: 'Гранд-досягнення здобуто!',
+            isAchievement: true,
+            potions: groupedPotions,
+            allPotions: allPotionsList
+          });
+        }
+
+        // 5. Regular brew title if no achievements were unlocked during this brew
         if (!awardedAchievement) {
           addToast({
             name: brewed.name,
@@ -1600,7 +1670,17 @@ export default function MinecraftStationWidget() {
 
           {/* ==================== LOWER SECTION: PLAYER INVENTORY ==================== */}
           <div className="mc-inventory-area">
-            <div className="mc-inventory-header-label">Інвентар</div>
+            <div className="mc-inventory-header-row">
+              <div className="mc-inventory-header-label">Інвентар</div>
+              <button
+                type="button"
+                className="mc-inventory-restock-btn"
+                onClick={handleRestockInventory}
+                title="Поповнити інвентар новими припасами (колби, порошок, редстоун, світлопил)"
+              >
+                <span className="restock-icon">🔄</span> Поповнити припаси
+              </button>
+            </div>
 
             {/* 3x18 Main Storage Grid (Slots 0..53) */}
             <div className="mc-inventory-grid">
