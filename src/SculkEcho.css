@@ -152,7 +152,7 @@ body.dark-theme .gradient-container { background-color: #0f766e; }
 .dark-theme .card-stat-pill { background: var(--sculk-raised); border-color: var(--sculk-edge); }
 .dark-theme .stat-value.time-val { color: var(--sculk-echo); }
 .dark-theme .card-upgrade-tag.redstone-tag { background: #452d3c; border-color: #906477; color: #f3afc2; }
-.dark-theme .card-upgrade-tag.glowstone-tag { background: #3e392c; border-color: #9c8d60; color: #eddbad; }
+.dark-theme .card-upgrade-tag.glowstone-tag { background: #3e392c; border-color: #9c8d60; color: #eddbad; text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8) !important; }
 
 .dark-theme .mc-mobile-launch {
   border: 2px solid #000000 !important;

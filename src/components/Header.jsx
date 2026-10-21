@@ -6,6 +6,7 @@ export default function Header({
   theme,
   onToggleTheme,
   onOpenEasterEgg,
+  onOpenAchievements,
 }) {
   const isDarkActive = theme ? theme === 'dark' || theme === 'sculk' : Boolean(isDark);
   const logoDaySrc = '/logo_light.svg';
@@ -44,6 +45,19 @@ export default function Header({
       </div>
 
       <div className="header-right-controls">
+        <button
+          type="button"
+          className="mc-header-achievements-btn"
+          onClick={() => {
+            playButtonClickSound();
+            if (onOpenAchievements) onOpenAchievements();
+          }}
+          title="Досягнення"
+          aria-label="Досягнення"
+        >
+          <img src="/items/advancements_book.svg" alt="Досягнення" className="mc-header-adv-icon" />
+        </button>
+
         {/* Authentic Minecraft Lever Toggle Switch (From Uiverse.io by zl306) */}
         <label className="switch" title={isDarkActive ? 'Перемкнути на День (Світла тема)' : 'Перемкнути на Sculk Echo (Темна тема)'}>
           <input

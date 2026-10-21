@@ -8,6 +8,7 @@ import { TooltipProvider } from './components/MinecraftTooltip';
 import PotionSearch from './components/PotionSearch';
 import BaseModifiersTable from './components/BaseModifiersTable';
 import MinecraftStationWidget from './components/MinecraftStationWidget';
+import AchievementsModal from './components/AchievementsModal';
 import { POTIONS_DATA } from './data/potionsData';
 import './App.css';
 import './SculkEcho.css';
@@ -40,6 +41,7 @@ export default function App() {
   // Modals
   const [activeModalPotion, setActiveModalPotion] = useState(null);
   const [activeEasterEgg, setActiveEasterEgg] = useState(null);
+  const [isAchievementsOpen, setIsAchievementsOpen] = useState(false);
 
   const logoDaySrc = '/logo_light.svg';
   const logoSculkSrc = '/logo_dark.svg';
@@ -209,6 +211,7 @@ export default function App() {
           theme={theme}
           onToggleTheme={handleToggleTheme}
           onOpenEasterEgg={handleOpenEasterEgg}
+          onOpenAchievements={() => setIsAchievementsOpen(true)}
         />
 
         {/* Main Body Container */}
@@ -324,6 +327,13 @@ export default function App() {
         <EasterEggModal
           type={activeEasterEgg}
           onClose={handleCloseEasterEgg}
+        />
+
+        {/* Global Achievements Modal */}
+        <AchievementsModal
+          isOpen={isAchievementsOpen}
+          onClose={() => setIsAchievementsOpen(false)}
+          isDark={isDark}
         />
       </div>
     </TooltipProvider>

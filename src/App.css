@@ -361,6 +361,7 @@ header#header2 {
   box-sizing: border-box;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
   transition: var(--theme-paint-transition);
+  view-transition-name: main-header;
 }
 
 #header2.light-theme {
@@ -665,8 +666,9 @@ header#header2 {
 }
 
 .dark-theme .card.dark-theme .mcui-Brewing_Stand {
-  background-color: #081a24 !important;
-  border-right-color: #02090e !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
 }
 
 .body2 h2,
@@ -1507,7 +1509,9 @@ body.light-theme .minecraft-styled-table tbody tr:hover,
 }
 
 .card.light-theme .mcui-Brewing_Stand {
-  background-color: #c6c6c6;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
 }
 
 .card.dark-theme {
@@ -1522,8 +1526,9 @@ body.light-theme .minecraft-styled-table tbody tr:hover,
 }
 
 .card.dark-theme .mcui-Brewing_Stand {
-  background-color: #0b1e28;
-  border: none;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
 }
 
 /* ==================== MINECRAFT WIKI MCUI BREWING STAND ==================== */
@@ -2359,6 +2364,7 @@ body.dark-theme .invslot.mcui-output3 {
   background-image: linear-gradient(180deg, #a16207 0%, #713f12 100%);
   color: #fef08a;
   box-shadow: inset 1px 1px 0px #eab308, inset -1px -1px 0px #422006;
+  text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8) !important;
 }
 
 /* ==================== MINECRAFT RECIPE ACTION BUTTON ("Встановити у стійку") ==================== */
@@ -2676,24 +2682,55 @@ body.dark-theme .card-load-stand-btn:active {
   position: absolute;
   top: 15px;
   right: 15px;
-  background: rgba(0, 0, 0, 0.3);
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  color: #fff;
-  width: 36px;
-  height: 36px;
-  font-size: 20px;
-  cursor: pointer;
-  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  width: 32px;
+  height: 32px;
+  background-color: #c6c6c6;
+  background-image: linear-gradient(180deg, #dbdbdb 0%, #b8b8b8 100%);
+  border: 2px solid #000000 !important;
+  border-radius: 0 !important;
+  box-shadow: inset 2px 2px 0px #ffffff, inset -2px -2px 0px #555555;
+  color: #1e1e1f;
+  font-size: 16px;
+  font-family: 'Minecraft', monospace;
+  cursor: pointer;
+  text-shadow: 1px 1px 0px #ffffff;
   z-index: 10;
+  user-select: none;
+  transition: transform 0.06s ease;
 }
 
 .modal-close-btn:hover {
-  background: #ff5555;
-  border-color: #ff3333;
+  background-color: #d6d6d6;
+  color: #ef4444;
+}
+
+.modal-close-btn:active {
+  background-color: #a8a8a8;
+  box-shadow: inset 2px 2px 0px #555555, inset -2px -2px 0px #ffffff;
+  transform: translateY(1px);
+}
+
+.dark-theme .modal-close-btn {
+  background-color: #0e2430;
+  background-image: linear-gradient(180deg, #153443 0%, #0b1c26 100%);
+  border-color: #000000 !important;
+  box-shadow: inset 2px 2px 0px #22596e, inset -2px -2px 0px #040e14;
+  color: #54dfcd;
+  text-shadow: 1px 1px 0px #020b0f;
+}
+
+.dark-theme .modal-close-btn:hover {
+  background-color: #163d4f;
+  color: #ff5555;
+}
+
+.dark-theme .modal-close-btn:active {
+  background-color: #08161e;
+  box-shadow: inset 2px 2px 0px #040e14, inset -2px -2px 0px #22596e;
+  transform: translateY(1px);
 }
 
 .pixel-title {
@@ -2702,10 +2739,52 @@ body.dark-theme .card-load-stand-btn:active {
 }
 
 .pixel-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
   font-family: 'Minecraft', monospace;
   cursor: pointer;
-  border: 2px solid;
-  border-radius: 4px;
+  border: 2px solid #000000 !important;
+  border-radius: 0 !important;
+  background-color: #c6c6c6;
+  background-image: linear-gradient(180deg, #dbdbdb 0%, #b8b8b8 100%);
+  box-shadow: inset 2px 2px 0px #ffffff, inset -2px -2px 0px #555555;
+  color: #1e1e1f;
+  text-shadow: 1px 1px 0px #ffffff;
+  user-select: none;
+  transition: transform 0.06s ease;
+}
+
+.pixel-btn:hover {
+  background-color: #d6d6d6;
+  color: #000000;
+}
+
+.pixel-btn:active {
+  background-color: #a8a8a8;
+  box-shadow: inset 2px 2px 0px #555555, inset -2px -2px 0px #ffffff;
+  transform: translateY(1px);
+}
+
+.dark-theme .pixel-btn {
+  background-color: #0e2430;
+  background-image: linear-gradient(180deg, #153443 0%, #0b1c26 100%);
+  border-color: #000000 !important;
+  box-shadow: inset 2px 2px 0px #22596e, inset -2px -2px 0px #040e14;
+  color: #54dfcd;
+  text-shadow: 1px 1px 0px #020b0f;
+}
+
+.dark-theme .pixel-btn:hover {
+  background-color: #163d4f;
+  color: #ffffa0;
+}
+
+.dark-theme .pixel-btn:active {
+  background-color: #08161e;
+  box-shadow: inset 2px 2px 0px #040e14, inset -2px -2px 0px #22596e;
+  transform: translateY(1px);
 }
 
 /* 3D Potion Modal */
@@ -2754,11 +2833,30 @@ body.dark-theme .card-load-stand-btn:active {
 .drink-btn {
   margin-top: 15px;
   width: 100%;
-  padding: 12px;
-  background: #138f28;
-  color: #fff;
-  border-color: #1ed760;
-  font-size: 16px;
+  padding: 10px 14px;
+  background-color: #2e8b57;
+  background-image: linear-gradient(180deg, #389e65 0%, #246e45 100%);
+  border: 2px solid #000000 !important;
+  border-radius: 0 !important;
+  box-shadow: inset 2px 2px 0px #52c788, inset -2px -2px 0px #134228;
+  color: #ffffff;
+  font-family: 'Minecraft', monospace;
+  font-size: 15px;
+  text-shadow: 1px 1px 0px #0e2e1c;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.06s ease;
+}
+
+.drink-btn:hover {
+  background-color: #389e65;
+  color: #ffffa0;
+}
+
+.drink-btn:active {
+  background-color: #1b5e39;
+  box-shadow: inset 2px 2px 0px #134228, inset -2px -2px 0px #52c788;
+  transform: translateY(1px);
 }
 
 .modal-header-flex {
@@ -2829,21 +2927,34 @@ body.dark-theme .card-load-stand-btn:active {
   position: fixed;
   top: 20px;
   right: 20px;
-  background: rgba(255, 255, 255, 0.2);
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 8px 16px;
-  border-radius: 4px;
-  font-family: 'Minecraft', sans-serif;
+  background-color: #c6c6c6;
+  background-image: linear-gradient(180deg, #dbdbdb 0%, #b8b8b8 100%);
+  border: 2px solid #000000 !important;
+  border-radius: 0 !important;
+  box-shadow: inset 2px 2px 0px #ffffff, inset -2px -2px 0px #555555;
+  color: #1e1e1f;
+  font-family: 'Minecraft', monospace;
   font-size: 14px;
+  text-shadow: 1px 1px 0px #ffffff;
   cursor: pointer;
   z-index: 10001;
-  transition: all 0.2s;
+  user-select: none;
+  transition: transform 0.06s ease;
 }
 
 .easter-egg-back-btn:hover {
-  background: rgba(255, 255, 255, 0.4);
-  border-color: #fff;
+  background-color: #d6d6d6;
+  color: #000000;
+}
+
+.easter-egg-back-btn:active {
+  background-color: #a8a8a8;
+  box-shadow: inset 2px 2px 0px #555555, inset -2px -2px 0px #ffffff;
+  transform: translateY(1px);
 }
 
 /* no.html style */
@@ -3143,6 +3254,8 @@ body.dark-theme .card-load-stand-btn:active {
   }
 
   .mobile-brewing-stand-container .mcui-Brewing_Stand {
+    background: transparent !important;
+    background-color: transparent !important;
     border: none !important;
     border-right: none !important;
     margin: 0 !important;
@@ -3325,16 +3438,25 @@ html[data-theme-transition="crossfade"]::view-transition {
 }
 
 html[data-theme-transition="crossfade"]::view-transition-group(root),
-html[data-theme-transition="crossfade"]::view-transition-old(root) {
+html[data-theme-transition="crossfade"]::view-transition-old(root),
+html[data-theme-transition="crossfade"]::view-transition-group(main-header),
+html[data-theme-transition="crossfade"]::view-transition-old(main-header) {
   animation: none;
 }
 
+html[data-theme-transition="crossfade"]::view-transition-group(main-header) {
+  z-index: 1000;
+}
+
 html[data-theme-transition="crossfade"]::view-transition-old(root),
-html[data-theme-transition="crossfade"]::view-transition-new(root) {
+html[data-theme-transition="crossfade"]::view-transition-new(root),
+html[data-theme-transition="crossfade"]::view-transition-old(main-header),
+html[data-theme-transition="crossfade"]::view-transition-new(main-header) {
   mix-blend-mode: normal;
 }
 
-html[data-theme-transition="crossfade"]::view-transition-new(root) {
+html[data-theme-transition="crossfade"]::view-transition-new(root),
+html[data-theme-transition="crossfade"]::view-transition-new(main-header) {
   animation: theme-crossfade var(--theme-duration) var(--theme-easing) both;
 }
 
@@ -3482,4 +3604,783 @@ body.light-theme .mc-pocket-split>input {
     border: 2px solid #000000 !important;
     text-shadow: 1px 1px 0px #313674 !important;
   }
+}
+
+/* ==================== PC HEADER ACHIEVEMENTS BUTTON (Minecraft Beveled GUI design) ==================== */
+.mc-header-achievements-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  padding: 0;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  border: 2px solid #000000 !important;
+  border-radius: 0 !important;
+  background-color: #c6c6c6;
+  background-image: linear-gradient(180deg, #dbdbdb 0%, #b8b8b8 100%);
+  box-shadow: inset 2px 2px 0px #ffffff, inset -2px -2px 0px #555555;
+  color: #1e1e1f;
+  font-family: 'Minecraft', monospace;
+  font-size: 13px;
+  line-height: 1;
+  letter-spacing: 0.5px;
+  text-shadow: 1px 1px 0px #ffffff;
+  cursor: pointer;
+  user-select: none;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  transition: transform 0.06s ease;
+  white-space: nowrap;
+}
+
+.mc-header-achievements-btn:has(span) {
+  width: auto;
+  padding: 0 10px;
+}
+
+.dark-theme .mc-header-achievements-btn {
+  background-color: #0e2430;
+  background-image: linear-gradient(180deg, #153443 0%, #0b1c26 100%);
+  border-color: #000000 !important;
+  box-shadow: inset 2px 2px 0px #22596e, inset -2px -2px 0px #040e14;
+  color: #54dfcd;
+  text-shadow: 1px 1px 0px #020b0f;
+}
+
+.mc-header-achievements-btn:hover {
+  background-color: #d6d6d6;
+  background-image: linear-gradient(180deg, #e8e8e8 0%, #c4c4c4 100%);
+  box-shadow: inset 2px 2px 0px #ffffff, inset -2px -2px 0px #555555;
+  color: #000000;
+  text-shadow: 1px 1px 0px #ffffff;
+}
+
+.dark-theme .mc-header-achievements-btn:hover {
+  background-color: #163d4f;
+  background-image: linear-gradient(180deg, #1f4f64 0%, #102e3b 100%);
+  box-shadow: inset 2px 2px 0px #317f9d, inset -2px -2px 0px #040e14;
+  color: #ffffa0;
+  text-shadow: 1px 1px 0px #2a280c;
+}
+
+.mc-header-achievements-btn:active {
+  background-color: #a8a8a8;
+  background-image: none;
+  box-shadow: inset 2px 2px 0px #555555, inset -2px -2px 0px #ffffff;
+  color: #000000;
+  transform: translateY(1px);
+}
+
+.dark-theme .mc-header-achievements-btn:active {
+  background-color: #08161e;
+  background-image: none;
+  box-shadow: inset 2px 2px 0px #040e14, inset -2px -2px 0px #22596e;
+  color: #54dfcd;
+  transform: translateY(1px);
+}
+
+.mc-header-adv-icon {
+  width: 22px;
+  height: 22px;
+  display: block;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+@media (max-width: 580px) {
+  .mc-header-achievements-btn span {
+    display: none;
+  }
+  .mc-header-achievements-btn {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    padding: 0;
+  }
+}
+
+/* ==================== ACHIEVEMENTS MODAL WINDOW ==================== */
+.mc-achievements-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+  animation: fadeIn 0.2s ease;
+}
+
+.mc-achievements-window {
+  position: relative;
+  width: 100%;
+  max-width: 640px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  background: #c6c6c6;
+  border: 3px solid #000000;
+  box-shadow: inset 2px 2px 0px #ffffff, inset -2px -2px 0px #555555, 0 16px 36px rgba(0, 0, 0, 0.85);
+  font-family: 'Minecraft', monospace;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+.mc-achievements-window.dark-theme {
+  background: #17212d;
+  border-color: #000000;
+  box-shadow: inset 2px 2px 0px #2c3f57, inset -2px -2px 0px #0a0f16, 0 16px 36px rgba(0, 0, 0, 0.95);
+  color: #ffffff;
+}
+
+.mc-achievements-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: #a0a0a0;
+  border-bottom: 2px solid #555555;
+  box-shadow: inset 0 1px 0 #ffffff;
+}
+
+.dark-theme .mc-achievements-header {
+  background: #121922;
+  border-bottom: 2px solid #090e15;
+  box-shadow: inset 0 1px 0 #28374a;
+}
+
+.mc-achievements-header-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mc-achievements-title-icon {
+  width: 24px;
+  height: 24px;
+  image-rendering: pixelated;
+  object-fit: contain;
+}
+
+.mc-achievements-header-title h2 {
+  margin: 0;
+  font-size: 18px;
+  color: #2b2b2b;
+  text-shadow: 1px 1px 0 #ffffff;
+}
+
+.dark-theme .mc-achievements-header-title h2 {
+  color: #ffff55;
+  text-shadow: 2px 2px 0 #3f3f00;
+}
+
+.mc-achievements-close-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  background-color: #c6c6c6;
+  background-image: linear-gradient(180deg, #dbdbdb 0%, #b8b8b8 100%);
+  border: 2px solid #000000 !important;
+  border-radius: 0 !important;
+  box-shadow: inset 2px 2px 0px #ffffff, inset -2px -2px 0px #555555;
+  color: #1e1e1f;
+  font-size: 14px;
+  font-family: 'Minecraft', monospace;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+  text-shadow: 1px 1px 0px #ffffff;
+  user-select: none;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: transform 0.06s ease;
+}
+
+.mc-achievements-close-btn:hover {
+  background-color: #d6d6d6;
+  color: #ef4444;
+}
+
+.mc-achievements-close-btn:active {
+  background-color: #a8a8a8;
+  background-image: none;
+  box-shadow: inset 2px 2px 0px #555555, inset -2px -2px 0px #ffffff;
+  transform: translateY(1px);
+}
+
+.dark-theme .mc-achievements-close-btn {
+  background-color: #0e2430;
+  background-image: linear-gradient(180deg, #153443 0%, #0b1c26 100%);
+  border-color: #000000 !important;
+  box-shadow: inset 2px 2px 0px #22596e, inset -2px -2px 0px #040e14;
+  color: #54dfcd;
+  text-shadow: 1px 1px 0px #020b0f;
+}
+
+.dark-theme .mc-achievements-close-btn:hover {
+  background-color: #163d4f;
+  color: #ff5555;
+}
+
+.dark-theme .mc-achievements-close-btn:active {
+  background-color: #08161e;
+  box-shadow: inset 2px 2px 0px #040e14, inset -2px -2px 0px #22596e;
+  transform: translateY(1px);
+}
+
+.mc-achievements-stats-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background: #b0b0b0;
+  border-bottom: 2px solid #888888;
+  padding: 8px 12px;
+  font-size: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.dark-theme .mc-achievements-stats-bar {
+  background: #0f151c;
+  border-bottom: 2px solid #1a2533;
+}
+
+.mc-ach-stat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mc-ach-stat-label {
+  color: #444444;
+}
+.dark-theme .mc-ach-stat-label {
+  color: #8c9ea8;
+}
+
+.mc-ach-stat-val {
+  font-weight: bold;
+  font-size: 13px;
+  color: #111111;
+}
+.dark-theme .mc-ach-stat-val {
+  color: #ffffff;
+}
+.mc-ach-stat-val.highlight {
+  color: #2e8b57;
+}
+.dark-theme .mc-ach-stat-val.highlight {
+  color: #55ff55;
+}
+.mc-ach-stat-val.gold {
+  color: #b8860b;
+}
+.dark-theme .mc-ach-stat-val.gold {
+  color: #ffff55;
+}
+
+.mc-achievements-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mc-achievements-section-title {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333333;
+  text-shadow: 1px 1px 0 #ffffff;
+  border-bottom: 1px dashed #888888;
+  padding-bottom: 4px;
+  margin-top: 4px;
+}
+
+.dark-theme .mc-achievements-section-title {
+  color: #79f1d9;
+  text-shadow: 2px 2px 0 #090e15;
+  border-bottom-color: #243447;
+}
+
+.mc-achievements-section-title.ultimate-title {
+  color: #b8860b;
+  margin-top: 10px;
+}
+.dark-theme .mc-achievements-section-title.ultimate-title {
+  color: #ffff55;
+}
+
+.mc-achievements-cards-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 10px;
+}
+
+.mc-ach-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: #dbdbdb;
+  border: 2px solid #888888;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.dark-theme .mc-ach-card {
+  background: #141c26;
+  border-color: #253344;
+}
+
+.mc-ach-card.is-unlocked {
+  border-color: #2e8b57;
+  background: #e3faea;
+}
+.dark-theme .mc-ach-card.is-unlocked {
+  border-color: #55ff55;
+  background: #0f2219;
+}
+
+.mc-ach-card.is-locked {
+  opacity: 0.8;
+}
+
+.mc-ach-card-icon-box {
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  background: #999999;
+  border: 2px solid #555555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.dark-theme .mc-ach-card-icon-box {
+  background: #090e15;
+  border-color: #35465c;
+}
+.mc-ach-card.is-unlocked .mc-ach-card-icon-box {
+  border-color: #2e8b57;
+}
+.dark-theme .mc-ach-card.is-unlocked .mc-ach-card-icon-box {
+  border-color: #55ff55;
+}
+
+.mc-ach-card-icon-box img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.mc-ach-card-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.mc-ach-card-name {
+  font-size: 14px;
+  font-weight: bold;
+  color: #222222;
+  margin-bottom: 3px;
+}
+.dark-theme .mc-ach-card-name {
+  color: #ffffff;
+}
+.mc-ach-card.is-unlocked .mc-ach-card-name {
+  color: #1a6d3f;
+}
+.dark-theme .mc-ach-card.is-unlocked .mc-ach-card-name {
+  color: #ffff55;
+}
+
+.mc-ach-card-desc {
+  font-size: 12px;
+  color: #555555;
+  line-height: 1.3;
+  margin-bottom: 5px;
+}
+.dark-theme .mc-ach-card-desc {
+  color: #8c9ea8;
+}
+
+.mc-ach-card-status {
+  font-size: 12px;
+  font-weight: bold;
+}
+.unlocked-text {
+  color: #2e8b57;
+}
+.dark-theme .unlocked-text {
+  color: #55ff55;
+}
+.locked-text {
+  color: #777777;
+}
+.dark-theme .locked-text {
+  color: #667788;
+}
+.gold-text {
+  color: #b8860b !important;
+}
+.dark-theme .gold-text {
+  color: #ffff55 !important;
+}
+
+/* Prepared Potions Section */
+.mc-achievements-potions-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.mc-ach-filters {
+  display: flex;
+  gap: 4px;
+}
+
+.mc-ach-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #c6c6c6;
+  background-image: linear-gradient(180deg, #dbdbdb 0%, #b8b8b8 100%);
+  border: 2px solid #000000 !important;
+  border-radius: 0 !important;
+  box-shadow: inset 2px 2px 0px #ffffff, inset -2px -2px 0px #555555;
+  color: #1e1e1f;
+  font-family: 'Minecraft', monospace;
+  font-size: 11px;
+  padding: 3px 9px;
+  cursor: pointer;
+  text-shadow: 1px 1px 0px #ffffff;
+  user-select: none;
+  transition: transform 0.06s ease;
+}
+
+.mc-ach-filter-btn:hover {
+  background-color: #d6d6d6;
+  color: #000000;
+}
+
+.mc-ach-filter-btn:active,
+.mc-ach-filter-btn.active {
+  background-color: #2e8b57;
+  background-image: linear-gradient(180deg, #389e65 0%, #246e45 100%);
+  box-shadow: inset 2px 2px 0px #52c788, inset -2px -2px 0px #134228;
+  color: #ffffff;
+  text-shadow: 1px 1px 0px #0e2e1c;
+}
+
+.dark-theme .mc-ach-filter-btn {
+  background-color: #0e2430;
+  background-image: linear-gradient(180deg, #153443 0%, #0b1c26 100%);
+  border-color: #000000 !important;
+  box-shadow: inset 2px 2px 0px #22596e, inset -2px -2px 0px #040e14;
+  color: #54dfcd;
+  text-shadow: 1px 1px 0px #020b0f;
+}
+
+.dark-theme .mc-ach-filter-btn:hover {
+  color: #ffffa0;
+}
+
+.dark-theme .mc-ach-filter-btn:active,
+.dark-theme .mc-ach-filter-btn.active {
+  background-color: #174254;
+  background-image: linear-gradient(180deg, #205368 0%, #113645 100%);
+  box-shadow: inset 2px 2px 0px #317894, inset -2px -2px 0px #05141b;
+  color: #ffffa0;
+  text-shadow: 1px 1px 0px #353314;
+}
+
+.mc-ach-potions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 8px;
+  max-height: 220px;
+  overflow-y: auto;
+  padding: 4px;
+  background: #b8b8b8;
+  border: 2px solid #888;
+  box-shadow: inset 1px 1px 0 #555;
+}
+.dark-theme .mc-ach-potions-grid {
+  background: #111822;
+  border-color: #243447;
+  box-shadow: inset 1px 1px 0 #090e15;
+}
+
+.mc-ach-potion-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #cccccc;
+  border: 1px solid #999;
+  padding: 6px;
+  box-sizing: border-box;
+}
+.dark-theme .mc-ach-potion-item {
+  background: #17212d;
+  border-color: #243447;
+}
+
+.mc-ach-potion-item.brewed {
+  border-color: #2e8b57;
+  background: #dbf5e4;
+}
+.dark-theme .mc-ach-potion-item.brewed {
+  border-color: #28543f;
+  background: #0f241c;
+}
+
+.mc-ach-potion-item.unbrewed {
+  opacity: 0.6;
+}
+
+.mc-ach-potion-icon-box {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mc-ach-potion-icon {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+.mc-ach-potion-item.unbrewed .mc-ach-potion-icon {
+  filter: grayscale(100%) brightness(0.7);
+}
+
+.mc-ach-potion-check {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  font-size: 11px;
+  font-weight: bold;
+  color: #2e8b57;
+  text-shadow: 1px 1px 0 #ffffff;
+}
+.dark-theme .mc-ach-potion-check {
+  color: #55ff55;
+  text-shadow: 1px 1px 0 #000000;
+}
+
+.mc-ach-potion-manual {
+  position: absolute;
+  top: -6px;
+  left: -4px;
+  font-size: 11px;
+  color: #b8860b;
+}
+.dark-theme .mc-ach-potion-manual {
+  color: #ffff55;
+}
+
+.mc-ach-potion-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.mc-ach-potion-name {
+  font-size: 11px;
+  font-weight: bold;
+  color: #222;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dark-theme .mc-ach-potion-name {
+  color: #e2f1f8;
+}
+
+.mc-ach-potion-tag {
+  font-size: 10px;
+}
+.tag-brewed {
+  color: #2e8b57;
+  font-weight: bold;
+}
+.dark-theme .tag-brewed {
+  color: #55ff55;
+}
+.tag-unbrewed {
+  color: #777777;
+}
+.dark-theme .tag-unbrewed {
+  color: #667788;
+}
+
+/* Ultimate Card */
+.ultimate-card {
+  border: 2px solid #b8860b;
+  background: #fff8e8;
+}
+.dark-theme .ultimate-card {
+  border-color: #ffff55;
+  background: #232213;
+}
+.ultimate-card.is-unlocked {
+  border-color: #ffd700;
+  box-shadow: 0 0 12px rgba(255, 215, 0, 0.4);
+}
+
+.ultimate-icon-box {
+  border-color: #b8860b !important;
+}
+.dark-theme .ultimate-icon-box {
+  border-color: #ffff55 !important;
+}
+
+.ultimate-crown {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  font-size: 14px;
+}
+
+.ultimate-name {
+  color: #b8860b;
+  font-size: 15px;
+}
+.dark-theme .ultimate-name {
+  color: #ffff55;
+}
+
+.mc-ach-progress-bar-wrap {
+  width: 100%;
+  height: 8px;
+  background: #999999;
+  border: 1px solid #666666;
+  margin: 6px 0;
+  overflow: hidden;
+}
+.dark-theme .mc-ach-progress-bar-wrap {
+  background: #090e15;
+  border-color: #2c3f57;
+}
+
+.mc-ach-progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #b8860b 0%, #ffd700 100%);
+  transition: width 0.3s ease;
+}
+.dark-theme .mc-ach-progress-bar-fill {
+  background: linear-gradient(90deg, #55ff55 0%, #ffff55 100%);
+}
+
+.mc-achievements-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 16px;
+  background: #a0a0a0;
+  border-top: 2px solid #555555;
+}
+.dark-theme .mc-achievements-footer {
+  background: #121922;
+  border-top-color: #090e15;
+}
+
+.mc-ach-done-btn {
+  width: auto !important;
+  min-width: 100px;
+  height: 32px !important;
+}
+
+/* ==================== UNIVERSAL MINECRAFT BEVELED BUTTONS ==================== */
+.mc-btn,
+.mc-pocket-settings-actions button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 14px;
+  box-sizing: border-box;
+  border: 2px solid #000000 !important;
+  border-radius: 0 !important;
+  background-color: #c6c6c6;
+  background-image: linear-gradient(180deg, #dbdbdb 0%, #b8b8b8 100%);
+  box-shadow: inset 2px 2px 0px #ffffff, inset -2px -2px 0px #555555;
+  color: #1e1e1f;
+  font-family: 'Minecraft', monospace;
+  font-size: 13px;
+  line-height: 1;
+  text-shadow: 1px 1px 0px #ffffff;
+  cursor: pointer;
+  user-select: none;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  transition: transform 0.06s ease;
+}
+
+.mc-btn:hover,
+.mc-pocket-settings-actions button:hover {
+  background-color: #d6d6d6;
+  background-image: linear-gradient(180deg, #e8e8e8 0%, #c4c4c4 100%);
+  box-shadow: inset 2px 2px 0px #ffffff, inset -2px -2px 0px #555555;
+  color: #000000;
+  text-shadow: 1px 1px 0px #ffffff;
+}
+
+.mc-btn:active,
+.mc-pocket-settings-actions button:active {
+  background-color: #a8a8a8;
+  background-image: none;
+  box-shadow: inset 2px 2px 0px #555555, inset -2px -2px 0px #ffffff;
+  color: #000000;
+  transform: translateY(1px);
+}
+
+.dark-theme .mc-btn,
+.dark-theme .mc-pocket-settings-actions button {
+  background-color: #0e2430;
+  background-image: linear-gradient(180deg, #153443 0%, #0b1c26 100%);
+  border-color: #000000 !important;
+  box-shadow: inset 2px 2px 0px #22596e, inset -2px -2px 0px #040e14;
+  color: #54dfcd;
+  text-shadow: 1px 1px 0px #020b0f;
+}
+
+.dark-theme .mc-btn:hover,
+.dark-theme .mc-pocket-settings-actions button:hover {
+  background-color: #163d4f;
+  background-image: linear-gradient(180deg, #1f4f64 0%, #102e3b 100%);
+  box-shadow: inset 2px 2px 0px #317f9d, inset -2px -2px 0px #040e14;
+  color: #ffffa0;
+  text-shadow: 1px 1px 0px #2a280c;
+}
+
+.dark-theme .mc-btn:active,
+.dark-theme .mc-pocket-settings-actions button:active {
+  background-color: #08161e;
+  background-image: none;
+  box-shadow: inset 2px 2px 0px #040e14, inset -2px -2px 0px #22596e;
+  color: #54dfcd;
+  transform: translateY(1px);
 }

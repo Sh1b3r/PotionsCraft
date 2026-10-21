@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal, flushSync } from 'react-dom';
 import BrewingStandFrame from './BrewingStandFrame';
+import AchievementsModal from './AchievementsModal';
 
 export function useMobileStation() {
   const [mobile, setMobile] = useState(() => window.matchMedia('(max-width: 720px), (pointer: coarse)').matches);
@@ -28,14 +29,20 @@ export function usePocketSettings() {
 export default function MobileStationShell({ mobile, children, onClose, onOpen, settings, onSettingsChange }) {
   const [open, setOpen] = useState(false);
   const [config, setConfig] = useState(false);
+  const [showAchievements, setShowAchievements] = useState(false);
   const [viewport, setViewport] = useState({ width: window.innerWidth, height: window.innerHeight });
   const panel = useRef(null);
   const launchButton = useRef(null);
   const openedRef = useRef(false);
+
+  const openAchievements = () => {
+    setShowAchievements(true);
+  };
+
   const close = () => {
     openedRef.current = false;
     screen.orientation?.unlock?.();
-    onClose(); setOpen(false); setConfig(false);
+    onClose(); setOpen(false); setConfig(false); setShowAchievements(false);
     if (document.fullscreenElement === panel.current) document.exitFullscreen?.().catch(() => {});
     launchButton.current?.focus();
   };
@@ -52,11 +59,15 @@ export default function MobileStationShell({ mobile, children, onClose, onOpen, 
     const previousInert = app?.inert;
     document.body.style.overflow = 'hidden';
     if (app) app.inert = true;
-    (panel.current.querySelector(config ? '.mc-pocket-settings select' : '.mc-mobile-heading button'))?.focus();
+    (panel.current.querySelector(config ? '.mc-pocket-settings select' : showAchievements ? '.mc-pocket-adv-close' : '.mc-mobile-heading button'))?.focus();
     const escape = event => {
-      if (event.key === 'Escape') { if (config) setConfig(false); else close(); }
+      if (event.key === 'Escape') {
+        if (config) setConfig(false);
+        else if (showAchievements) setShowAchievements(false);
+        else close();
+      }
       if (event.key === 'Tab') {
-        const root = panel.current.querySelector('.mc-pocket-settings, .mc-pocket-split') || panel.current;
+        const root = panel.current.querySelector('.mc-pocket-settings, .mc-pocket-split, .mc-pocket-advancements-modal') || panel.current;
         const controls = [...root.querySelectorAll('button:not(:disabled), input, select')].filter(el => el.getClientRects().length);
         const index = controls.indexOf(document.activeElement);
         event.preventDefault();
@@ -65,7 +76,7 @@ export default function MobileStationShell({ mobile, children, onClose, onOpen, 
     };
     window.addEventListener('keydown', escape);
     return () => { document.body.style.overflow = previousOverflow; if (app) app.inert = previousInert; window.removeEventListener('keydown', escape); };
-  }, [open, config]);
+  }, [open, config, showAchievements]);
   const launch = async () => {
     onOpen();
     openedRef.current = true;
@@ -85,10 +96,25 @@ export default function MobileStationShell({ mobile, children, onClose, onOpen, 
     </button>
     {open && createPortal(<div ref={panel} role="dialog" aria-modal="true" aria-label="Варильна стійка та верстак" className="mc-station-shell is-mobile is-open">
       <div className={`mc-station-viewport ${rotated ? 'is-rotated' : ''}`} style={{ width: rotated ? viewport.height : viewport.width, height: rotated ? viewport.width : viewport.height }}>
-        <header className="mc-mobile-heading"><button type="button" className="mc-pocket-back" onClick={close} aria-label="Закрити верстак">‹ <span>Назад</span></button><span>Варіння та крафт</span><div>
-          <button type="button" onClick={() => setConfig(true)} aria-label="Налаштування керування">⚙</button>
-        </div></header>
-        <div className="mc-station-content" inert={config ? true : undefined}>{children}</div>
+        <header className="mc-mobile-heading">
+          <div className="mc-mobile-heading-left">
+            <button type="button" className="mc-pocket-btn mc-pocket-back" onClick={close} aria-label="Закрити верстак">
+              ‹ <span>Назад</span>
+            </button>
+            <button type="button" className="mc-pocket-btn mc-pocket-settings-btn" onClick={() => setConfig(true)} aria-label="Налаштування керування">
+              ⚙ <span>Опції</span>
+            </button>
+          </div>
+
+          <span className="mc-mobile-heading-title">Варіння та крафт</span>
+
+          <div className="mc-mobile-heading-right">
+            <button type="button" className="mc-pocket-btn mc-pocket-achievements-btn" onClick={openAchievements} aria-label="Досягнення" title="Досягнення">
+              <img src="/items/advancements_book.svg" alt="Досягнення" className="mc-pocket-adv-icon" />
+            </button>
+          </div>
+        </header>
+        <div className="mc-station-content" inert={config || showAchievements ? true : undefined}>{children}</div>
         {config && <div className="mc-pocket-overlay"><section className="mc-pocket-settings" role="dialog" aria-modal="true" aria-label="Налаштування керування">
           <h3>Сенсорне керування</h3>
           <label>Розмір слотів<select value={settings.size} onChange={e => onSettingsChange({ ...settings, size: Number(e.target.value) })}><option value="0.9">Компактні</option><option value="1">Звичайні</option><option value="1.15">Великі</option></select></label>
@@ -98,6 +124,11 @@ export default function MobileStationShell({ mobile, children, onClose, onOpen, 
           <label><span>Книга рецептів</span><input type="checkbox" checked={settings.recipeBook} onChange={e => onSettingsChange({ ...settings, recipeBook: e.target.checked })} /></label>
           <div className="mc-pocket-settings-actions"><button type="button" onClick={() => onSettingsChange(POCKET_DEFAULTS)}>Скинути</button><button type="button" onClick={() => setConfig(false)}>Готово</button></div>
         </section></div>}
+        <AchievementsModal
+          isOpen={showAchievements}
+          onClose={() => setShowAchievements(false)}
+          isDark={document.body.classList.contains('dark-theme')}
+        />
       </div>
     </div>, document.body)}
   </>;
