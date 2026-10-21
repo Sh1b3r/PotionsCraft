@@ -113,7 +113,7 @@ export default function MinecraftStationWidget() {
   const [toastQueue, setToastQueue] = useState([]);
 
   const addToast = useCallback((toast) => {
-    setToastQueue(prev => [...prev, toast]);
+    setBrewedToast(toast);
   }, []);
 
   const handleRestockInventory = useCallback(() => {
@@ -131,13 +131,6 @@ export default function MinecraftStationWidget() {
       timestamp: Date.now()
     });
   }, [addToast]);
-
-  useEffect(() => {
-    if (!brewedToast && toastQueue.length > 0) {
-      setBrewedToast(toastQueue[0]);
-      setToastQueue(prev => prev.slice(1));
-    }
-  }, [brewedToast, toastQueue]);
 
   // Refs to always access freshest state inside timer, drag & click handlers
   const inventoryRef = useRef(inventory);
@@ -1185,8 +1178,8 @@ export default function MinecraftStationWidget() {
             fromCard,
             timestamp: Date.now(),
             sprite,
-            customTitle: 'Зілля зварено!',
-            isAchievement: false,
+            customTitle: 'Досягнення отримано!',
+            isAchievement: true,
             potions: groupedPotions,
             allPotions: allPotionsList
           });
@@ -1831,6 +1824,7 @@ export default function MinecraftStationWidget() {
     {/* ==================== MINECRAFT ACHIEVEMENT POPUP (PC & MOBILE) ==================== */}
     {brewedToast && createPortal(
       <div
+        key={brewedToast.timestamp || `${brewedToast.name}-${Date.now()}`}
         className={`mc-station-toast ${brewedToast.isAchievement ? 'is-achievement' : ''} ${!brewedToast.fromCard && brewedToast.catalogId ? 'is-clickable' : ''}`}
         onClick={() => {
           if (!brewedToast.fromCard && brewedToast.catalogId) {
@@ -1840,7 +1834,7 @@ export default function MinecraftStationWidget() {
         role="status"
         title={
           brewedToast.potions && brewedToast.potions.length > 0
-            ? `${brewedToast.customTitle || 'Зілля зварено!'}: ${brewedToast.potions.map(p => `${p.name}${p.count > 1 ? ` × ${p.count}` : ''}`).join(', ')}`
+            ? `${brewedToast.customTitle || 'Досягнення отримано!'}: ${brewedToast.potions.map(p => `${p.name}${p.count > 1 ? ` × ${p.count}` : ''}`).join(', ')}`
             : brewedToast.name === 'Майстер зілля'
             ? 'Зваріть 3 будь-які зілля одночасно на одній варильній стійці'
             : brewedToast.name === 'Місцева броварня'
@@ -1866,11 +1860,9 @@ export default function MinecraftStationWidget() {
         </div>
         <div className="mc-station-toast-body">
           <div className="mc-station-toast-title">
-            {brewedToast.customTitle || 'Зілля зварено!'}
+            {brewedToast.customTitle || 'Досягнення отримано!'}
           </div>
-          {brewedToast.isAchievement && (
-            <div className="mc-station-toast-desc">{brewedToast.name}</div>
-          )}
+          <div className="mc-station-toast-desc">{brewedToast.name}</div>
           {brewedToast.potions && brewedToast.potions.length > 0 && (
             <div className="mc-station-toast-potions-items">
               {brewedToast.potions.map((p, idx) => (

@@ -224,12 +224,10 @@ export function getBrewingResult(bottleItem, ingredientId) {
   const isSplash = !!bottleItem.isSplash;
   const isLingering = !!bottleItem.isLingering;
 
-  // Vanilla addStartMix registers water -> mundane alongside awkward -> effect.
-  // Verified against PotionBrewing / Builder in Mojang's Java 1.21.1 client.
+  // Only Redstone brews (extended) Mundane Potion and Glowstone brews Thick Potion from water bottles.
+  // Ingredients like cobweb, stone, sugar, slime, etc. do NOT brew with water bottles.
   if (['water_bottle', 'splash_water_bottle', 'lingering_water_bottle'].includes(bId)) {
-    const mundaneReagents = ['redstone', 'breeze_rod', 'slime_block', 'stone', 'cobweb',
-      'magma_cream', 'rabbit_foot', 'glistering_melon', 'spider_eye', 'ghast_tear', 'blaze_powder'];
-    const baseId = ingredientId === 'glowstone' ? 'thick_potion' : mundaneReagents.includes(ingredientId) ? 'mundane_potion' : null;
+    const baseId = ingredientId === 'glowstone' ? 'thick_potion' : (ingredientId === 'redstone' ? 'mundane_potion' : null);
     if (baseId) {
       const lingering = isLingering || bId === 'lingering_water_bottle';
       const splash = isSplash || bId === 'splash_water_bottle' || lingering;
