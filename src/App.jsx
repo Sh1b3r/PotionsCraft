@@ -2,7 +2,6 @@ import React, { useState, useEffect, useLayoutEffect, useMemo, useRef } from 're
 import { flushSync } from 'react-dom';
 import Header from './components/Header';
 import PotionCard from './components/PotionCard';
-import PotionModal from './components/PotionModal';
 import EasterEggModal from './components/EasterEggModal';
 import { TooltipProvider } from './components/MinecraftTooltip';
 import PotionSearch from './components/PotionSearch';
@@ -39,7 +38,6 @@ export default function App() {
   const requestedThemeRef = useRef(theme);
 
   // Modals
-  const [activeModalPotion, setActiveModalPotion] = useState(null);
   const [activeEasterEgg, setActiveEasterEgg] = useState(null);
   const [isAchievementsOpen, setIsAchievementsOpen] = useState(false);
 
@@ -253,7 +251,6 @@ export default function App() {
                           key={potion.id}
                           potion={potion}
                           isDark={isDark}
-                          onSelect3D={setActiveModalPotion}
                           onOpenEasterEgg={handleOpenEasterEgg}
                         />
                       ))}
@@ -272,7 +269,6 @@ export default function App() {
                           key={potion.id}
                           potion={potion}
                           isDark={isDark}
-                          onSelect3D={setActiveModalPotion}
                           onOpenEasterEgg={handleOpenEasterEgg}
                         />
                       ))}
@@ -291,7 +287,6 @@ export default function App() {
                           key={potion.id}
                           potion={potion}
                           isDark={isDark}
-                          onSelect3D={setActiveModalPotion}
                           onOpenEasterEgg={handleOpenEasterEgg}
                         />
                       ))}
@@ -316,12 +311,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* Interactive 3D Modal */}
-        <PotionModal
-          potion={activeModalPotion}
-          onClose={() => setActiveModalPotion(null)}
-          isDark={isDark}
-        />
+
 
         {/* Easter Egg Modals */}
         <EasterEggModal

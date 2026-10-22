@@ -17,11 +17,6 @@ export default defineConfig({
         no: resolve(__dirname, 'no.html'),
         heroine: resolve(__dirname, 'heroine.html'),
       },
-      output: {
-        manualChunks: {
-          'three-vendor': ['three', '@react-three/fiber', '@react-three/drei'],
-        },
-      },
     },
   },
 });

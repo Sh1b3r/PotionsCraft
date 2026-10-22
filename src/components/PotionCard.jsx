@@ -9,7 +9,6 @@ import { playButtonClickSound, playBubbleSound } from '../utils/soundEffects';
 export default function PotionCard({
   potion,
   isDark,
-  onSelect3D,
   onOpenEasterEgg,
   isSelected,
 }) {
