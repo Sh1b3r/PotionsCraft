@@ -3,8 +3,8 @@ import React, { useId } from 'react';
 // Lossless rectangles from the existing PNGs. SVG paints their pixel grid at
 // the final size, so reduced browser zoom does not resample a raster texture.
 const CARD = [
-  { fill: 'var(--brewing-arrow-shadow, var(--brewing-pipe-body, #8b8b8b))', d: 'M14 7h2v42h-2z M16 51h2v2h-2z M14 53h2v2h-2z M12 55h2v2h-2z' },
-  { fill: 'var(--brewing-arrow-body, var(--brewing-pipe-light, #fff))', d: 'M8 5h6v44h-6z M4 49h14v2h-14z M6 51h10v2h-10z M8 53h6v2h-6z M10 55h2v2h-2z' },
+  { fill: 'var(--brewing-card-arrow-shadow, var(--brewing-arrow-shadow, var(--brewing-pipe-body, #8b8b8b)))', d: 'M14 7h2v42h-2z M16 51h2v2h-2z M14 53h2v2h-2z M12 55h2v2h-2z' },
+  { fill: 'var(--brewing-card-arrow-fill, var(--brewing-arrow-fill, #fff))', d: 'M8 5h6v44h-6z M4 49h14v2h-14z M6 51h10v2h-10z M8 53h6v2h-6z M10 55h2v2h-2z' },
 ];
 const STATION = [
   { fill: 'var(--brewing-arrow-shadow, var(--brewing-pipe-shadow, #373737))', d: 'M4 0h4v2h-4z M4 2h2v46h-2z M0 48h4v2h-4z M8 48h6v2h-6z' },
@@ -18,7 +18,7 @@ export default function BrewingArrow({ variant = 'station', filledHeight = 0 }) 
   const card = variant === 'card';
   const width = card ? 18 : 16;
   const height = card ? 57 : 56;
-  return <svg className="mc-brewing-arrow-svg" width={width} height={height} viewBox={'0 0 ' + width + ' ' + height} shapeRendering="crispEdges" aria-hidden="true" focusable="false">
+  return <svg className={`mc-brewing-arrow-svg ${card ? 'mc-brewing-arrow-card' : 'mc-brewing-arrow-station'}`} width={width} height={height} viewBox={'0 0 ' + width + ' ' + height} shapeRendering="crispEdges" aria-hidden="true" focusable="false">
     {(card ? CARD : STATION).map((path, index) => <path key={index} {...path} />)}
     {!card && filledHeight > 0 && <>
       <defs><clipPath id={clipId} clipPathUnits="userSpaceOnUse"><rect width="16" height={Math.min(56, Math.max(0, filledHeight))} /></clipPath></defs>

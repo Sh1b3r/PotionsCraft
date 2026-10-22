@@ -1801,6 +1801,8 @@ body.light-theme .minecraft-styled-table tbody tr:hover,
 .dark-theme .mcui-arrow,
 .card.dark-theme .mcui-arrow {
   filter: none;
+  --brewing-card-arrow-fill: var(--brewing-arrow-fill, #54dfcd);
+  --brewing-arrow-body: var(--brewing-arrow-fill, #54dfcd);
 }
 
 .mcui-paths {

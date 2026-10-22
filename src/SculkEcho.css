@@ -21,6 +21,8 @@ html[data-theme='dark'], body.dark-theme {
   --brewing-arrow-shadow: #020c11;
   --brewing-arrow-body: #123c47;
   --brewing-arrow-light: #28616b;
+  --brewing-card-arrow-fill: var(--brewing-arrow-fill);
+  --brewing-card-arrow-shadow: var(--brewing-arrow-shadow);
   --brewing-fuel-shadow: #020c11;
   --brewing-fuel-detail: var(--sculk-shadow);
   --brewing-fuel-body: #123c47;
@@ -44,6 +46,12 @@ body.dark-theme .gradient-container { background-color: #0f766e; }
 .dark-theme .mcui-grid, .dark-theme .mc-brewing-stand-stage {
   --slot-bevel-light: var(--sculk-edge);
   --brewing-pipe-shadow: var(--sculk-shadow);
+}
+.dark-theme .mcui-arrow,
+.card.dark-theme .mcui-arrow,
+.dark-theme .card .mcui-arrow {
+  --brewing-arrow-body: var(--brewing-arrow-fill);
+  --brewing-card-arrow-fill: var(--brewing-arrow-fill);
 }
 
 #header2.dark-theme, #body21.dark-theme,
