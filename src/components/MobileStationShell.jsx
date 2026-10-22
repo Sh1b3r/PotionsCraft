@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { createPortal, flushSync } from 'react-dom';
 import BrewingStandFrame from './BrewingStandFrame';
 import AchievementsModal from './AchievementsModal';
+import { playButtonClickSound } from '../utils/soundEffects';
 
 export function useMobileStation() {
   const [mobile, setMobile] = useState(() => window.matchMedia('(max-width: 720px), (pointer: coarse)').matches);
@@ -26,7 +27,26 @@ export function usePocketSettings() {
   const update = next => { setSettings(next); try { localStorage.setItem('potionscraft-pocket-settings-v1', JSON.stringify(next)); } catch { /* Storage may be unavailable. */ } };
   return [settings, update];
 }
-export default function MobileStationShell({ mobile, children, onClose, onOpen, settings, onSettingsChange }) {
+export default function MobileStationShell({
+  mobile,
+  children,
+  onClose,
+  onOpen,
+  settings,
+  onSettingsChange,
+  isDark,
+  onToggleTheme
+}) {
+  const currentIsDark = isDark !== undefined
+    ? isDark
+    : (typeof document !== 'undefined' ? document.body.classList.contains('dark-theme') : true);
+
+  const handleToggleTheme = onToggleTheme || (() => {
+    const el = document.getElementById('themeswitcher');
+    if (el) {
+      el.click();
+    }
+  });
   const [open, setOpen] = useState(false);
   const [config, setConfig] = useState(false);
   const [showAchievements, setShowAchievements] = useState(false);
@@ -112,6 +132,23 @@ export default function MobileStationShell({ mobile, children, onClose, onOpen, 
             <button type="button" className="mc-pocket-btn mc-pocket-achievements-btn" onClick={openAchievements} aria-label="Досягнення" title="Досягнення">
               <img src="/items/advancements_book.svg" alt="Досягнення" className="mc-pocket-adv-icon" />
             </button>
+            <label
+              className="switch mc-mobile-theme-switch"
+              title={currentIsDark ? 'Перемкнути на День (Світла тема)' : 'Перемкнути на Sculk Echo (Темна тема)'}
+              aria-label="Перемикач теми"
+            >
+              <input
+                className="toggle"
+                type="checkbox"
+                checked={currentIsDark}
+                onChange={(e) => {
+                  playButtonClickSound();
+                  handleToggleTheme(e.target.checked);
+                }}
+              />
+              <span className="slider"></span>
+              <span className="card-side"></span>
+            </label>
           </div>
         </header>
         <div className="mc-station-content" inert={config || showAchievements ? true : undefined}>{children}</div>
@@ -127,7 +164,7 @@ export default function MobileStationShell({ mobile, children, onClose, onOpen, 
         <AchievementsModal
           isOpen={showAchievements}
           onClose={() => setShowAchievements(false)}
-          isDark={document.body.classList.contains('dark-theme')}
+          isDark={currentIsDark}
         />
       </div>
     </div>, document.body)}

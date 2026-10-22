@@ -1126,6 +1126,14 @@
   flex-shrink: 0;
 }
 
+.mc-mobile-heading .mc-mobile-theme-switch {
+  margin: 0 0 0 2px;
+  transform: scale(0.82);
+  transform-origin: center right;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
 .mc-pocket-adv-icon {
   width: 22px;
   height: 22px;

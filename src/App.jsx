@@ -235,7 +235,7 @@ export default function App() {
             />
 
             {/* Interactive Minecraft Brewing & Crafting Station Widget */}
-            <MinecraftStationWidget />
+            <MinecraftStationWidget isDark={isDark} onToggleTheme={handleToggleTheme} />
 
             <h2>Зілля та їх види</h2>
 
