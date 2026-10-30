@@ -1172,6 +1172,8 @@
 }
 
 .mc-pocket-adv-header {
+  position: relative;
+  padding-right: 36px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1201,6 +1203,10 @@
 }
 
 .mc-pocket-adv-close {
+  position: absolute !important;
+  top: 6px !important;
+  right: 6px !important;
+  z-index: 10 !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
