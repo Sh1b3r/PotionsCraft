@@ -945,7 +945,7 @@
   -webkit-user-select: none;
 }
 
-.is-mobile button {
+.is-mobile button:not(.mc-achievements-close-btn, .mc-pocket-adv-close, .mc-achievements-window button) {
   touch-action: manipulation;
   cursor: pointer;
   border: 2px outset #eee;
@@ -1201,16 +1201,51 @@
 }
 
 .mc-pocket-adv-close {
-  background: transparent;
-  border: 2px solid transparent;
-  color: #aaaaaa;
-  font-size: 16px;
-  cursor: pointer;
-  padding: 2px 8px;
-  font-family: 'Minecraft', monospace;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 26px !important;
+  height: 26px !important;
+  min-width: 26px !important;
+  max-width: 26px !important;
+  min-height: 26px !important;
+  max-height: 26px !important;
+  flex-shrink: 0 !important;
+  box-sizing: border-box !important;
+  background-color: #c6c6c6 !important;
+  background-image: linear-gradient(180deg, #dbdbdb 0%, #b8b8b8 100%) !important;
+  border: 2px solid #000000 !important;
+  border-radius: 0 !important;
+  box-shadow: inset 2px 2px 0px #ffffff, inset -2px -2px 0px #555555 !important;
+  color: #1e1e1f !important;
+  font-size: 14px !important;
+  font-family: 'Minecraft', monospace !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  line-height: 1 !important;
+  text-shadow: 1px 1px 0px #ffffff !important;
+  user-select: none !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  outline: none !important;
+  transition: transform 0.06s ease !important;
 }
 .mc-pocket-adv-close:hover {
-  color: #ffffff;
+  background-color: #d6d6d6 !important;
+  color: #ef4444 !important;
+}
+.dark-theme .mc-pocket-adv-close {
+  background-color: #0e2430 !important;
+  background-image: linear-gradient(180deg, #153443 0%, #0b1c26 100%) !important;
+  border: 2px solid #000000 !important;
+  box-shadow: inset 2px 2px 0px #22596e, inset -2px -2px 0px #040e14 !important;
+  color: #54dfcd !important;
+  text-shadow: 1px 1px 0px #020b0f !important;
+}
+.dark-theme .mc-pocket-adv-close:hover {
+  background-color: #163d4f !important;
+  color: #ff5555 !important;
 }
 
 .mc-pocket-adv-stats-banner {
@@ -1764,7 +1799,7 @@
   border-color: #65768a;
 }
 
-.dark-theme .is-mobile button:not([aria-pressed='true']) {
+.dark-theme .is-mobile button:not([aria-pressed='true'], .mc-achievements-close-btn, .mc-pocket-adv-close, .mc-achievements-window button) {
   background: #46566a;
   color: #edf2f8;
   border-color: #6f8093;

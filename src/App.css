@@ -3785,61 +3785,90 @@ body.light-theme .mc-pocket-split>input {
   text-shadow: 2px 2px 0 #3f3f00;
 }
 
-.mc-achievements-close-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 26px;
-  height: 26px;
-  background-color: #c6c6c6;
-  background-image: linear-gradient(180deg, #dbdbdb 0%, #b8b8b8 100%);
+.mc-achievements-close-btn,
+.is-mobile .mc-achievements-close-btn,
+.mc-achievements-window .mc-achievements-close-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 26px !important;
+  height: 26px !important;
+  min-width: 26px !important;
+  max-width: 26px !important;
+  min-height: 26px !important;
+  max-height: 26px !important;
+  flex-shrink: 0 !important;
+  box-sizing: border-box !important;
+  background-color: #c6c6c6 !important;
+  background-image: linear-gradient(180deg, #dbdbdb 0%, #b8b8b8 100%) !important;
   border: 2px solid #000000 !important;
   border-radius: 0 !important;
-  box-shadow: inset 2px 2px 0px #ffffff, inset -2px -2px 0px #555555;
-  color: #1e1e1f;
-  font-size: 14px;
-  font-family: 'Minecraft', monospace;
-  cursor: pointer;
-  padding: 0;
-  margin: 0;
-  line-height: 1;
-  text-shadow: 1px 1px 0px #ffffff;
-  user-select: none;
-  -webkit-appearance: none;
-  appearance: none;
-  transition: transform 0.06s ease;
+  box-shadow: inset 2px 2px 0px #ffffff, inset -2px -2px 0px #555555 !important;
+  color: #1e1e1f !important;
+  font-size: 14px !important;
+  font-family: 'Minecraft', monospace !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  line-height: 1 !important;
+  text-shadow: 1px 1px 0px #ffffff !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  outline: none !important;
+  touch-action: manipulation !important;
+  -webkit-tap-highlight-color: transparent !important;
+  transition: transform 0.06s ease !important;
 }
 
-.mc-achievements-close-btn:hover {
-  background-color: #d6d6d6;
-  color: #ef4444;
+.mc-achievements-close-btn:hover,
+.is-mobile .mc-achievements-close-btn:hover,
+.mc-achievements-window .mc-achievements-close-btn:hover {
+  background-color: #d6d6d6 !important;
+  background-image: linear-gradient(180deg, #e8e8e8 0%, #c4c4c4 100%) !important;
+  color: #ef4444 !important;
 }
 
-.mc-achievements-close-btn:active {
-  background-color: #a8a8a8;
-  background-image: none;
-  box-shadow: inset 2px 2px 0px #555555, inset -2px -2px 0px #ffffff;
-  transform: translateY(1px);
+.mc-achievements-close-btn:active,
+.is-mobile .mc-achievements-close-btn:active,
+.mc-achievements-window .mc-achievements-close-btn:active {
+  background-color: #a8a8a8 !important;
+  background-image: none !important;
+  box-shadow: inset 2px 2px 0px #555555, inset -2px -2px 0px #ffffff !important;
+  transform: translateY(1px) !important;
 }
 
-.dark-theme .mc-achievements-close-btn {
-  background-color: #0e2430;
-  background-image: linear-gradient(180deg, #153443 0%, #0b1c26 100%);
+.dark-theme .mc-achievements-close-btn,
+.dark-theme .is-mobile .mc-achievements-close-btn,
+.is-mobile .dark-theme .mc-achievements-close-btn,
+.dark-theme .mc-achievements-window .mc-achievements-close-btn {
+  background-color: #0e2430 !important;
+  background-image: linear-gradient(180deg, #153443 0%, #0b1c26 100%) !important;
+  border: 2px solid #000000 !important;
   border-color: #000000 !important;
-  box-shadow: inset 2px 2px 0px #22596e, inset -2px -2px 0px #040e14;
-  color: #54dfcd;
-  text-shadow: 1px 1px 0px #020b0f;
+  box-shadow: inset 2px 2px 0px #22596e, inset -2px -2px 0px #040e14 !important;
+  color: #54dfcd !important;
+  text-shadow: 1px 1px 0px #020b0f !important;
 }
 
-.dark-theme .mc-achievements-close-btn:hover {
-  background-color: #163d4f;
-  color: #ff5555;
+.dark-theme .mc-achievements-close-btn:hover,
+.dark-theme .is-mobile .mc-achievements-close-btn:hover,
+.is-mobile .dark-theme .mc-achievements-close-btn:hover,
+.dark-theme .mc-achievements-window .mc-achievements-close-btn:hover {
+  background-color: #163d4f !important;
+  background-image: linear-gradient(180deg, #1f4f64 0%, #102e3b 100%) !important;
+  color: #ff5555 !important;
 }
 
-.dark-theme .mc-achievements-close-btn:active {
-  background-color: #08161e;
-  box-shadow: inset 2px 2px 0px #040e14, inset -2px -2px 0px #22596e;
-  transform: translateY(1px);
+.dark-theme .mc-achievements-close-btn:active,
+.dark-theme .is-mobile .mc-achievements-close-btn:active,
+.is-mobile .dark-theme .mc-achievements-close-btn:active,
+.dark-theme .mc-achievements-window .mc-achievements-close-btn:active {
+  background-color: #08161e !important;
+  background-image: none !important;
+  box-shadow: inset 2px 2px 0px #040e14, inset -2px -2px 0px #22596e !important;
+  transform: translateY(1px) !important;
 }
 
 .mc-achievements-stats-bar {

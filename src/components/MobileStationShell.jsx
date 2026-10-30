@@ -79,7 +79,7 @@ export default function MobileStationShell({
     const previousInert = app?.inert;
     document.body.style.overflow = 'hidden';
     if (app) app.inert = true;
-    (panel.current.querySelector(config ? '.mc-pocket-settings select' : showAchievements ? '.mc-pocket-adv-close' : '.mc-mobile-heading button'))?.focus();
+    (panel.current.querySelector(config ? '.mc-pocket-settings select' : showAchievements ? '.mc-achievements-close-btn, .mc-pocket-adv-close' : '.mc-mobile-heading button'))?.focus();
     const escape = event => {
       if (event.key === 'Escape') {
         if (config) setConfig(false);
@@ -87,7 +87,7 @@ export default function MobileStationShell({
         else close();
       }
       if (event.key === 'Tab') {
-        const root = panel.current.querySelector('.mc-pocket-settings, .mc-pocket-split, .mc-pocket-advancements-modal') || panel.current;
+        const root = panel.current.querySelector('.mc-pocket-settings, .mc-pocket-split, .mc-achievements-window, .mc-pocket-advancements-modal') || panel.current;
         const controls = [...root.querySelectorAll('button:not(:disabled), input, select')].filter(el => el.getClientRects().length);
         const index = controls.indexOf(document.activeElement);
         event.preventDefault();
