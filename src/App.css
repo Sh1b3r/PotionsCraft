@@ -449,9 +449,9 @@ header#header2 {
   font-family: 'Minecraft', monospace, sans-serif;
   font-size: 12px;
   cursor: pointer;
-  border: 2px solid #000000;
-  border-radius: 0;
-  transition: none;
+  border: 2px solid #000000 !important;
+  border-radius: 0 !important;
+  transition: none !important;
   text-transform: capitalize;
   box-sizing: border-box;
   text-decoration: none;
@@ -485,16 +485,17 @@ header#header2 {
 
 /* Dark theme */
 .dark-theme .header-donate-link {
-  background: #09202e;
-  border-color: #000000;
+  background: #09202e !important;
+  border-color: #000000 !important;
   box-shadow: inset 1px 1px 0px #1a3c4f, inset -1px -1px 0px #04121a;
-  color: #79c5b8;
+  color: #79c5b8 !important;
+  text-shadow: none;
 }
 
 .dark-theme .header-donate-link:hover {
-  background: #174a54;
-  color: #ffffa0;
-  box-shadow: inset 1px 1px 0px #246d65, inset -1px -1px 0px #041413;
+  background: #174a54 !important;
+  color: #ffffa0 !important;
+  box-shadow: inset 1px 1px 0px #246d65, inset -1px -1px 0px #041413 !important;
 }
 
 
