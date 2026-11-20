@@ -361,7 +361,6 @@ header#header2 {
   box-sizing: border-box;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
   transition: var(--theme-paint-transition);
-  view-transition-name: main-header;
 }
 
 #header2.light-theme {
@@ -442,6 +441,60 @@ header#header2 {
   align-items: center;
   gap: 12px;
   flex-shrink: 0;
+}
+
+/* Donate link — same style as .potion-filter-pill-btn */
+.header-donate-link {
+  padding: 4px 10px;
+  font-family: 'Minecraft', monospace, sans-serif;
+  font-size: 12px;
+  cursor: pointer;
+  border: 2px solid #000000;
+  border-radius: 0;
+  transition: none;
+  text-transform: capitalize;
+  box-sizing: border-box;
+  text-decoration: none;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* Light theme */
+.light-theme .header-donate-link {
+  background-color: #c6c6c6;
+  background-image: linear-gradient(180deg, #dbdbdb 0%, #b8b8b8 100%);
+  box-shadow: inset 1px 1px 0px #ffffff, inset -1px -1px 0px #555555;
+  color: #2a2a2a;
+  text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.7);
+}
+
+.light-theme .header-donate-link:hover {
+  background-color: #d6d6d6;
+  background-image: linear-gradient(180deg, #e8e8e8 0%, #c4c4c4 100%);
+  box-shadow: inset 1px 1px 0px #ffffff, inset -1px -1px 0px #555555;
+  color: #ffffa0;
+  text-shadow: 1px 1px 0px #353314;
+}
+
+.light-theme .header-donate-link:active {
+  background-color: #a0a0a0;
+  background-image: none;
+  box-shadow: inset 2px 2px 0px #555555, inset -2px -2px 0px #ffffff;
+  transform: translateY(1px);
+}
+
+/* Dark theme */
+.dark-theme .header-donate-link {
+  background: #09202e;
+  border-color: #000000;
+  box-shadow: inset 1px 1px 0px #1a3c4f, inset -1px -1px 0px #04121a;
+  color: #79c5b8;
+}
+
+.dark-theme .header-donate-link:hover {
+  background: #174a54;
+  color: #ffffa0;
+  box-shadow: inset 1px 1px 0px #246d65, inset -1px -1px 0px #041413;
 }
 
 
@@ -3033,6 +3086,13 @@ body.dark-theme .card-load-stand-btn:active {
 /* ==================== RESPONSIVE ==================== */
 @media (max-width: 850px) {
   header#header2 {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1000 !important;
+    width: 100% !important;
     flex-direction: row !important;
     flex-wrap: nowrap !important;
     justify-content: space-between !important;
@@ -3440,25 +3500,16 @@ html[data-theme-transition="crossfade"]::view-transition {
 }
 
 html[data-theme-transition="crossfade"]::view-transition-group(root),
-html[data-theme-transition="crossfade"]::view-transition-old(root),
-html[data-theme-transition="crossfade"]::view-transition-group(main-header),
-html[data-theme-transition="crossfade"]::view-transition-old(main-header) {
+html[data-theme-transition="crossfade"]::view-transition-old(root) {
   animation: none;
 }
 
-html[data-theme-transition="crossfade"]::view-transition-group(main-header) {
-  z-index: 1000;
-}
-
 html[data-theme-transition="crossfade"]::view-transition-old(root),
-html[data-theme-transition="crossfade"]::view-transition-new(root),
-html[data-theme-transition="crossfade"]::view-transition-old(main-header),
-html[data-theme-transition="crossfade"]::view-transition-new(main-header) {
+html[data-theme-transition="crossfade"]::view-transition-new(root) {
   mix-blend-mode: normal;
 }
 
-html[data-theme-transition="crossfade"]::view-transition-new(root),
-html[data-theme-transition="crossfade"]::view-transition-new(main-header) {
+html[data-theme-transition="crossfade"]::view-transition-new(root) {
   animation: theme-crossfade var(--theme-duration) var(--theme-easing) both;
 }
 
@@ -3699,6 +3750,7 @@ body.light-theme .mc-pocket-split>input {
   .mc-header-achievements-btn span {
     display: none;
   }
+
   .mc-header-achievements-btn {
     width: 32px;
     height: 32px;
@@ -3902,6 +3954,7 @@ body.light-theme .mc-pocket-split>input {
 .mc-ach-stat-label {
   color: #444444;
 }
+
 .dark-theme .mc-ach-stat-label {
   color: #8c9ea8;
 }
@@ -3911,18 +3964,23 @@ body.light-theme .mc-pocket-split>input {
   font-size: 13px;
   color: #111111;
 }
+
 .dark-theme .mc-ach-stat-val {
   color: #ffffff;
 }
+
 .mc-ach-stat-val.highlight {
   color: #2e8b57;
 }
+
 .dark-theme .mc-ach-stat-val.highlight {
   color: #55ff55;
 }
+
 .mc-ach-stat-val.gold {
   color: #b8860b;
 }
+
 .dark-theme .mc-ach-stat-val.gold {
   color: #ffff55;
 }
@@ -3957,6 +4015,7 @@ body.light-theme .mc-pocket-split>input {
   color: #b8860b;
   margin-top: 10px;
 }
+
 .dark-theme .mc-achievements-section-title.ultimate-title {
   color: #ffff55;
 }
@@ -3986,6 +4045,7 @@ body.light-theme .mc-pocket-split>input {
   border-color: #2e8b57;
   background: #e3faea;
 }
+
 .dark-theme .mc-ach-card.is-unlocked {
   border-color: #55ff55;
   background: #0f2219;
@@ -4006,13 +4066,16 @@ body.light-theme .mc-pocket-split>input {
   justify-content: center;
   position: relative;
 }
+
 .dark-theme .mc-ach-card-icon-box {
   background: #090e15;
   border-color: #35465c;
 }
+
 .mc-ach-card.is-unlocked .mc-ach-card-icon-box {
   border-color: #2e8b57;
 }
+
 .dark-theme .mc-ach-card.is-unlocked .mc-ach-card-icon-box {
   border-color: #55ff55;
 }
@@ -4035,12 +4098,15 @@ body.light-theme .mc-pocket-split>input {
   color: #222222;
   margin-bottom: 3px;
 }
+
 .dark-theme .mc-ach-card-name {
   color: #ffffff;
 }
+
 .mc-ach-card.is-unlocked .mc-ach-card-name {
   color: #1a6d3f;
 }
+
 .dark-theme .mc-ach-card.is-unlocked .mc-ach-card-name {
   color: #ffff55;
 }
@@ -4051,6 +4117,7 @@ body.light-theme .mc-pocket-split>input {
   line-height: 1.3;
   margin-bottom: 5px;
 }
+
 .dark-theme .mc-ach-card-desc {
   color: #8c9ea8;
 }
@@ -4059,21 +4126,27 @@ body.light-theme .mc-pocket-split>input {
   font-size: 12px;
   font-weight: bold;
 }
+
 .unlocked-text {
   color: #2e8b57;
 }
+
 .dark-theme .unlocked-text {
   color: #55ff55;
 }
+
 .locked-text {
   color: #777777;
 }
+
 .dark-theme .locked-text {
   color: #667788;
 }
+
 .gold-text {
   color: #b8860b !important;
 }
+
 .dark-theme .gold-text {
   color: #ffff55 !important;
 }
@@ -4159,6 +4232,7 @@ body.light-theme .mc-pocket-split>input {
   border: 2px solid #888;
   box-shadow: inset 1px 1px 0 #555;
 }
+
 .dark-theme .mc-ach-potions-grid {
   background: #111822;
   border-color: #243447;
@@ -4174,6 +4248,7 @@ body.light-theme .mc-pocket-split>input {
   padding: 6px;
   box-sizing: border-box;
 }
+
 .dark-theme .mc-ach-potion-item {
   background: #17212d;
   border-color: #243447;
@@ -4183,6 +4258,7 @@ body.light-theme .mc-pocket-split>input {
   border-color: #2e8b57;
   background: #dbf5e4;
 }
+
 .dark-theme .mc-ach-potion-item.brewed {
   border-color: #28543f;
   background: #0f241c;
@@ -4208,6 +4284,7 @@ body.light-theme .mc-pocket-split>input {
   object-fit: contain;
   image-rendering: pixelated;
 }
+
 .mc-ach-potion-item.unbrewed .mc-ach-potion-icon {
   filter: grayscale(100%) brightness(0.7);
 }
@@ -4221,6 +4298,7 @@ body.light-theme .mc-pocket-split>input {
   color: #2e8b57;
   text-shadow: 1px 1px 0 #ffffff;
 }
+
 .dark-theme .mc-ach-potion-check {
   color: #55ff55;
   text-shadow: 1px 1px 0 #000000;
@@ -4233,6 +4311,7 @@ body.light-theme .mc-pocket-split>input {
   font-size: 11px;
   color: #b8860b;
 }
+
 .dark-theme .mc-ach-potion-manual {
   color: #ffff55;
 }
@@ -4250,6 +4329,7 @@ body.light-theme .mc-pocket-split>input {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .dark-theme .mc-ach-potion-name {
   color: #e2f1f8;
 }
@@ -4257,16 +4337,20 @@ body.light-theme .mc-pocket-split>input {
 .mc-ach-potion-tag {
   font-size: 10px;
 }
+
 .tag-brewed {
   color: #2e8b57;
   font-weight: bold;
 }
+
 .dark-theme .tag-brewed {
   color: #55ff55;
 }
+
 .tag-unbrewed {
   color: #777777;
 }
+
 .dark-theme .tag-unbrewed {
   color: #667788;
 }
@@ -4276,10 +4360,12 @@ body.light-theme .mc-pocket-split>input {
   border: 2px solid #b8860b;
   background: #fff8e8;
 }
+
 .dark-theme .ultimate-card {
   border-color: #ffff55;
   background: #232213;
 }
+
 .ultimate-card.is-unlocked {
   border-color: #ffd700;
   box-shadow: 0 0 12px rgba(255, 215, 0, 0.4);
@@ -4288,6 +4374,7 @@ body.light-theme .mc-pocket-split>input {
 .ultimate-icon-box {
   border-color: #b8860b !important;
 }
+
 .dark-theme .ultimate-icon-box {
   border-color: #ffff55 !important;
 }
@@ -4303,6 +4390,7 @@ body.light-theme .mc-pocket-split>input {
   color: #b8860b;
   font-size: 15px;
 }
+
 .dark-theme .ultimate-name {
   color: #ffff55;
 }
@@ -4315,6 +4403,7 @@ body.light-theme .mc-pocket-split>input {
   margin: 6px 0;
   overflow: hidden;
 }
+
 .dark-theme .mc-ach-progress-bar-wrap {
   background: #090e15;
   border-color: #2c3f57;
@@ -4325,6 +4414,7 @@ body.light-theme .mc-pocket-split>input {
   background: linear-gradient(90deg, #b8860b 0%, #ffd700 100%);
   transition: width 0.3s ease;
 }
+
 .dark-theme .mc-ach-progress-bar-fill {
   background: linear-gradient(90deg, #55ff55 0%, #ffff55 100%);
 }
@@ -4335,6 +4425,7 @@ body.light-theme .mc-pocket-split>input {
   text-shadow: 1px 1px 0 #ffffff !important;
   margin-top: 12px;
 }
+
 .dark-theme .overlord-section-title {
   color: #c77dff !important;
   text-shadow: 2px 2px 0 #1e0038 !important;
@@ -4345,16 +4436,19 @@ body.light-theme .mc-pocket-split>input {
   background: #fbf5ff !important;
   box-shadow: inset 1px 1px 0 #e0aaff, 0 2px 8px rgba(123, 44, 191, 0.15);
 }
+
 .dark-theme .overlord-card {
   border-color: #9d4edd !important;
   background: #1a102a !important;
   box-shadow: inset 1px 1px 0 #3c096c, 0 4px 16px rgba(157, 78, 221, 0.25);
 }
+
 .overlord-card.is-unlocked {
   border-color: #ffd700 !important;
   background: #fffbe6 !important;
   box-shadow: 0 0 16px rgba(255, 215, 0, 0.5), inset 0 0 8px rgba(255, 215, 0, 0.2);
 }
+
 .dark-theme .overlord-card.is-unlocked {
   background: #251c0a !important;
   border-color: #ffe066 !important;
@@ -4365,6 +4459,7 @@ body.light-theme .mc-pocket-split>input {
   border-color: #7b2cbf !important;
   background: #f3e8ff !important;
 }
+
 .dark-theme .overlord-icon-box {
   border-color: #9d4edd !important;
   background: #2d1847 !important;
@@ -4378,6 +4473,7 @@ body.light-theme .mc-pocket-split>input {
   gap: 8px;
   flex-wrap: wrap;
 }
+
 .dark-theme .overlord-name {
   color: #e0aaff !important;
 }
@@ -4405,6 +4501,7 @@ body.light-theme .mc-pocket-split>input {
 .overlord-progress-wrap {
   border-color: #7b2cbf !important;
 }
+
 .dark-theme .overlord-progress-wrap {
   border-color: #9d4edd !important;
 }
@@ -4431,6 +4528,7 @@ body.light-theme .mc-pocket-split>input {
   color: #444444;
   border-radius: 2px;
 }
+
 .dark-theme .mc-ach-chip {
   background: rgba(255, 255, 255, 0.06);
   border-color: rgba(255, 255, 255, 0.12);
@@ -4443,6 +4541,7 @@ body.light-theme .mc-pocket-split>input {
   color: #1a6d3f;
   font-weight: bold;
 }
+
 .dark-theme .mc-ach-chip.done {
   background: #0f2a1d;
   border-color: #55ff55;
@@ -4457,6 +4556,7 @@ body.light-theme .mc-pocket-split>input {
   border-bottom: 2px solid #888888;
   padding-bottom: 6px;
 }
+
 .dark-theme .mc-ach-checklist-nav {
   border-bottom-color: #243447;
 }
@@ -4531,6 +4631,7 @@ body.light-theme .mc-pocket-split>input {
   cursor: pointer;
   user-select: none;
 }
+
 .dark-theme .mc-type-pill {
   background: #17212d;
   border-color: #334455;
@@ -4542,6 +4643,7 @@ body.light-theme .mc-pocket-split>input {
   color: #ffffff;
   border-color: #1a6d3f;
 }
+
 .dark-theme .mc-type-pill.active {
   background: #55ff55;
   color: #000000;
@@ -4561,6 +4663,7 @@ body.light-theme .mc-pocket-split>input {
   border: 2px solid #888888;
   box-shadow: inset 1px 1px 0 #555555;
 }
+
 .dark-theme .mc-ach-variants-grid {
   background: #111822;
   border-color: #243447;
@@ -4576,6 +4679,7 @@ body.light-theme .mc-pocket-split>input {
   padding: 4px 6px;
   box-sizing: border-box;
 }
+
 .dark-theme .mc-ach-variant-item {
   background: #17212d;
   border-color: #243447;
@@ -4585,6 +4689,7 @@ body.light-theme .mc-pocket-split>input {
   border-color: #2e8b57;
   background: #dbf5e4;
 }
+
 .dark-theme .mc-ach-variant-item.brewed {
   border-color: #28543f;
   background: #0f241c;
@@ -4610,6 +4715,7 @@ body.light-theme .mc-pocket-split>input {
   object-fit: contain;
   image-rendering: pixelated;
 }
+
 .mc-ach-variant-item.unbrewed .mc-ach-variant-icon {
   filter: grayscale(100%) brightness(0.7);
 }
@@ -4623,6 +4729,7 @@ body.light-theme .mc-pocket-split>input {
   color: #2e8b57;
   text-shadow: 1px 1px 0 #ffffff;
 }
+
 .dark-theme .mc-ach-variant-check {
   color: #55ff55;
   text-shadow: 1px 1px 0 #000000;
@@ -4642,6 +4749,7 @@ body.light-theme .mc-pocket-split>input {
   text-overflow: ellipsis;
   line-height: 1.2;
 }
+
 .dark-theme .mc-ach-variant-name {
   color: #e2f1f8;
 }
@@ -4654,7 +4762,9 @@ body.light-theme .mc-pocket-split>input {
   flex-wrap: wrap;
 }
 
-.tag-del, .tag-tier, .tag-status {
+.tag-del,
+.tag-tier,
+.tag-status {
   font-size: 9px;
   padding: 1px 4px;
   border-radius: 2px;
@@ -4665,6 +4775,7 @@ body.light-theme .mc-pocket-split>input {
   background: #e2e8f0;
   color: #334155;
 }
+
 .dark-theme .tag-del.tag-regular {
   background: #1e293b;
   color: #94a3b8;
@@ -4674,6 +4785,7 @@ body.light-theme .mc-pocket-split>input {
   background: #fee2e2;
   color: #991b1b;
 }
+
 .dark-theme .tag-del.tag-splash {
   background: #3f1212;
   color: #f87171;
@@ -4683,6 +4795,7 @@ body.light-theme .mc-pocket-split>input {
   background: #f3e8ff;
   color: #6b21a8;
 }
+
 .dark-theme .tag-del.tag-lingering {
   background: #301048;
   color: #d8b4fe;
@@ -4692,6 +4805,7 @@ body.light-theme .mc-pocket-split>input {
   background: #fef3c7;
   color: #92400e;
 }
+
 .dark-theme .tag-tier.tag-extended {
   background: #39240a;
   color: #fbbf24;
@@ -4702,6 +4816,7 @@ body.light-theme .mc-pocket-split>input {
   color: #854d0e;
   font-weight: bold;
 }
+
 .dark-theme .tag-tier.tag-level2 {
   background: #362908;
   color: #fde047;
@@ -4711,6 +4826,7 @@ body.light-theme .mc-pocket-split>input {
   color: #2e8b57;
   font-weight: bold;
 }
+
 .dark-theme .tag-status.brewed {
   color: #55ff55;
 }
@@ -4718,6 +4834,7 @@ body.light-theme .mc-pocket-split>input {
 .tag-status.unbrewed {
   color: #777777;
 }
+
 .dark-theme .tag-status.unbrewed {
   color: #667788;
 }
@@ -4729,6 +4846,7 @@ body.light-theme .mc-pocket-split>input {
   background: #a0a0a0;
   border-top: 2px solid #555555;
 }
+
 .dark-theme .mc-achievements-footer {
   background: #121922;
   border-top-color: #090e15;

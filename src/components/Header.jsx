@@ -1,5 +1,6 @@
 import React from 'react';
 import { playButtonClickSound } from '../utils/soundEffects';
+import { useI18n } from '../i18n';
 
 export default function Header({
   isDark,
@@ -8,6 +9,7 @@ export default function Header({
   onOpenEasterEgg,
   onOpenAchievements,
 }) {
+  const { t } = useI18n();
   const isDarkActive = theme ? theme === 'dark' || theme === 'sculk' : Boolean(isDark);
   const logoDaySrc = '/logo_light.svg';
   const logoDarkSrc = '/logo_dark.svg';
@@ -45,6 +47,14 @@ export default function Header({
       </div>
 
       <div className="header-right-controls">
+        <a
+          href="https://www.privat24.ua/send/k853c"
+          className="header-donate-link"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {t('donate')}
+        </a>
         <button
           type="button"
           className="mc-header-achievements-btn"
@@ -52,14 +62,14 @@ export default function Header({
             playButtonClickSound();
             if (onOpenAchievements) onOpenAchievements();
           }}
-          title="Досягнення"
-          aria-label="Досягнення"
+          title={t('achievements')}
+          aria-label={t('achievements')}
         >
-          <img src="/items/advancements_book.svg" alt="Досягнення" className="mc-header-adv-icon" />
+          <img src="/items/advancements_book.svg" alt={t('achievements')} className="mc-header-adv-icon" />
         </button>
 
         {/* Authentic Minecraft Lever Toggle Switch (From Uiverse.io by zl306) */}
-        <label className="switch" title={isDarkActive ? 'Перемкнути на День (Світла тема)' : 'Перемкнути на Sculk Echo (Темна тема)'}>
+        <label className="switch" title={isDarkActive ? t('toggle_to_light') : t('toggle_to_dark')}>
           <input
             className="toggle"
             type="checkbox"
