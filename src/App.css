@@ -487,22 +487,14 @@ header#header2 {
   transform: translateY(1px);
 }
 
-/* Dark theme */
-.dark-theme .header-donate-link,
-#header2.dark-theme .header-donate-link {
-  background: #09202e !important;
-  border: 2px solid #000000 !important;
-  outline: none !important;
-  box-shadow: inset 1px 1px 0px #1a3c4f, inset -1px -1px 0px #04121a !important;
-  color: #79c5b8 !important;
+/* Dark theme — base fallback; SculkEcho.css overrides background/border/color */
+.dark-theme .header-donate-link {
   text-shadow: none !important;
+  outline: none !important;
 }
 
-.dark-theme .header-donate-link:hover,
-#header2.dark-theme .header-donate-link:hover {
-  background: #174a54 !important;
+.dark-theme .header-donate-link:hover {
   color: #ffffa0 !important;
-  box-shadow: inset 1px 1px 0px #246d65, inset -1px -1px 0px #041413 !important;
 }
 
 
