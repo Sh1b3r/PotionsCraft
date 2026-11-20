@@ -97,14 +97,14 @@ body.dark-theme .gradient-container { background-color: #0f766e; }
 }
 .dark-theme input::placeholder { color: var(--sculk-muted); }
 .dark-theme :is(.search-input, .mc-pocket-search):focus { border-color: var(--sculk-glow) !important; }
-.dark-theme :is(.category-tab-btn, .reagent-pill-btn, .potion-filter-pill-btn,
+.dark-theme :is(.category-tab-btn, .reagent-pill-btn, .potion-filter-pill-btn, .header-donate-link,
   .reset-btn, .pixel-btn, .modal-close-btn,
   .mc-container-return, .is-mobile button:not(.mc-achievements-close-btn, .mc-achievements-window button)) {
   background: var(--sculk-raised) !important;
   color: var(--sculk-text) !important;
   border-color: var(--sculk-edge) !important;
 }
-.dark-theme :is(.category-tab-btn, .reagent-pill-btn, .potion-filter-pill-btn,
+.dark-theme :is(.category-tab-btn, .reagent-pill-btn, .potion-filter-pill-btn, .header-donate-link,
   .reset-btn, .pixel-btn, .modal-close-btn, .is-mobile button:not(.mc-achievements-close-btn, .mc-achievements-window button)):hover {
   background: #174a54 !important;
   border-color: var(--sculk-glow) !important;
