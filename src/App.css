@@ -450,6 +450,7 @@ header#header2 {
   font-size: 12px;
   cursor: pointer;
   border: 2px solid #000000 !important;
+  outline: none !important;
   border-radius: 0 !important;
   transition: none !important;
   text-transform: capitalize;
@@ -460,7 +461,8 @@ header#header2 {
 }
 
 /* Light theme */
-.light-theme .header-donate-link {
+.light-theme .header-donate-link,
+#header2.light-theme .header-donate-link {
   background-color: #c6c6c6;
   background-image: linear-gradient(180deg, #dbdbdb 0%, #b8b8b8 100%);
   box-shadow: inset 1px 1px 0px #ffffff, inset -1px -1px 0px #555555;
@@ -468,7 +470,8 @@ header#header2 {
   text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.7);
 }
 
-.light-theme .header-donate-link:hover {
+.light-theme .header-donate-link:hover,
+#header2.light-theme .header-donate-link:hover {
   background-color: #d6d6d6;
   background-image: linear-gradient(180deg, #e8e8e8 0%, #c4c4c4 100%);
   box-shadow: inset 1px 1px 0px #ffffff, inset -1px -1px 0px #555555;
@@ -476,7 +479,8 @@ header#header2 {
   text-shadow: 1px 1px 0px #353314;
 }
 
-.light-theme .header-donate-link:active {
+.light-theme .header-donate-link:active,
+#header2.light-theme .header-donate-link:active {
   background-color: #a0a0a0;
   background-image: none;
   box-shadow: inset 2px 2px 0px #555555, inset -2px -2px 0px #ffffff;
@@ -484,15 +488,18 @@ header#header2 {
 }
 
 /* Dark theme */
-.dark-theme .header-donate-link {
+.dark-theme .header-donate-link,
+#header2.dark-theme .header-donate-link {
   background: #09202e !important;
-  border-color: #000000 !important;
-  box-shadow: inset 1px 1px 0px #1a3c4f, inset -1px -1px 0px #04121a;
+  border: 2px solid #000000 !important;
+  outline: none !important;
+  box-shadow: inset 1px 1px 0px #1a3c4f, inset -1px -1px 0px #04121a !important;
   color: #79c5b8 !important;
-  text-shadow: none;
+  text-shadow: none !important;
 }
 
-.dark-theme .header-donate-link:hover {
+.dark-theme .header-donate-link:hover,
+#header2.dark-theme .header-donate-link:hover {
   background: #174a54 !important;
   color: #ffffa0 !important;
   box-shadow: inset 1px 1px 0px #246d65, inset -1px -1px 0px #041413 !important;
