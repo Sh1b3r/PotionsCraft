@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
 import { playButtonClickSound, playEerieSound } from '../utils/soundEffects';
+import { useI18n } from '../i18n';
 
 export default function EasterEggModal({ type, onClose }) {
+  const { t } = useI18n();
   useEffect(() => {
     if (!type) return;
 
@@ -27,16 +29,16 @@ export default function EasterEggModal({ type, onClose }) {
           playButtonClickSound();
           onClose();
         }}
-        title="Повернутися"
+        title={t('easter_egg_back')}
       >
-        ✕ Закрити
+        {t('easter_egg_close')}
       </button>
 
       {type === 'no' && (
         <div className="no-content" onClick={(e) => e.stopPropagation()}>
-          <h1>Ти думав що тут буде пасхалка?</h1>
+          <h1>{t('easter_egg_no_title')}</h1>
           <img src="/photo_5429111156800356839_x.jpg" alt="No." />
-          <h2>нє.</h2>
+          <h2>{t('easter_egg_no_sub')}</h2>
         </div>
       )}
 
@@ -48,8 +50,8 @@ export default function EasterEggModal({ type, onClose }) {
           <div className="shooting-star"></div>
           <div className="shooting-star"></div>
           <div className="shooting-star"></div>
-          <img src="/photo_5429299422396807543_x.jpg" alt="ХЕРПОБРИЛ" />
-          <h1>О ні, Херпобрив, не їж мене</h1>
+          <img src="/photo_5429299422396807543_x.jpg" alt="Herobrine" />
+          <h1>{t('easter_egg_heroine_sub')}</h1>
         </div>
       )}
     </div>

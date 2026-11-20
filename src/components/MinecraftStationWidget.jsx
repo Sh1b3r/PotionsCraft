@@ -26,6 +26,7 @@ import { WIKI_REAGENTS, WIKI_POTIONS } from '../data/wikiTooltipsData';
 import { BREWING_STAND_DATA } from '../data/brewingStandData';
 import { POTIONS_DATA } from '../data/potionsData';
 import { identifyPotionVariant, TOTAL_VARIANTS_COUNT } from '../data/potionVariantsData';
+import { useI18n } from '../i18n';
 import './MinecraftStationWidget.css';
 
 // All valid Minecraft brewing reagents that can be placed in the reagent slot
@@ -58,6 +59,7 @@ const sameStack = (a, b) => !!a && !!b && a.itemId === b.itemId &&
   ['isExtended', 'isLevel2', 'isSplash', 'isLingering'].every(key => !!a[key] === !!b[key]);
 
 export default function MinecraftStationWidget({ isDark, onToggleTheme }) {
+  const { t, getItemName, getPotion, getVariantName } = useI18n();
   const mobile = useMobileStation();
   const [pocketOpen, setPocketOpen] = useState(false);
   const [pocketSettings, setPocketSettings] = usePocketSettings();
@@ -1306,8 +1308,8 @@ export default function MinecraftStationWidget({ isDark, onToggleTheme }) {
 
       if (slotType === 'arrow') {
         return {
-          title: 'Прогрес варіння',
-          lore: isBrewing ? `§aВаріння зілля... ${Math.floor(brewingProgress)}%` : '§7Вставте інгредієнт та зілля для початку варіння'
+          title: t('pocket_brewing_tab'),
+          lore: isBrewing ? `§a${t('pocket_brewing_tab')}... ${Math.floor(brewingProgress)}%` : null
         };
       }
 
@@ -1315,30 +1317,36 @@ export default function MinecraftStationWidget({ isDark, onToggleTheme }) {
 
       // Potion item tooltip
       if (item.isPotion || item.itemId === 'water_bottle') {
-        let title = item.name;
-        let lore = null;
-
         const catalogKey =
           item.catalogId ||
           (item.itemId.startsWith('potion_') ? item.itemId.replace('potion_', '') : item.itemId);
-        const wikiDef = WIKI_POTIONS[catalogKey] || WIKI_POTIONS[item.itemId];
-
-        if (wikiDef) {
-          if (item.isExtended && wikiDef.extendedMinetip) {
-            lore = wikiDef.extendedMinetip;
-          } else if (item.isLevel2 && wikiDef.upgradedMinetip) {
-            lore = wikiDef.upgradedMinetip;
-          } else {
-            lore = wikiDef.minetip;
-          }
+        const locP = getPotion(catalogKey);
+        let title = locP?.name || (item.itemId === 'water_bottle' ? getItemName('water_bottle') : item.name);
+        if (item.isSplash || item.isLingering || item.isExtended || item.isLevel2) {
+          title = getVariantName({
+            catalogId: catalogKey,
+            potionId: item.itemId,
+            isBase: item.itemId === 'water_bottle' || !locP,
+            delivery: item.isLingering ? 'lingering' : item.isSplash ? 'splash' : 'regular',
+            tier: item.isExtended ? 'extended' : item.isLevel2 ? 'level2' : 'base'
+          }) || title;
         }
 
-        if (!lore) {
-          if (item.description) {
-            lore = `§9${item.description}`;
+        let lore = null;
+        if (locP?.effectName) {
+          const tierStr = item.isLevel2 ? ' II' : '';
+          const durStr = item.isExtended ? (locP.durationExtended || '8:00') : (locP.duration || '3:00');
+          if (locP.isInstant) {
+            lore = `§9${locP.effectName}${tierStr}`;
           } else {
-            lore = '§7Немає ефектів';
+            lore = `§9${locP.effectName}${tierStr} (${durStr})`;
           }
+        } else if (item.itemId === 'water_bottle' || catalogKey === 'awkward' || catalogKey === 'thick' || catalogKey === 'mundane') {
+          lore = `§7${t('minetip_no_effects')}`;
+        } else if (item.description) {
+          lore = `§9${item.description}`;
+        } else {
+          lore = `§7${t('minetip_no_effects')}`;
         }
 
         return {
@@ -1348,21 +1356,19 @@ export default function MinecraftStationWidget({ isDark, onToggleTheme }) {
       }
 
       // Regular crafting/brewing item
-      if (item.itemId === 'sugar') {
+      const itemName = getItemName(item.itemId || item.id) || item.name;
+      if (item.itemId === 'turtle_helmet') {
         return {
-          title: item.name,
-          lore: null
+          title: itemName,
+          lore: t('minetip_when_on_head')
         };
       }
-      const reagentDef = WIKI_REAGENTS[item.name];
       return {
-        title: item.name,
-        lore:
-          reagentDef?.lore ||
-          (item.description ? `§7${item.description}` : item.englishName ? `§8${item.englishName}` : null)
+        title: itemName,
+        lore: null
       };
     },
-    [isBrewing, brewingProgress]
+    [isBrewing, brewingProgress, t, getItemName, getPotion, getVariantName]
   );
 
   const handleSlotHover = useCallback(
@@ -1581,7 +1587,7 @@ export default function MinecraftStationWidget({ isDark, onToggleTheme }) {
                   {/* 1. LEFT: Brewing Stand (Pixel-Perfect Authentic Minecraft GUI matching user reference) */}
                   <div className="mc-brewing-stand-area">
                     <div className="mc-brewing-header-row">
-                      <div className="mc-brewing-header-label">Варильна стійка</div>
+                      <div className="mc-brewing-header-label">{t('station_brewing_stand')}</div>
                     </div>
 
                     {brewingStage}
@@ -1589,7 +1595,7 @@ export default function MinecraftStationWidget({ isDark, onToggleTheme }) {
 
                   {/* 2. RIGHT: Crafting Table 3x3 ("Майстрування" matching reference mockup) */}
                   <div className="mc-crafting-area">
-                    <div className="mc-crafting-header-label">Крафт</div>
+                    <div className="mc-crafting-header-label">{t('station_crafting_table')}</div>
 
                     <div className="mc-crafting-flex-panel">
                       {/* 3x3 Grid (Contiguous touching slots) */}
@@ -1671,7 +1677,7 @@ export default function MinecraftStationWidget({ isDark, onToggleTheme }) {
                 {/* ==================== LOWER SECTION: PLAYER INVENTORY ==================== */}
                 <div className="mc-inventory-area">
                   <div className="mc-inventory-header-row">
-                    <div className="mc-inventory-header-label">Інвентар</div>
+                    <div className="mc-inventory-header-label">{t('station_inventory')}</div>
                   </div>
 
                   {/* 3x18 Main Storage Grid (Slots 0..53) */}

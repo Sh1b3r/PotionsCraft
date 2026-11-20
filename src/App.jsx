@@ -9,6 +9,7 @@ import BaseModifiersTable from './components/BaseModifiersTable';
 import MinecraftStationWidget from './components/MinecraftStationWidget';
 import AchievementsModal from './components/AchievementsModal';
 import { POTIONS_DATA } from './data/potionsData';
+import { useI18n } from './i18n';
 import './App.css';
 import './SculkEcho.css';
 
@@ -19,6 +20,7 @@ const THEME_IMAGES = [
 ];
 
 export default function App() {
+  const { t, localizedPotions } = useI18n();
   const [theme, setTheme] = useState(() => {
     try {
       const urlParams = new URLSearchParams(window.location.search);
@@ -45,12 +47,11 @@ export default function App() {
   const logoSculkSrc = '/logo_dark.svg';
 
   const handleToggleTheme = () => {
-    // Count clicks against the latest request, even before a snapshot commits.
     const nextTheme = requestedThemeRef.current === 'dark' ? 'light' : 'dark';
     requestedThemeRef.current = nextTheme;
     const previousTransition = themeTransitionRef.current;
     themeTransitionRef.current = null;
-    previousTransition?.skipTransition();
+    previousTransition?.skipTransition?.();
     document.documentElement.removeAttribute('data-theme-transition');
 
     if (typeof document.startViewTransition !== 'function' ||
@@ -59,22 +60,26 @@ export default function App() {
       return;
     }
 
-    // Capture complete themes, including logos and pixel-art backgrounds.
-    // Local CSS transitions would otherwise capture partly updated colors.
     document.documentElement.setAttribute('data-theme-transition', 'crossfade');
-    const transition = document.startViewTransition(() => {
-      if (themeTransitionRef.current === transition) {
-        flushSync(() => setTheme(nextTheme));
-      }
-    });
-    themeTransitionRef.current = transition;
-    transition.ready.catch(() => {}); // A rapid toggle may skip the animation.
-    transition.finished.catch(() => {}).finally(() => {
-      if (themeTransitionRef.current === transition) {
-        themeTransitionRef.current = null;
-        document.documentElement.removeAttribute('data-theme-transition');
-      }
-    });
+    try {
+      const transition = document.startViewTransition(() => {
+        flushSync(() => {
+          setTheme(nextTheme);
+        });
+      });
+      themeTransitionRef.current = transition;
+      transition.finished
+        .catch(() => { })
+        .finally(() => {
+          if (themeTransitionRef.current === transition) {
+            themeTransitionRef.current = null;
+          }
+          document.documentElement.removeAttribute('data-theme-transition');
+        });
+    } catch {
+      setTheme(nextTheme);
+      document.documentElement.removeAttribute('data-theme-transition');
+    }
   };
 
   useEffect(() => () => {
@@ -89,7 +94,7 @@ export default function App() {
     THEME_IMAGES.forEach((src) => {
       const image = new Image();
       image.src = src;
-      image.decode().catch(() => {});
+      image.decode().catch(() => { });
     });
   }, []);
 
@@ -152,7 +157,7 @@ export default function App() {
   // Filter potions based on search query and category
   const filteredPotions = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
-    return POTIONS_DATA.filter((p) => {
+    return localizedPotions.filter((p) => {
       // Category filter
       if (selectedCategory !== 'all' && p.category !== selectedCategory) {
         return false;
@@ -161,14 +166,15 @@ export default function App() {
       if (!q) return true;
       const qAlt = q.startsWith('сцілен') ? q.replace('сцілен', 'зцілен') : q.startsWith('зцілен') ? q.replace('зцілен', 'сцілен') : q;
       const matchName = p.name.toLowerCase().includes(q) || p.name.toLowerCase().includes(qAlt);
+      const matchNominative = p.nominativeTitle?.toLowerCase().includes(q);
       const matchEnglish = p.englishName?.toLowerCase().includes(q);
       const matchIngredient = p.ingredient?.toLowerCase().includes(q);
       const matchEffect = p.effectName?.toLowerCase().includes(q) || p.effectName?.toLowerCase().includes(qAlt);
       const matchDesc = p.description?.toLowerCase().includes(q) || p.description?.toLowerCase().includes(qAlt);
       const matchBase = p.base?.toLowerCase().includes(q);
-      return matchName || matchEnglish || matchIngredient || matchEffect || matchDesc || matchBase;
+      return matchName || matchNominative || matchEnglish || matchIngredient || matchEffect || matchDesc || matchBase;
     });
-  }, [searchQuery, selectedCategory]);
+  }, [localizedPotions, searchQuery, selectedCategory]);
 
   const positiveFiltered = useMemo(
     () => filteredPotions.filter((p) => p.category === 'positive'),
@@ -185,12 +191,12 @@ export default function App() {
 
   const categoryCounts = useMemo(() => {
     return {
-      all: POTIONS_DATA.length,
-      positive: POTIONS_DATA.filter((p) => p.category === 'positive').length,
-      negative: POTIONS_DATA.filter((p) => p.category === 'negative').length,
-      mixed: POTIONS_DATA.filter((p) => p.category === 'mixed').length,
+      all: localizedPotions.length,
+      positive: localizedPotions.filter((p) => p.category === 'positive').length,
+      negative: localizedPotions.filter((p) => p.category === 'negative').length,
+      mixed: localizedPotions.filter((p) => p.category === 'mixed').length,
     };
-  }, []);
+  }, [localizedPotions]);
 
   const handleResetSearch = () => {
     setSearchQuery('');
@@ -203,7 +209,7 @@ export default function App() {
 
 
 
-        {/* Authentic Minecraft Header with Lever Toggle Switch */}
+        {/* Authentic   Minecraft Header with Lever Toggle Switch */}
         <Header
           isDark={isDark}
           theme={theme}
@@ -235,7 +241,7 @@ export default function App() {
             {/* Interactive Minecraft Brewing & Crafting Station Widget */}
             <MinecraftStationWidget isDark={isDark} onToggleTheme={handleToggleTheme} />
 
-            <h2>Зілля та їх види</h2>
+            <h2>{t('section_potions_title')}</h2>
 
             {/* Categorized Potions with Big Section Titles */}
             {filteredPotions.length > 0 ? (
@@ -243,7 +249,7 @@ export default function App() {
                 {positiveFiltered.length > 0 && (
                   <div className="potions-category-group">
                     <h3 className="category-section-title positive-title">
-                      Зілля з позитивними ефектами
+                      {t('section_positive_title')}
                     </h3>
                     <div className="potions">
                       {positiveFiltered.map((potion) => (
@@ -261,7 +267,7 @@ export default function App() {
                 {negativeFiltered.length > 0 && (
                   <div className="potions-category-group">
                     <h3 className="category-section-title negative-title">
-                      Зілля з негативними ефектами
+                      {t('section_negative_title')}
                     </h3>
                     <div className="potions">
                       {negativeFiltered.map((potion) => (
@@ -279,7 +285,7 @@ export default function App() {
                 {mixedFiltered.length > 0 && (
                   <div className="potions-category-group">
                     <h3 className="category-section-title mixed-title">
-                      Зілля зі змішаними ефектами
+                      {t('section_mixed_title')}
                     </h3>
                     <div className="potions">
                       {mixedFiltered.map((potion) => (
@@ -297,14 +303,14 @@ export default function App() {
             ) : (
               <div className="search-empty-state">
                 <div className="empty-state-icon">🧪</div>
-                <h3>Нічого не знайдено</h3>
-                <p>За запитом «<b>{searchQuery}</b>» не знайдено жодного зілля.</p>
+                <h3>{t('empty_title')}</h3>
+                <p>{t('empty_desc', { query: searchQuery })}</p>
                 <button
                   type="button"
                   className="empty-reset-btn"
                   onClick={handleResetSearch}
                 >
-                  Скинути пошук
+                  {t('empty_reset')}
                 </button>
               </div>
             )}

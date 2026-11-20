@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { playButtonClickSound } from '../utils/soundEffects';
+import { useI18n } from '../i18n';
 
 const STORAGE_KEY = 'pc_recent_potion_filters';
-const DEFAULT_POTION_FILTERS = ['зцілення', 'сила', 'швидкість'];
 
 export default function PotionSearch({
   searchQuery,
@@ -13,27 +13,22 @@ export default function PotionSearch({
   totalResults,
   onReset
 }) {
+  const { t, localizedPotions } = useI18n();
+
   const categories = [
-    { id: 'all', label: 'Всі зілля', icon: '✨', count: counts.all },
-    { id: 'positive', label: 'Позитивні', icon: '💚', count: counts.positive },
-    { id: 'negative', label: 'Негативні', icon: '🔻', count: counts.negative },
-    { id: 'mixed', label: 'Змішані', icon: '🐢', count: counts.mixed }
+    { id: 'all', label: t('cat_all'), icon: '✨', count: counts.all },
+    { id: 'positive', label: t('cat_positive'), icon: '💚', count: counts.positive },
+    { id: 'negative', label: t('cat_negative'), icon: '🔻', count: counts.negative },
+    { id: 'mixed', label: t('cat_mixed'), icon: '🐢', count: counts.mixed }
   ];
 
-  const popularEffects = [
-    'зцілення',
-    'сила',
-    'швидкість',
-    'вогнестійкість',
-    'регенерація',
-    'невидимість',
-    'нічне бачення',
-    'стрибучість',
-    'водяне дихання',
-    'повільне падіння',
-    'отруєння',
-    'слабкість'
-  ];
+  const popularEffects = useMemo(() => {
+    return localizedPotions.slice(0, 12).map((p) => p.nominativeTitle || p.name);
+  }, [localizedPotions]);
+
+  const defaultFilters = useMemo(() => {
+    return localizedPotions.slice(0, 3).map((p) => p.nominativeTitle || p.name);
+  }, [localizedPotions]);
 
   // Adaptive quick filters with frequency + recency calculation
   const [quickPotionFilters, setQuickPotionFilters] = useState(() => {
@@ -41,10 +36,8 @@ export default function PotionSearch({
       const savedHistory = localStorage.getItem('pc_potion_queries_history');
       if (savedHistory) {
         const history = JSON.parse(savedHistory);
-        // history is an object { [term]: { count: number, lastUsed: number } }
         const sorted = Object.entries(history)
           .sort((a, b) => {
-            // prioritize frequency (count * 2) combined with recency
             const scoreA = a[1].count * 2 + Math.min(10, Math.floor((Date.now() - a[1].lastUsed) / -3600000));
             const scoreB = b[1].count * 2 + Math.min(10, Math.floor((Date.now() - b[1].lastUsed) / -3600000));
             return scoreB - scoreA;
@@ -52,25 +45,14 @@ export default function PotionSearch({
           .map(([term]) => term);
 
         if (sorted.length > 0) {
-          const filled = [...sorted];
-          for (const d of DEFAULT_POTION_FILTERS) {
-            if (!filled.includes(d)) filled.push(d);
-          }
-          return filled.slice(0, 3);
-        }
-      }
-
-      // fallback to legacy STORAGE_KEY
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length === 3) {
-          return parsed;
+          return sorted.slice(0, 3);
         }
       }
     } catch (e) { }
-    return DEFAULT_POTION_FILTERS;
+    return [];
   });
+
+  const activeMobileFilters = quickPotionFilters.length > 0 ? quickPotionFilters : defaultFilters;
 
   // Record a search term in frequency/recency history and update the 3 pills
   const recordSearchTerm = (query) => {
@@ -162,8 +144,8 @@ export default function PotionSearch({
                 recordSearchTerm(e.currentTarget.value);
               }
             }}
-            placeholder="Пошук зілля за назвою, інгредієнтом або ефектом..."
-            aria-label="Пошук зілля"
+            placeholder={t('search_placeholder')}
+            aria-label={t('search_placeholder')}
           />
           {searchQuery && (
             <button
@@ -173,7 +155,7 @@ export default function PotionSearch({
                 playButtonClickSound();
                 onSearchChange('');
               }}
-              title="Очистити пошук"
+              title={t('search_clear')}
             >
               ✕
             </button>
@@ -189,7 +171,7 @@ export default function PotionSearch({
               onReset();
             }}
           >
-            Скинути
+            {t('search_reset')}
           </button>
         )}
       </div>
@@ -212,17 +194,17 @@ export default function PotionSearch({
         </div>
 
         <div className="search-results-count">
-          Знайдено: <b>{totalResults}</b>
+          {t('search_results_found')}<b>{totalResults}</b>
         </div>
       </div>
 
       {/* Quick Filters Row */}
       <div className="quick-reagents-row">
-        <span className="quick-reagents-title">Фільтр:</span>
+        <span className="quick-reagents-title">{t('quick_filter_title')}</span>
 
         {/* Mobile-only 3 adaptive potion filters */}
         <div className="mobile-quick-filters">
-          {quickPotionFilters.map((filter) => {
+          {activeMobileFilters.map((filter) => {
             const isSelected = searchQuery.toLowerCase() === filter.toLowerCase();
             return (
               <button

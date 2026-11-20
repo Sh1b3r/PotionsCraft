@@ -3,6 +3,7 @@ import { createPortal, flushSync } from 'react-dom';
 import BrewingStandFrame from './BrewingStandFrame';
 import AchievementsModal from './AchievementsModal';
 import { playButtonClickSound } from '../utils/soundEffects';
+import { useI18n } from '../i18n';
 
 export function useMobileStation() {
   const [mobile, setMobile] = useState(() => window.matchMedia('(max-width: 720px), (pointer: coarse)').matches);
@@ -37,6 +38,7 @@ export default function MobileStationShell({
   isDark,
   onToggleTheme
 }) {
+  const { t } = useI18n();
   const currentIsDark = isDark !== undefined
     ? isDark
     : (typeof document !== 'undefined' ? document.body.classList.contains('dark-theme') : true);
@@ -110,32 +112,32 @@ export default function MobileStationShell({
   if (!mobile && !open) return children;
   return <>
     <button ref={launchButton} type="button" className="mc-mobile-launch" onClick={launch}
-      aria-label="Відкрити варильну стійку та верстак" aria-haspopup="dialog">
-      <span className="mc-mobile-launch-copy"><span className="mc-mobile-launch-title">Варіння та крафт</span><span className="mc-mobile-launch-hint">Відкрити інтерактивний блок</span></span>
+      aria-label={t('station_mobile_hint')} aria-haspopup="dialog">
+      <span className="mc-mobile-launch-copy"><span className="mc-mobile-launch-title">{t('station_mobile_launch')}</span><span className="mc-mobile-launch-hint">{t('station_mobile_hint')}</span></span>
       <span className="mc-mobile-launch-chevron" aria-hidden="true">›</span>
     </button>
-    {open && createPortal(<div ref={panel} role="dialog" aria-modal="true" aria-label="Варильна стійка та верстак" className="mc-station-shell is-mobile is-open">
+    {open && createPortal(<div ref={panel} role="dialog" aria-modal="true" aria-label={t('station_mobile_launch')} className="mc-station-shell is-mobile is-open">
       <div className={`mc-station-viewport ${rotated ? 'is-rotated' : ''}`} style={{ width: rotated ? viewport.height : viewport.width, height: rotated ? viewport.width : viewport.height }}>
         <header className="mc-mobile-heading">
           <div className="mc-mobile-heading-left">
-            <button type="button" className="mc-pocket-btn mc-pocket-back" onClick={close} aria-label="Закрити верстак">
-              ‹ <span>Назад</span>
+            <button type="button" className="mc-pocket-btn mc-pocket-back" onClick={close} aria-label={t('station_btn_back')}>
+              ‹ <span>{t('station_btn_back')}</span>
             </button>
-            <button type="button" className="mc-pocket-btn mc-pocket-settings-btn" onClick={() => setConfig(true)} aria-label="Налаштування керування">
-              ⚙ <span>Опції</span>
+            <button type="button" className="mc-pocket-btn mc-pocket-settings-btn" onClick={() => setConfig(true)} aria-label={t('station_btn_options')}>
+              ⚙ <span>{t('station_btn_options')}</span>
             </button>
           </div>
 
-          <span className="mc-mobile-heading-title">Варіння та крафт</span>
+          <span className="mc-mobile-heading-title">{t('station_mobile_launch')}</span>
 
           <div className="mc-mobile-heading-right">
-            <button type="button" className="mc-pocket-btn mc-pocket-achievements-btn" onClick={openAchievements} aria-label="Досягнення" title="Досягнення">
-              <img src="/items/advancements_book.svg" alt="Досягнення" className="mc-pocket-adv-icon" />
+            <button type="button" className="mc-pocket-btn mc-pocket-achievements-btn" onClick={openAchievements} aria-label={t('achievements')} title={t('achievements')}>
+              <img src="/items/advancements_book.svg" alt={t('achievements')} className="mc-pocket-adv-icon" />
             </button>
             <label
               className="switch mc-mobile-theme-switch"
-              title={currentIsDark ? 'Перемкнути на День (Світла тема)' : 'Перемкнути на Sculk Echo (Темна тема)'}
-              aria-label="Перемикач теми"
+              title={currentIsDark ? t('toggle_to_light') : t('toggle_to_dark')}
+              aria-label="Theme switch"
             >
               <input
                 className="toggle"
@@ -152,14 +154,14 @@ export default function MobileStationShell({
           </div>
         </header>
         <div className="mc-station-content" inert={config || showAchievements ? true : undefined}>{children}</div>
-        {config && <div className="mc-pocket-overlay"><section className="mc-pocket-settings" role="dialog" aria-modal="true" aria-label="Налаштування керування">
-          <h3>Сенсорне керування</h3>
-          <label>Розмір слотів<select value={settings.size} onChange={e => onSettingsChange({ ...settings, size: Number(e.target.value) })}><option value="0.9">Компактні</option><option value="1">Звичайні</option><option value="1.15">Великі</option></select></label>
-          <label>Час утримання<select value={settings.holdDelay} onChange={e => onSettingsChange({ ...settings, holdDelay: Number(e.target.value) })}><option value="400">400 мс</option><option value="600">600 мс</option><option value="900">900 мс</option></select></label>
-          <label><span>Розділяти стопку утриманням</span><input type="checkbox" checked={settings.splitControl} onChange={e => onSettingsChange({ ...settings, splitControl: e.target.checked })} /></label>
-          <label><span>Швидкий перенос подвійним дотиком</span><input type="checkbox" checked={settings.doubleTap} onChange={e => onSettingsChange({ ...settings, doubleTap: e.target.checked })} /></label>
-          <label><span>Книга рецептів</span><input type="checkbox" checked={settings.recipeBook} onChange={e => onSettingsChange({ ...settings, recipeBook: e.target.checked })} /></label>
-          <div className="mc-pocket-settings-actions"><button type="button" onClick={() => onSettingsChange(POCKET_DEFAULTS)}>Скинути</button><button type="button" onClick={() => setConfig(false)}>Готово</button></div>
+        {config && <div className="mc-pocket-overlay"><section className="mc-pocket-settings" role="dialog" aria-modal="true" aria-label={t('station_controls_title')}>
+          <h3>{t('station_controls_title')}</h3>
+          <label>{t('station_slot_size')}<select value={settings.size} onChange={e => onSettingsChange({ ...settings, size: Number(e.target.value) })}><option value="0.9">{t('station_slot_compact')}</option><option value="1">{t('station_slot_normal')}</option><option value="1.15">{t('station_slot_large')}</option></select></label>
+          <label>{t('station_hold_delay')}<select value={settings.holdDelay} onChange={e => onSettingsChange({ ...settings, holdDelay: Number(e.target.value) })}><option value="400">400 ms</option><option value="600">600 ms</option><option value="900">900 ms</option></select></label>
+          <label><span>{t('station_split_control')}</span><input type="checkbox" checked={settings.splitControl} onChange={e => onSettingsChange({ ...settings, splitControl: e.target.checked })} /></label>
+          <label><span>{t('station_double_tap')}</span><input type="checkbox" checked={settings.doubleTap} onChange={e => onSettingsChange({ ...settings, doubleTap: e.target.checked })} /></label>
+          <label><span>{t('station_recipe_book')}</span><input type="checkbox" checked={settings.recipeBook} onChange={e => onSettingsChange({ ...settings, recipeBook: e.target.checked })} /></label>
+          <div className="mc-pocket-settings-actions"><button type="button" onClick={() => onSettingsChange(POCKET_DEFAULTS)}>{t('station_reset')}</button><button type="button" onClick={() => setConfig(false)}>{t('station_done')}</button></div>
         </section></div>}
         <AchievementsModal
           isOpen={showAchievements}

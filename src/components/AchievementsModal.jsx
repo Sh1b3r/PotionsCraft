@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { POTIONS_DATA } from '../data/potionsData';
 import { POTION_VARIANTS, TOTAL_VARIANTS_COUNT, getVariantStats } from '../data/potionVariantsData';
 import { playButtonClickSound } from '../utils/soundEffects';
+import { useI18n } from '../i18n';
 
 export function getAchievementsState() {
   try {
@@ -59,6 +60,7 @@ export function getAchievementsState() {
 }
 
 export default function AchievementsModal({ isOpen, onClose, isDark }) {
+  const { t, getPotion, getVariantName, getDeliveryLabel } = useI18n();
   const [data, setData] = useState(getAchievementsState);
   const [checklistTab, setChecklistTab] = useState('variants'); // 'variants' | 'base'
   const [baseFilter, setBaseFilter] = useState('all'); // 'all' | 'brewed' | 'remaining'
@@ -145,7 +147,7 @@ export default function AchievementsModal({ isOpen, onClose, isDark }) {
       className="mc-achievements-overlay"
       role="dialog"
       aria-modal="true"
-      aria-label="Досягнення зіллєваріння"
+      aria-label={t('achievements_title')}
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           playButtonClickSound();
@@ -158,7 +160,7 @@ export default function AchievementsModal({ isOpen, onClose, isDark }) {
         <div className="mc-achievements-header">
           <div className="mc-achievements-header-title">
             <img src="/items/advancements_book.svg" alt="" className="mc-achievements-title-icon" />
-            <h2>Досягнення зіллєваріння</h2>
+            <h2>{t('achievements_title')}</h2>
           </div>
           <button
             type="button"
@@ -167,7 +169,7 @@ export default function AchievementsModal({ isOpen, onClose, isDark }) {
               playButtonClickSound();
               onClose();
             }}
-            aria-label="Закрити"
+            aria-label={t('achievements_close')}
           >
             ✕
           </button>
@@ -176,15 +178,15 @@ export default function AchievementsModal({ isOpen, onClose, isDark }) {
         {/* Global Stats Overview Banner */}
         <div className="mc-achievements-stats-bar">
           <div className="mc-ach-stat">
-            <span className="mc-ach-stat-label">Зварено всього:</span>
+            <span className="mc-ach-stat-label">{t('achievements_total_brewed')}</span>
             <span className="mc-ach-stat-val">{data.totalBrewed}</span>
           </div>
           <div className="mc-ach-stat">
-            <span className="mc-ach-stat-label">Основних видів:</span>
+            <span className="mc-ach-stat-label">{t('achievements_tab_base')}:</span>
             <span className="mc-ach-stat-val highlight">{baseBrewedCount} / {POTIONS_DATA.length}</span>
           </div>
           <div className="mc-ach-stat">
-            <span className="mc-ach-stat-label">Всіх варіацій:</span>
+            <span className="mc-ach-stat-label">{t('achievements_tab_variants')}:</span>
             <span className="mc-ach-stat-val gold">{variantStats.brewedCount} / {TOTAL_VARIANTS_COUNT}</span>
           </div>
         </div>
@@ -192,18 +194,18 @@ export default function AchievementsModal({ isOpen, onClose, isDark }) {
         {/* Scrollable Content Body */}
         <div className="mc-achievements-body">
           {/* Main Achievements Section */}
-          <div className="mc-achievements-section-title">Основні досягнення</div>
+          <div className="mc-achievements-section-title">{t('achievements_title')}</div>
           <div className="mc-achievements-cards-row">
             {/* 1. Місцева броварня */}
             <div className={`mc-ach-card ${data.hasLocalBrewery ? 'is-unlocked' : 'is-locked'}`}>
               <div className="mc-ach-card-icon-box">
-                <img src="/items/brewing_stand.png" alt="Місцева броварня" />
+                <img src="/items/brewing_stand.png" alt={t('ach_local_brewery_title')} />
               </div>
               <div className="mc-ach-card-content">
-                <div className="mc-ach-card-name">Місцева броварня</div>
-                <div className="mc-ach-card-desc">Зваріть своє перше зілля на варильній стійці</div>
+                <div className="mc-ach-card-name">{t('ach_local_brewery_title')}</div>
+                <div className="mc-ach-card-desc">{t('ach_local_brewery_desc')}</div>
                 <div className="mc-ach-card-status">
-                  {data.hasLocalBrewery ? <span className="unlocked-text">✓ Здобуто!</span> : <span className="locked-text">🔒 Заблоковано</span>}
+                  {data.hasLocalBrewery ? <span className="unlocked-text">✓</span> : <span className="locked-text">🔒</span>}
                 </div>
               </div>
             </div>
@@ -211,13 +213,13 @@ export default function AchievementsModal({ isOpen, onClose, isDark }) {
             {/* 2. Майстер зілля */}
             <div className={`mc-ach-card ${data.hasMasterAlchemist ? 'is-unlocked' : 'is-locked'}`}>
               <div className="mc-ach-card-icon-box">
-                <img src="/Potion_of_Swiftness_JE3.png" alt="Майстер зілля" />
+                <img src="/Potion_of_Swiftness_JE3.png" alt={t('ach_master_alchemist_title')} />
               </div>
               <div className="mc-ach-card-content">
-                <div className="mc-ach-card-name">Майстер зілля</div>
-                <div className="mc-ach-card-desc">Зваріть 3 будь-які зілля одночасно на одній стійці</div>
+                <div className="mc-ach-card-name">{t('ach_master_alchemist_title')}</div>
+                <div className="mc-ach-card-desc">{t('ach_master_alchemist_desc')}</div>
                 <div className="mc-ach-card-status">
-                  {data.hasMasterAlchemist ? <span className="unlocked-text">✓ Здобуто!</span> : <span className="locked-text">🔒 Заблоковано</span>}
+                  {data.hasMasterAlchemist ? <span className="unlocked-text">✓</span> : <span className="locked-text">🔒</span>}
                 </div>
               </div>
             </div>
@@ -225,16 +227,16 @@ export default function AchievementsModal({ isOpen, onClose, isDark }) {
             {/* 3. Істинний зіллєвар */}
             <div className={`mc-ach-card ${isTrueAlchemistComplete ? 'is-unlocked' : 'is-locked'}`}>
               <div className="mc-ach-card-icon-box">
-                <img src="/Potion_of_Healing_JE2_BE2.png" alt="Істинний зіллєвар" />
+                <img src="/Potion_of_Healing_JE2_BE2.png" alt={t('ach_true_alchemist_title')} />
               </div>
               <div className="mc-ach-card-content">
-                <div className="mc-ach-card-name">Істинний зіллєвар</div>
-                <div className="mc-ach-card-desc">Приготуйте всі {POTIONS_DATA.length} основних видів власноруч</div>
+                <div className="mc-ach-card-name">{t('ach_true_alchemist_title')}</div>
+                <div className="mc-ach-card-desc">{t('ach_true_alchemist_desc')}</div>
                 <div className="mc-ach-card-status">
                   {isTrueAlchemistComplete ? (
-                    <span className="unlocked-text gold-text">✓ Здобуто! ({POTIONS_DATA.length}/{POTIONS_DATA.length})</span>
+                    <span className="unlocked-text gold-text">✓ ({POTIONS_DATA.length}/{POTIONS_DATA.length})</span>
                   ) : (
-                    <span className="locked-text">🔒 {baseManualCount} / {POTIONS_DATA.length} видів</span>
+                    <span className="locked-text">🔒 {baseManualCount} / {POTIONS_DATA.length}</span>
                   )}
                 </div>
               </div>
@@ -242,23 +244,23 @@ export default function AchievementsModal({ isOpen, onClose, isDark }) {
           </div>
 
           {/* Grand Ultimate Achievement: "Володар зіллєваріння" */}
-          <div className="mc-achievements-section-title overlord-section-title">Гранд-досягнення</div>
+          <div className="mc-achievements-section-title overlord-section-title">{t('ach_potion_overlord_title')}</div>
           <div className={`mc-ach-card overlord-card ${isOverlordComplete ? 'is-unlocked' : 'is-locked'}`}>
             <div className="mc-ach-card-icon-box overlord-icon-box">
               <img
                 src="/Potion_of_the_Turtle_Master_JE3.png"
-                alt="Володар зіллєваріння"
+                alt={t('ach_potion_overlord_title')}
                 onError={(e) => { e.currentTarget.src = '/items/brewing_stand.png'; }}
               />
               {isOverlordComplete && <span className="overlord-crown">👑</span>}
             </div>
             <div className="mc-ach-card-content">
               <div className="mc-ach-card-name overlord-name">
-                Володар зіллєваріння
-                {isOverlordComplete && <span className="overlord-tag">ВИКОНАНО 100%</span>}
+                {t('ach_potion_overlord_title')}
+                {isOverlordComplete && <span className="overlord-tag">100%</span>}
               </div>
               <div className="mc-ach-card-desc">
-                Приготуйте всі <strong>{TOTAL_VARIANTS_COUNT}</strong> варіанти зілля (і звичайні, і вибухові, і осідальні, подовжені редстоуном та посилені світлопилом). Прогрес зберігається між сесіями.
+                {t('ach_potion_overlord_desc')}
               </div>
 
               {/* Progress bar */}
@@ -271,31 +273,35 @@ export default function AchievementsModal({ isOpen, onClose, isDark }) {
 
               {/* Category sub-stats pills */}
               <div className="mc-ach-chips-row">
-                <span className={`mc-ach-chip ${variantStats.regularCount >= (variantStats.totalRegular || 45) ? 'done' : ''}`} title="Звичайні питні зілля">
-                  🧪 Звичайні: {variantStats.regularCount}/{variantStats.totalRegular || 45}
+                <span className={`mc-ach-chip ${variantStats.regularCount >= (variantStats.totalRegular || 45) ? 'done' : ''}`} title={t('achievements_filter_regular')}>
+                  {t('ach_chip_regular', { count: variantStats.regularCount, total: variantStats.totalRegular || 45 })}
                 </span>
-                <span className={`mc-ach-chip ${variantStats.splashCount >= (variantStats.totalSplash || 45) ? 'done' : ''}`} title="Вибухові зілля (з порохом)">
-                  💥 Вибухові: {variantStats.splashCount}/{variantStats.totalSplash || 45}
+                <span className={`mc-ach-chip ${variantStats.splashCount >= (variantStats.totalSplash || 45) ? 'done' : ''}`} title={t('achievements_filter_splash')}>
+                  {t('ach_chip_splash', { count: variantStats.splashCount, total: variantStats.totalSplash || 45 })}
                 </span>
-                <span className={`mc-ach-chip ${variantStats.lingeringCount >= (variantStats.totalLingering || 45) ? 'done' : ''}`} title="Осідальні зілля (з диханням дракона)">
-                  💨 Осідальні: {variantStats.lingeringCount}/{variantStats.totalLingering || 45}
+                <span className={`mc-ach-chip ${variantStats.lingeringCount >= (variantStats.totalLingering || 45) ? 'done' : ''}`} title={t('achievements_filter_lingering')}>
+                  {t('ach_chip_lingering', { count: variantStats.lingeringCount, total: variantStats.totalLingering || 45 })}
                 </span>
-                <span className={`mc-ach-chip ${variantStats.extendedCount >= (variantStats.totalExtended || 39) ? 'done' : ''}`} title="Подовжені зілля (з редстоуном)">
-                  ⏳ Редстоун: {variantStats.extendedCount}/{variantStats.totalExtended || 39}
+                <span className={`mc-ach-chip ${variantStats.extendedCount >= (variantStats.totalExtended || 39) ? 'done' : ''}`} title={t('achievements_filter_extended')}>
+                  {t('ach_chip_redstone', { count: variantStats.extendedCount, total: variantStats.totalExtended || 39 })}
                 </span>
-                <span className={`mc-ach-chip ${variantStats.level2Count >= (variantStats.totalLevel2 || 27) ? 'done' : ''}`} title="Посилені II/IV зілля (зі світлопилом)">
-                  ⚡ Світлопил: {variantStats.level2Count}/{variantStats.totalLevel2 || 27}
+                <span className={`mc-ach-chip ${variantStats.level2Count >= (variantStats.totalLevel2 || 27) ? 'done' : ''}`} title={t('achievements_filter_level2')}>
+                  {t('ach_chip_glowstone', { count: variantStats.level2Count, total: variantStats.totalLevel2 || 27 })}
                 </span>
               </div>
 
               <div className="mc-ach-card-status">
                 {isOverlordComplete ? (
                   <span className="unlocked-text gold-text">
-                    ★ Гранд-досягнення здобуто! Всі {TOTAL_VARIANTS_COUNT} варіацій приготовано! 👑
+                    {t('ach_overlord_unlocked', { count: TOTAL_VARIANTS_COUNT })}
                   </span>
                 ) : (
                   <span className="locked-text">
-                    🔒 Прогрес: <strong>{variantStats.brewedCount}</strong> / {TOTAL_VARIANTS_COUNT} варіацій ({variantStats.percentage}%)
+                    {t('ach_overlord_progress_line', {
+                      count: variantStats.brewedCount,
+                      total: TOTAL_VARIANTS_COUNT,
+                      percent: variantStats.percentage
+                    })}
                   </span>
                 )}
               </div>
@@ -312,7 +318,7 @@ export default function AchievementsModal({ isOpen, onClose, isDark }) {
                 setChecklistTab('variants');
               }}
             >
-              Усі варіації зілля ({variantStats.brewedCount} / {TOTAL_VARIANTS_COUNT})
+              {t('achievements_tab_variants')} ({variantStats.brewedCount} / {TOTAL_VARIANTS_COUNT})
             </button>
             <button
               type="button"
@@ -322,7 +328,7 @@ export default function AchievementsModal({ isOpen, onClose, isDark }) {
                 setChecklistTab('base');
               }}
             >
-              Основні види ({baseBrewedCount} / {POTIONS_DATA.length})
+              {t('achievements_tab_base')} ({baseBrewedCount} / {POTIONS_DATA.length})
             </button>
           </div>
 
@@ -337,21 +343,21 @@ export default function AchievementsModal({ isOpen, onClose, isDark }) {
                     className={`mc-ach-filter-btn ${variantStatusFilter === 'all' ? 'active' : ''}`}
                     onClick={() => setVariantStatusFilter('all')}
                   >
-                    Всі ({TOTAL_VARIANTS_COUNT})
+                    {t('achievements_filter_all')} ({TOTAL_VARIANTS_COUNT})
                   </button>
                   <button
                     type="button"
                     className={`mc-ach-filter-btn ${variantStatusFilter === 'brewed' ? 'active' : ''}`}
                     onClick={() => setVariantStatusFilter('brewed')}
                   >
-                    Зварені ({variantStats.brewedCount})
+                    {t('achievements_filter_brewed')} ({variantStats.brewedCount})
                   </button>
                   <button
                     type="button"
                     className={`mc-ach-filter-btn ${variantStatusFilter === 'remaining' ? 'active' : ''}`}
                     onClick={() => setVariantStatusFilter('remaining')}
                   >
-                    Залишилось ({TOTAL_VARIANTS_COUNT - variantStats.brewedCount})
+                    {t('achievements_filter_remaining')} ({TOTAL_VARIANTS_COUNT - variantStats.brewedCount})
                   </button>
                 </div>
 
@@ -362,87 +368,92 @@ export default function AchievementsModal({ isOpen, onClose, isDark }) {
                     className={`mc-type-pill ${variantTypeFilter === 'all' ? 'active' : ''}`}
                     onClick={() => setVariantTypeFilter('all')}
                   >
-                    Всі типи
+                    {t('ach_all_types')}
                   </button>
                   <button
                     type="button"
                     className={`mc-type-pill ${variantTypeFilter === 'regular' ? 'active' : ''}`}
                     onClick={() => setVariantTypeFilter('regular')}
                   >
-                    🧪 Звичайні
+                    {t('ach_pill_regular')}
                   </button>
                   <button
                     type="button"
                     className={`mc-type-pill ${variantTypeFilter === 'splash' ? 'active' : ''}`}
                     onClick={() => setVariantTypeFilter('splash')}
                   >
-                    💥 Вибухові
+                    {t('ach_pill_splash')}
                   </button>
                   <button
                     type="button"
                     className={`mc-type-pill ${variantTypeFilter === 'lingering' ? 'active' : ''}`}
                     onClick={() => setVariantTypeFilter('lingering')}
                   >
-                    💨 Осідальні
+                    {t('ach_pill_lingering')}
                   </button>
                   <button
                     type="button"
                     className={`mc-type-pill ${variantTypeFilter === 'extended' ? 'active' : ''}`}
                     onClick={() => setVariantTypeFilter('extended')}
                   >
-                    ⏳ Подовжені
+                    {t('ach_pill_extended')}
                   </button>
                   <button
                     type="button"
                     className={`mc-type-pill ${variantTypeFilter === 'level2' ? 'active' : ''}`}
                     onClick={() => setVariantTypeFilter('level2')}
                   >
-                    ⚡ Посилені II
+                    {t('ach_pill_level2')}
                   </button>
                   <button
                     type="button"
                     className={`mc-type-pill ${variantTypeFilter === 'base' ? 'active' : ''}`}
                     onClick={() => setVariantTypeFilter('base')}
                   >
-                    💧 Базові основи
+                    {t('ach_pill_base')}
                   </button>
                 </div>
               </div>
 
               {/* Grid of 123 Potion Variations */}
               <div className="mc-ach-variants-grid">
-                {displayedVariants.map((v) => (
-                  <div
-                    key={v.key}
-                    className={`mc-ach-variant-item ${v.isBrewed ? 'brewed' : 'unbrewed'}`}
-                    title={v.name}
-                  >
-                    <div className="mc-ach-variant-icon-box">
-                      <img
-                        src={v.sprite}
-                        alt={v.name}
-                        className="mc-ach-variant-icon"
-                        draggable="false"
-                        onError={(e) => { e.currentTarget.src = '/items/water_bottle.png'; }}
-                      />
-                      {v.isBrewed && <span className="mc-ach-variant-check">✓</span>}
-                    </div>
-                    <div className="mc-ach-variant-details">
-                      <div className="mc-ach-variant-name">{v.name}</div>
-                      <div className="mc-ach-variant-tags">
-                        <span className={`tag-del tag-${v.delivery}`}>{v.deliveryLabel}</span>
-                        {v.tier !== 'base' && (
-                          <span className={`tag-tier tag-${v.tier}`}>{v.tier === 'extended' ? '+Редстоун' : '+Світлопил'}</span>
-                        )}
-                        {v.isBrewed ? (
-                          <span className="tag-status brewed">✓ Зварено</span>
-                        ) : (
-                          <span className="tag-status unbrewed">🔒 Очікує</span>
-                        )}
+                {displayedVariants.map((v) => {
+                  const localizedVariantName = getVariantName(v);
+                  return (
+                    <div
+                      key={v.key}
+                      className={`mc-ach-variant-item ${v.isBrewed ? 'brewed' : 'unbrewed'}`}
+                      title={localizedVariantName}
+                    >
+                      <div className="mc-ach-variant-icon-box">
+                        <img
+                          src={v.sprite}
+                          alt={localizedVariantName}
+                          className="mc-ach-variant-icon"
+                          draggable="false"
+                          onError={(e) => { e.currentTarget.src = '/items/water_bottle.png'; }}
+                        />
+                        {v.isBrewed && <span className="mc-ach-variant-check">✓</span>}
+                      </div>
+                      <div className="mc-ach-variant-details">
+                        <div className="mc-ach-variant-name">{localizedVariantName}</div>
+                        <div className="mc-ach-variant-tags">
+                          <span className={`tag-del tag-${v.delivery}`}>{getDeliveryLabel(v.delivery)}</span>
+                          {v.tier !== 'base' && (
+                            <span className={`tag-tier tag-${v.tier}`}>
+                              {v.tier === 'extended' ? t('tag_plus_redstone') : t('tag_plus_glowstone')}
+                            </span>
+                          )}
+                          {v.isBrewed ? (
+                            <span className="tag-status brewed">✓ {t('tag_brewed')}</span>
+                          ) : (
+                            <span className="tag-status unbrewed">{t('tag_waiting')}</span>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}
@@ -457,54 +468,57 @@ export default function AchievementsModal({ isOpen, onClose, isDark }) {
                     className={`mc-ach-filter-btn ${baseFilter === 'all' ? 'active' : ''}`}
                     onClick={() => setBaseFilter('all')}
                   >
-                    Усі ({POTIONS_DATA.length})
+                    {t('achievements_filter_all')} ({POTIONS_DATA.length})
                   </button>
                   <button
                     type="button"
                     className={`mc-ach-filter-btn ${baseFilter === 'brewed' ? 'active' : ''}`}
                     onClick={() => setBaseFilter('brewed')}
                   >
-                    Зварені ({baseBrewedCount})
+                    {t('achievements_filter_brewed')} ({baseBrewedCount})
                   </button>
                   <button
                     type="button"
                     className={`mc-ach-filter-btn ${baseFilter === 'remaining' ? 'active' : ''}`}
                     onClick={() => setBaseFilter('remaining')}
                   >
-                    Залишилось ({POTIONS_DATA.length - baseBrewedCount})
+                    {t('achievements_filter_remaining')} ({POTIONS_DATA.length - baseBrewedCount})
                   </button>
                 </div>
               </div>
 
               <div className="mc-ach-potions-grid">
-                {displayedBasePotions.map((potion) => (
-                  <div
-                    key={potion.id}
-                    className={`mc-ach-potion-item ${potion.isBrewed ? 'brewed' : 'unbrewed'}`}
-                    title={potion.name}
-                  >
-                    <div className="mc-ach-potion-icon-box">
-                      <img
-                        src={potion.icon}
-                        alt={potion.name}
-                        className="mc-ach-potion-icon"
-                        draggable="false"
-                      />
-                      {potion.isBrewed && <span className="mc-ach-potion-check" title="Зілля зварено">✓</span>}
-                      {potion.isManual && <span className="mc-ach-potion-manual" title="Зварено власноруч (без кнопки вставки)">★</span>}
-                    </div>
-                    <div className="mc-ach-potion-details">
-                      <div className="mc-ach-potion-name">{potion.name}</div>
-                      <div className="mc-ach-potion-tag">
-                        {potion.isBrewed ? (
-                          <span className="tag-brewed">{potion.isManual ? 'Власноруч ✓' : 'Зварено ✓'}</span>
-                        ) : (
-                          <span className="tag-unbrewed">Не зварено 🔒</span>
-                        )}
+                {displayedBasePotions.map((potion) => {
+                  const locP = getPotion(potion.id) || potion;
+                  return (
+                    <div
+                      key={potion.id}
+                      className={`mc-ach-potion-item ${potion.isBrewed ? 'brewed' : 'unbrewed'}`}
+                      title={locP.name}
+                    >
+                      <div className="mc-ach-potion-icon-box">
+                        <img
+                          src={potion.icon}
+                          alt={locP.name}
+                          className="mc-ach-potion-icon"
+                          draggable="false"
+                        />
+                        {potion.isBrewed && <span className="mc-ach-potion-check" title={t('tag_brewed')}>✓</span>}
+                        {potion.isManual && <span className="mc-ach-potion-manual" title={t('tag_manual')}>★</span>}
+                      </div>
+                      <div className="mc-ach-potion-details">
+                        <div className="mc-ach-potion-name">{locP.name}</div>
+                        <div className="mc-ach-potion-tag">
+                          {potion.isBrewed ? (
+                            <span className="tag-brewed">{potion.isManual ? `${t('tag_manual')} ✓` : `${t('tag_brewed')} ✓`}</span>
+                          ) : (
+                            <span className="tag-unbrewed">{t('tag_unbrewed')}</span>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}
@@ -520,7 +534,7 @@ export default function AchievementsModal({ isOpen, onClose, isDark }) {
               onClose();
             }}
           >
-            Закрити
+            {t('achievements_close')}
           </button>
         </div>
       </div>
