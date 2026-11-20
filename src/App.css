@@ -2144,7 +2144,6 @@ body.dark-theme .invslot.mcui-output3 {
   -webkit-font-smoothing: antialiased !important;
   flex-shrink: 0;
   transition: transform 0.15s ease;
-  vertical-align: middle;
   display: block;
 }
 
